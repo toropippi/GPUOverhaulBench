@@ -1,0 +1,180 @@
+{
+  "bench_id": "d3d12_copy_compute_overlap",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "adapter_name": "NVIDIA GeForce RTX 5090",
+      "cases": [
+        {
+          "d2h_like": {
+            "copy_solo": {
+              "avg_ms": 2.43052,
+              "gib_per_s": 51.429324,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 2.49029,
+              "loop_count": 25029,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 2.563445,
+              "copy_gib_per_s": 48.762505,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.029376,
+              "wall_vs_solo_sum_ratio": 0.52094
+            }
+          },
+          "h2d_like": {
+            "copy_solo": {
+              "avg_ms": 1.13465,
+              "gib_per_s": 110.166131,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 1.19093,
+              "loop_count": 11482,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 1.22542,
+              "copy_gib_per_s": 102.005843,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.028961,
+              "wall_vs_solo_sum_ratio": 0.526931
+            }
+          },
+          "iterations": 20,
+          "size_mb": 128,
+          "warmup": 3
+        },
+        {
+          "d2h_like": {
+            "copy_solo": {
+              "avg_ms": 9.53276,
+              "gib_per_s": 52.450707,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 9.3453,
+              "loop_count": 98665,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 9.69297,
+              "copy_gib_per_s": 51.583777,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.016806,
+              "wall_vs_solo_sum_ratio": 0.513452
+            }
+          },
+          "h2d_like": {
+            "copy_solo": {
+              "avg_ms": 3.9202,
+              "gib_per_s": 127.544513,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 4.01931,
+              "loop_count": 40557,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 4.35517,
+              "copy_gib_per_s": 114.806081,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.083562,
+              "wall_vs_solo_sum_ratio": 0.548544
+            }
+          },
+          "iterations": 10,
+          "size_mb": 512,
+          "warmup": 3
+        },
+        {
+          "d2h_like": {
+            "copy_solo": {
+              "avg_ms": 19.06824,
+              "gib_per_s": 52.443225,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 18.71008,
+              "loop_count": 196734,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 21.04976,
+              "copy_gib_per_s": 47.50648,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.103917,
+              "wall_vs_solo_sum_ratio": 0.557192
+            }
+          },
+          "h2d_like": {
+            "copy_solo": {
+              "avg_ms": 7.78256,
+              "gib_per_s": 128.492424,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 7.64946,
+              "loop_count": 80315,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 8.55984,
+              "copy_gib_per_s": 116.824614,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.099875,
+              "wall_vs_solo_sum_ratio": 0.55468
+            }
+          },
+          "iterations": 5,
+          "size_mb": 1024,
+          "warmup": 2
+        }
+      ],
+      "min_d2h_wall_vs_solo_sum_ratio": 0.513452,
+      "min_h2d_wall_vs_solo_sum_ratio": 0.526931,
+      "min_wall_vs_solo_sum_ratio": 0.513452,
+      "timing_backend": "wall_clock"
+    },
+    "parameters": {
+      "api": "d3d12",
+      "copy_directions": [
+        "H2D-like",
+        "D2H-like"
+      ],
+      "iterations": 50,
+      "queue_count": 2,
+      "sizes_mb": [
+        128,
+        512,
+        1024
+      ],
+      "warmup": 5
+    },
+    "primary_metric": "min_wall_vs_solo_sum_ratio",
+    "status": "ok",
+    "unit": "ratio",
+    "validation": {
+      "passed": true
+    }
+  }
+}

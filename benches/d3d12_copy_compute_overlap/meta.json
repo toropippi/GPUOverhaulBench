@@ -1,0 +1,104 @@
+{
+  "id": "d3d12_copy_compute_overlap",
+  "title": "D3D12 Copy Queue and Compute Queue Overlap",
+  "question": {
+    "ja": "Direct3D 12 で COPY queue と COMPUTE queue を分けたとき、UPLOAD/READBACK 経由の copy と low-memory compute は x+y ではなく max(x, y) に近い wall time で重なるか。目的は D3D12 で CUDA 以外の GPGPU API として通信-計算のオーバーラップが技術的にできるかを確認すること。",
+    "en": "When COPY and COMPUTE queues are separated in Direct3D 12, do UPLOAD/READBACK-based copies and low-memory compute overlap with wall time closer to max(x, y) than x+y? The goal is to confirm whether a non-CUDA GPGPU API can technically achieve communication-compute overlap."
+  },
+  "tags": [
+    "d3d12",
+    "copy",
+    "compute",
+    "overlap",
+    "upload",
+    "readback",
+    "queue"
+  ],
+  "focus": [
+    "Technical overlap in a non-CUDA GPGPU API",
+    "COPY queue + COMPUTE queue wall-time behavior",
+    "H2D-like upload copy and D2H-like readback copy in one bench",
+    "Wall time vs x+y and vs max(x, y)"
+  ],
+  "primary_metrics": [
+    "min_h2d_wall_vs_solo_sum_ratio",
+    "min_d2h_wall_vs_solo_sum_ratio",
+    "min_wall_vs_solo_sum_ratio"
+  ],
+  "comparisons": [
+    {
+      "ja": "UPLOAD->DEFAULT copy + compute と DEFAULT->READBACK copy + compute の違い",
+      "en": "Difference between UPLOAD->DEFAULT copy + compute and DEFAULT->READBACK copy + compute"
+    },
+    {
+      "ja": "同時実行 wall time が x+y に近いか max(x, y) に近いか",
+      "en": "Whether simultaneous wall time stays closer to x+y or max(x, y)"
+    },
+    {
+      "ja": "OpenCL bench で確認した pinned-like overlap と D3D12 queue overlap の比較材料",
+      "en": "Comparison point between OpenCL pinned-like overlap and D3D12 queue-based overlap"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は CUDA の pinned/pageable 比較を D3D12 上で再現するものではない。D3D12 で COPY queue と COMPUTE queue を分けることで、技術的な overlap が成立するかだけを見る。",
+      "en": "This benchmark does not try to recreate CUDA pinned/pageable comparisons on D3D12. It only checks whether technical overlap appears when COPY and COMPUTE queues are separated."
+    },
+    {
+      "ja": "H2D-like は UPLOAD heap から DEFAULT resource への copy、D2H-like は DEFAULT resource から READBACK heap への copy と定義する。",
+      "en": "H2D-like is defined as a copy from an UPLOAD heap to a DEFAULT resource, and D2H-like is defined as a copy from a DEFAULT resource to a READBACK heap."
+    },
+    {
+      "ja": "主判定は wall time を使う。overlap 本番では queue 間の相互 wait を入れず、最後に CPU 側で両 queue の完了を待つ。",
+      "en": "The main judgment uses wall time. During the overlap run, no inter-queue waits are inserted; the CPU only waits for both queues to finish at the end."
+    },
+    {
+      "ja": "kernel はループ中にほぼレジスタ演算だけを行い、最後に 1 回だけ UAV へ書く。copy と同じメモリ資源を奪わないようにして、queue overlap を見やすくする。",
+      "en": "The kernel performs almost entirely register-side work in the loop and writes to a UAV only once at the end. This avoids competing for the same memory path as the copy and makes queue overlap easier to read."
+    },
+    {
+      "ja": "D3D12 の UPLOAD/READBACK heap は CUDA の raw PCIe memcpy と完全に同じ経路とは限らない。特に H2D-like の見かけ帯域は CUDA の PCIe 帯域 bench よりかなり高く出ることがあり、ここでは帯域値そのものより overlap ratio を主に読む。",
+      "en": "D3D12 UPLOAD/READBACK heaps do not necessarily map to the exact same path as raw CUDA PCIe memcpy. In particular, H2D-like apparent bandwidth can exceed the CUDA PCIe benchmark by a large margin, so this benchmark should be read primarily through overlap ratios rather than raw bandwidth."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "この RTX 5090 環境では、D3D12 でも COPY queue と COMPUTE queue を分けることで copy+compute overlap が明確に成立した。H2D-like も D2H-like も wall time は x+y ではなくほぼ max(x, y) 側に寄り、少なくとも D3D12 は CUDA 以外の GPGPU API として通信-計算 overlap を技術的に実現できている。",
+      "en": "On this RTX 5090 system, D3D12 clearly achieved copy+compute overlap by separating the COPY and COMPUTE queues. Both H2D-like and D2H-like wall times stayed much closer to max(x, y) than x+y, so D3D12 technically succeeds as a non-CUDA GPGPU API for communication-compute overlap."
+    },
+    "highlights": [
+      {
+        "ja": "Adapter: NVIDIA GeForce RTX 5090",
+        "en": "Adapter: NVIDIA GeForce RTX 5090"
+      },
+      {
+        "ja": "min_h2d_wall_vs_solo_sum_ratio = 0.526931",
+        "en": "min_h2d_wall_vs_solo_sum_ratio = 0.526931"
+      },
+      {
+        "ja": "min_d2h_wall_vs_solo_sum_ratio = 0.513452",
+        "en": "min_d2h_wall_vs_solo_sum_ratio = 0.513452"
+      },
+      {
+        "ja": "128 MB H2D-like: ratio 0.526931, overlap wall 1.225420 ms",
+        "en": "128 MB H2D-like: ratio 0.526931, overlap wall 1.225420 ms"
+      },
+      {
+        "ja": "128 MB D2H-like: ratio 0.520940, overlap wall 2.563445 ms",
+        "en": "128 MB D2H-like: ratio 0.520940, overlap wall 2.563445 ms"
+      },
+      {
+        "ja": "512 MB D2H-like: ratio 0.513452, overlap wall 9.692970 ms",
+        "en": "512 MB D2H-like: ratio 0.513452, overlap wall 9.692970 ms"
+      },
+      {
+        "ja": "H2D-like apparent bandwidth reached 102-128 GiB/s, so raw bandwidth here should not be read as a direct PCIe equivalent",
+        "en": "H2D-like apparent bandwidth reached 102-128 GiB/s, so raw bandwidth here should not be read as a direct PCIe equivalent"
+      }
+    ]
+  },
+  "build": {
+    "toolchain": "msvc_d3d12"
+  }
+}
