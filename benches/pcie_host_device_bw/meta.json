@@ -1,0 +1,141 @@
+{
+  "id": "pcie_host_device_bw",
+  "title": "PCIe Host-Device Transfer Bandwidth",
+  "question": {
+    "ja": "PCIe 5.0 x16 の理論片方向帯域に対して H2D と D2H の実効帯域はどこまで出るか。また、pageable host memory と pinned host memory でどれくらい差が付くか。",
+    "en": "How much effective H2D and D2H bandwidth is achieved relative to the theoretical one-way bandwidth of PCIe 5.0 x16, and how large is the pageable-vs-pinned host memory gap?"
+  },
+  "tags": [
+    "transfer",
+    "pcie",
+    "host-device",
+    "bandwidth",
+    "pageable",
+    "pinned"
+  ],
+  "focus": [
+    "PCIe 5.0 x16 theoretical one-way bandwidth utilization",
+    "Pinned vs pageable host-memory transfer gap",
+    "Difference between H2D and D2H transfer behavior",
+    "Size sweep through 8 GB"
+  ],
+  "primary_metrics": [
+    "best_h2d_pinned_bandwidth_gib_per_s",
+    "best_d2h_pinned_bandwidth_gib_per_s",
+    "max_speedup"
+  ],
+  "comparisons": [
+    {
+      "ja": "H2D と D2H の比較",
+      "en": "H2D vs D2H"
+    },
+    {
+      "ja": "pinned と pageable の比較",
+      "en": "Pinned vs pageable"
+    },
+    {
+      "ja": "実測帯域と PCIe 5.0 x16 理論値の比較",
+      "en": "Measured bandwidth vs PCIe 5.0 x16 theoretical limit"
+    },
+    {
+      "ja": "転送サイズによる帯域変化の比較",
+      "en": "Bandwidth change across transfer sizes"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "今回の結果では pinned 転送が約 53 GiB/s 前後まで到達し、PCIe 5.0 x16 の理論片方向帯域約 58.69 GiB/s に対して約 90% に達した。理論値から多少の差はあるが、実用上はかなり高い実効帯域が出ていると読める。",
+      "en": "In this run, pinned transfers reached roughly 53 GiB/s, about 90% of the PCIe 5.0 x16 theoretical one-way limit of roughly 58.69 GiB/s. There is still a gap to theory, but the achieved effective bandwidth is already very high in practical terms."
+    },
+    {
+      "ja": "pageable 転送は大きいサイズでおおむね 14 から 22 GiB/s 程度にとどまり、pinned に対して約 3 倍から 4 倍近い差が付いた。この差は PCIe リンクそのものよりも、pageable 経路で起きうる内部 staging buffer や追加コピーの overhead を強く示唆する。",
+      "en": "Pageable transfers stayed around roughly 14 to 22 GiB/s at larger sizes, yielding nearly a 3x to 4x gap versus pinned memory. This points more strongly to pageable-path overhead such as internal staging buffers and extra copy steps than to the PCIe link itself."
+    },
+    {
+      "ja": "H2D と D2H は大サイズでほぼ同じ水準に収束しており、このベンチでは方向差よりも memory type の違いのほうが支配的だった。まず pinned と pageable の差を見て、その後に H2D と D2H の非対称性が残るかを確認する読み方が適している。",
+      "en": "H2D and D2H converged to nearly the same level at large sizes, so in this benchmark the memory-type difference dominated more than directionality. The right reading order is to inspect the pinned-vs-pageable gap first and then check whether any H2D-vs-D2H asymmetry remains."
+    },
+    {
+      "ja": "8 GB まで size sweep しているため、単一サイズの偶然ではなく plateau を見やすい。一方で大きいサイズでは実行時間を抑えるため iterations と warmup を自動で減らしているので、サイズ間比較では各 case の iterations と warmup も併せて確認する。",
+      "en": "The sweep goes up to 8 GB, which makes it easier to identify a real plateau rather than overreading a single size. At the same time, larger sizes automatically use fewer iterations and warmup passes to keep runtime reasonable, so compare sizes together with each case's iterations and warmup."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "environment": {
+      "gpu": "NVIDIA GeForce RTX 5090",
+      "driver_version": "576.88",
+      "cuda_runtime_version": "12.9",
+      "os": "Windows-11-10.0.26200-SP0"
+    },
+    "summary": {
+      "ja": "最新実行では pinned H2D が 53.31 GiB/s、pinned D2H が 53.01 GiB/s まで到達した。どちらも理論片方向帯域 58.69 GiB/s の約 90% で、pageable との差は最大 3.67 倍だった。",
+      "en": "In the latest run, pinned H2D reached 53.31 GiB/s and pinned D2H reached 53.01 GiB/s. Both are about 90% of the 58.69 GiB/s theoretical one-way limit, and the maximum pageable-vs-pinned speedup was 3.67x."
+    },
+    "highlights": [
+      {
+        "label": "Pinned H2D peak",
+        "value_gib_per_s": 53.310166
+      },
+      {
+        "label": "Pinned D2H peak",
+        "value_gib_per_s": 53.012081
+      },
+      {
+        "label": "Pageable H2D peak",
+        "value_gib_per_s": 21.77269
+      },
+      {
+        "label": "Pageable D2H peak",
+        "value_gib_per_s": 16.229913
+      },
+      {
+        "label": "Pinned H2D utilization of theoretical",
+        "value": 0.908377
+      },
+      {
+        "label": "Pinned D2H utilization of theoretical",
+        "value": 0.903297
+      },
+      {
+        "label": "Maximum pinned vs pageable speedup",
+        "value": 3.673143
+      }
+    ],
+    "size_sweep_snapshot": [
+      {
+        "size_mb": 8,
+        "h2d_pageable_gib_per_s": 21.77269,
+        "h2d_pinned_gib_per_s": 46.692951,
+        "d2h_pageable_gib_per_s": 15.427215,
+        "d2h_pinned_gib_per_s": 49.410977
+      },
+      {
+        "size_mb": 128,
+        "h2d_pageable_gib_per_s": 15.667049,
+        "h2d_pinned_gib_per_s": 52.647842,
+        "d2h_pageable_gib_per_s": 16.229913,
+        "d2h_pinned_gib_per_s": 52.237809
+      },
+      {
+        "size_mb": 1024,
+        "h2d_pageable_gib_per_s": 14.653459,
+        "h2d_pinned_gib_per_s": 50.303925,
+        "d2h_pageable_gib_per_s": 15.82183,
+        "d2h_pinned_gib_per_s": 50.662617
+      },
+      {
+        "size_mb": 8192,
+        "h2d_pageable_gib_per_s": 15.049333,
+        "h2d_pinned_gib_per_s": 51.273886,
+        "d2h_pageable_gib_per_s": 14.933561,
+        "d2h_pinned_gib_per_s": 52.69823
+      }
+    ]
+  },
+  "theoretical_reference": {
+    "pcie_generation": "5.0",
+    "link_width": "x16",
+    "one_way_bandwidth_GBps_decimal": 63.015
+  }
+}
