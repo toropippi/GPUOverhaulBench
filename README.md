@@ -1,6 +1,6 @@
 # GPUOverhaulBench
 
-Small, self-contained CUDA C++ benchmarks for investigating GPU behavior.
+Small, self-contained GPU benchmarks for investigating GPU behavior.
 
 ## What This Repository Is
 - Each benchmark lives in its own folder under `benches/`.
@@ -11,7 +11,7 @@ Small, self-contained CUDA C++ benchmarks for investigating GPU behavior.
 - `benches/_shared/bench_support.hpp`
 - `benches/_template_benchmark/`
 - `benches/<bench-id>/meta.json`
-- `benches/<bench-id>/bench.cu`
+- `benches/<bench-id>/bench.cu` or `benches/<bench-id>/bench.cpp`
 - `benches/<bench-id>/run.py`
 - `benches/<bench-id>/results/`
 - `tools/run.py`
@@ -22,6 +22,7 @@ Small, self-contained CUDA C++ benchmarks for investigating GPU behavior.
 - Windows
 - NVIDIA GPU with CUDA support
 - CUDA Toolkit with `nvcc`
+- OpenCL runtime and import library when running OpenCL benchmarks
 - Python 3.13 or compatible
 
 ## Running a Benchmark
@@ -67,11 +68,13 @@ python run.py
 
 ## Adding a Benchmark
 1. Copy `benches/_template_benchmark/` to `benches/<bench-id>/`.
-2. Update `meta.json`, `bench.cu`, and `run.py`.
+2. Update `meta.json`, `bench.cu` or `bench.cpp`, and `run.py`.
 3. Run `python run.py` inside that benchmark folder.
 
 ## Authoring Rules
 Detailed benchmark authoring rules, metadata conventions, and output contracts are defined in `AGENT_BENCH_RULES.md`.
+
+The shared runner in `tools/run.py` supports both CUDA (`nvcc`) and OpenCL (`MSVC + OpenCL.lib`) benchmarks.
 
 ## Design Backlog
 The consolidated benchmark backlog lives in `BENCH_TODO.md`.
