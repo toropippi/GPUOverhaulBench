@@ -3,19 +3,20 @@
 Small, self-contained CUDA C++ benchmarks for investigating GPU behavior with minimal manual metadata.
 
 ## Goals
-- Keep each benchmark isolated in its own folder.
-- Use one runner for build, execution, context capture, and result persistence.
-- Store machine-readable results as JSON Lines.
-- Make it easy to add many benchmarks without growing repo maintenance overhead.
+- Keep each benchmark self-contained.
+- Let users enter a benchmark folder and run it directly.
+- Keep shared code minimal and close to the benchmarks.
+- Store shareable results next to the benchmark that produced them.
 
 ## Repository Layout
+- `benches/_shared/bench_support.hpp`
 - `benches/<bench-id>/meta.json`
 - `benches/<bench-id>/bench.cu`
-- `include/bench_support.hpp`
-- `runner/run.py`
-- `runner/context.py`
-- `runner/schema.py`
-- `results/results.jsonl`
+- `benches/<bench-id>/run.py`
+- `benches/<bench-id>/results/`
+- `tools/run.py`
+- `tools/context.py`
+- `tools/schema.py`
 - `AGENT_BENCH_RULES.md`
 
 ## Current Reference Benchmarks
@@ -31,29 +32,35 @@ Small, self-contained CUDA C++ benchmarks for investigating GPU behavior with mi
 
 ## Run a Benchmark
 ```powershell
-python runner\run.py pcie_h2d_bw
+cd benches\pcie_h2d_bw
+python run.py
 ```
 
 Build only:
 
 ```powershell
-python runner\run.py pcie_h2d_bw --build
+cd benches\pcie_h2d_bw
+python run.py --build
 ```
 
 Run an already built benchmark:
 
 ```powershell
-python runner\run.py pcie_h2d_bw --run
+cd benches\pcie_h2d_bw
+python run.py --run
 ```
 
-Write results to a different file:
+Write the result to a specific file:
 
 ```powershell
-python runner\run.py pcie_h2d_bw --out results\custom.jsonl
+cd benches\pcie_h2d_bw
+python run.py --out results\manual_name.json
 ```
 
 ## Result Format
-Each execution appends one JSON record to `results/results.jsonl` with:
+Each execution writes one JSON file into `benches/<bench-id>/results/` by default.
+
+Each result contains:
 - `meta`
 - `context`
 - `result`
@@ -61,15 +68,26 @@ Each execution appends one JSON record to `results/results.jsonl` with:
 - `built_at`
 - `executed_at`
 
-`context` contains host, GPU, build, and run metadata collected by the runner.
+This keeps source, local runner, and shareable outputs in one place.
 
 ## Adding a New Benchmark
 1. Create `benches/<bench-id>/meta.json`.
 2. Create `benches/<bench-id>/bench.cu`.
-3. Follow `AGENT_BENCH_RULES.md`.
-4. Run `python runner\run.py <bench-id>`.
+3. Add `benches/<bench-id>/run.py` by copying a thin wrapper from an existing benchmark and changing only `BENCH_ID`.
+4. Create `benches/<bench-id>/results/`.
+5. Follow `AGENT_BENCH_RULES.md`.
+6. Run `python run.py` from that benchmark folder.
+
+Recommended `meta.json` additions beyond the required fields:
+- `focus`
+- `primary_metrics`
+- `comparisons`
+- `considerations`
+- `theoretical_reference`
+
+This keeps each benchmark self-describing even before opening a result file.
 
 ## Notes
 - Benchmark binaries must print exactly one JSON document to stdout.
-- The runner validates the benchmark output before appending it to `results/results.jsonl`.
-- `build/` is generated locally and should not be committed.
+- `tools/run.py` validates the benchmark output before writing the JSON result.
+- `benches/<bench-id>/build/` is generated locally and should not be committed.

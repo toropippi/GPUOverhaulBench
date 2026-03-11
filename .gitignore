@@ -1,7 +1,5 @@
-build/
-results/*.jsonl
-results/*.json
-runner/__pycache__/
+benches/*/build/
+tools/__pycache__/
 *.py[cod]
 *.obj
 *.exp
