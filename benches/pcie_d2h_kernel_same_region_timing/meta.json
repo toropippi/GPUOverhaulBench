@@ -1,0 +1,77 @@
+{
+  "id": "pcie_d2h_kernel_same_region_timing",
+  "title": "PCIe D2H Copy and Same-Region Kernel Timing",
+  "question": {
+    "ja": "D2H copy と kernel write が同じ device アドレス範囲そのものを別 stream で同時に触っても、wall time は x+y に近いか、それとも max(x, y) に近いか。",
+    "en": "When a D2H copy and a kernel write touch the exact same device address range on separate streams, does wall time behave more like x+y or more like max(x, y)?"
+  },
+  "tags": [
+    "transfer",
+    "pcie",
+    "d2h",
+    "kernel",
+    "same-region",
+    "race",
+    "timing"
+  ],
+  "focus": [
+    "Race-condition timing only",
+    "Solo D2H wall time x",
+    "Solo kernel wall time y",
+    "Overlap wall time vs x+y and vs max(x, y)"
+  ],
+  "primary_metrics": [
+    "min_wall_vs_solo_sum_ratio",
+    "min_wall_vs_solo_max_ratio",
+    "best_overlap_wall_ms"
+  ],
+  "comparisons": [
+    {
+      "ja": "同時実行 wall time と solo copy + solo kernel の和",
+      "en": "Simultaneous wall time vs solo copy plus solo kernel"
+    },
+    {
+      "ja": "同時実行 wall time と max(solo copy, solo kernel)",
+      "en": "Simultaneous wall time vs max(solo copy, solo kernel)"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は correctness を捨てた timing bench であり、copy 先の host データの壊れは見ません。validation は CUDA の launch・copy・synchronize が正常終了したかだけを見ます。",
+      "en": "This benchmark intentionally drops correctness and looks only at timing. It does not inspect the copied host data, and validation checks only whether CUDA launch, copy, and synchronization complete successfully."
+    },
+    {
+      "ja": "D2H copy は device buffer を読み、kernel はその全く同じ device 領域へ書きます。したがってこれは正しさの benchmark ではなく、race 条件でも時間的 overlap が成立するかを見る benchmark です。",
+      "en": "The D2H copy reads from a device buffer while the kernel writes to that exact same device region. This is therefore not a correctness benchmark but a timing benchmark for whether overlap still happens under a race condition."
+    },
+    {
+      "ja": "主判定は wall time のみです。timing backend は wall_clock 固定で、x+y に近いか max(x, y) に近いかで読みます。",
+      "en": "The main judgment uses wall time only. The timing backend is fixed to wall_clock, and the result is interpreted by whether the overlap wall time is closer to x+y or to max(x, y)."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "same-region race 条件でも wall time は x+y ではなくほぼ max(x, y) に寄りました。時間だけを見ると、separate-memory の copy+kernel overlap bench と同様に強く重なっています。",
+      "en": "Even under a same-region race condition, wall time stayed close to max(x, y) rather than x+y. From a timing-only perspective, the copy and kernel still overlap strongly, similar to the separate-memory copy+kernel overlap benchmark."
+    },
+    "highlights": [
+      {
+        "ja": "128 MB: solo copy 2.394 ms, solo kernel 2.714 ms, overlap 2.794 ms, ratio_to_sum 0.547, ratio_to_max 1.029",
+        "en": "128 MB: solo copy 2.394 ms, solo kernel 2.714 ms, overlap 2.794 ms, ratio_to_sum 0.547, ratio_to_max 1.029"
+      },
+      {
+        "ja": "512 MB: solo copy 9.760 ms, solo kernel 11.235 ms, overlap 11.363 ms, ratio_to_sum 0.541, ratio_to_max 1.011",
+        "en": "512 MB: solo copy 9.760 ms, solo kernel 11.235 ms, overlap 11.363 ms, ratio_to_sum 0.541, ratio_to_max 1.011"
+      },
+      {
+        "ja": "1024 MB: solo copy 19.078 ms, solo kernel 19.245 ms, overlap 19.407 ms, ratio_to_sum 0.506, ratio_to_max 1.008",
+        "en": "1024 MB: solo copy 19.078 ms, solo kernel 19.245 ms, overlap 19.407 ms, ratio_to_sum 0.506, ratio_to_max 1.008"
+      },
+      {
+        "ja": "最小 wall_vs_solo_sum_ratio は 0.506、最小 wall_vs_solo_max_ratio は 1.008 で、同時実行時間はほぼ max(x, y) でした。",
+        "en": "The minimum wall_vs_solo_sum_ratio was 0.506 and the minimum wall_vs_solo_max_ratio was 1.008, so overlap wall time was effectively at max(x, y)."
+      }
+    ]
+  }
+}

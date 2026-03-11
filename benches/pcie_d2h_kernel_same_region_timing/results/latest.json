@@ -1,0 +1,108 @@
+{
+  "bench_id": "pcie_d2h_kernel_same_region_timing",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "best_overlap_wall_ms": 2.793565,
+      "cases": [
+        {
+          "iterations": 20,
+          "overlap": {
+            "avg_wall_ms": 2.793565,
+            "success": true,
+            "wall_vs_solo_max_ratio": 1.029288,
+            "wall_vs_solo_sum_ratio": 0.546917
+          },
+          "size_mb": 128,
+          "solo_copy": {
+            "avg_ms": 2.393765,
+            "success": true
+          },
+          "solo_kernel": {
+            "avg_ms": 2.714075,
+            "loop_count": 256,
+            "success": true
+          },
+          "warmup": 3
+        },
+        {
+          "iterations": 10,
+          "overlap": {
+            "avg_wall_ms": 11.36278,
+            "success": true,
+            "wall_vs_solo_max_ratio": 1.011403,
+            "wall_vs_solo_sum_ratio": 0.541224
+          },
+          "size_mb": 512,
+          "solo_copy": {
+            "avg_ms": 9.75994,
+            "success": true
+          },
+          "solo_kernel": {
+            "avg_ms": 11.23467,
+            "loop_count": 256,
+            "success": true
+          },
+          "warmup": 3
+        },
+        {
+          "iterations": 5,
+          "overlap": {
+            "avg_wall_ms": 19.40674,
+            "success": true,
+            "wall_vs_solo_max_ratio": 1.00838,
+            "wall_vs_solo_sum_ratio": 0.506391
+          },
+          "size_mb": 1024,
+          "solo_copy": {
+            "avg_ms": 19.07816,
+            "success": true
+          },
+          "solo_kernel": {
+            "avg_ms": 19.24546,
+            "loop_count": 216,
+            "success": true
+          },
+          "warmup": 2
+        }
+      ],
+      "min_wall_vs_solo_max_ratio": 1.00838,
+      "min_wall_vs_solo_sum_ratio": 0.506391,
+      "representative_kernel_loop_count": 216,
+      "timing_backend": "wall_clock"
+    },
+    "parameters": {
+      "copy_direction": "D2H",
+      "iterations": 50,
+      "shared_region": true,
+      "sizes_mb": [
+        128,
+        512,
+        1024
+      ],
+      "stream_count": 2,
+      "warmup": 5
+    },
+    "primary_metric": "min_wall_vs_solo_sum_ratio",
+    "status": "ok",
+    "unit": "ratio",
+    "validation": {
+      "passed": true
+    }
+  }
+}
