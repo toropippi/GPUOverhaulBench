@@ -69,3 +69,6 @@ python run.py
 
 ## Authoring Rules
 Detailed benchmark authoring rules, metadata conventions, and output contracts are defined in `AGENT_BENCH_RULES.md`.
+
+## Design Backlog
+The consolidated benchmark backlog lives in `BENCH_TODO.md`.
