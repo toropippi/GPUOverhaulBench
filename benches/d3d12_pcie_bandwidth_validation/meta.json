@@ -1,0 +1,100 @@
+{
+  "id": "d3d12_pcie_bandwidth_validation",
+  "title": "D3D12 PCIe Copy Timing Validation",
+  "question": {
+    "ja": "D3D12 で H2D-like / D2H-like copy を測るとき、どの timing method なら CUDA の PCIe 測定値に対しておおむね妥当な値を返せるか。正しい測定の条件は、CUDA pinned 基準値の ±30% 以内かつ理論 PCIe 5.0 x16 片方向帯域以下であること。",
+    "en": "When measuring H2D-like / D2H-like copies in D3D12, which timing methods produce values that are plausibly consistent with the CUDA PCIe benchmark? A method is treated as valid only if it stays within +/-30% of the CUDA pinned reference and also remains below the theoretical one-way PCIe 5.0 x16 limit."
+  },
+  "tags": [
+    "d3d12",
+    "pcie",
+    "timing",
+    "validation",
+    "upload",
+    "readback",
+    "copy"
+  ],
+  "focus": [
+    "Whether D3D12 can measure PCIe-like copy bandwidth sanely",
+    "Compare multiple timing methods on the same copy path",
+    "CUDA pinned reference consistency",
+    "Theoretical-limit sanity check"
+  ],
+  "primary_metrics": [
+    "validated_direction_count",
+    "accepted_h2d_method",
+    "accepted_d2h_method"
+  ],
+  "comparisons": [
+    {
+      "ja": "CPU wall single-submit, CPU wall batched-submit, GPU timestamp batched-submit の違い",
+      "en": "Difference between CPU wall single-submit, CPU wall batched-submit, and GPU timestamp batched-submit"
+    },
+    {
+      "ja": "D3D12 H2D-like / D2H-like copy と CUDA pinned PCIe copy の違い",
+      "en": "Difference between D3D12 H2D-like / D2H-like copies and CUDA pinned PCIe copies"
+    },
+    {
+      "ja": "実測値が理論 PCIe 5.0 x16 片方向帯域を超えるかどうか",
+      "en": "Whether measured bandwidth exceeds the theoretical one-way PCIe 5.0 x16 limit"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は overlap を測るものではなく、D3D12 copy timing が raw PCIe bandwidth の proxy として使えるかの sanity test である。",
+      "en": "This benchmark is not about overlap. It is a sanity test for whether D3D12 copy timing can be used as a proxy for raw PCIe bandwidth."
+    },
+    {
+      "ja": "H2D-like は UPLOAD heap から DEFAULT resource への copy、D2H-like は DEFAULT resource から READBACK heap への copy と定義する。",
+      "en": "H2D-like is defined as a copy from an UPLOAD heap to a DEFAULT resource, and D2H-like is defined as a copy from a DEFAULT resource to a READBACK heap."
+    },
+    {
+      "ja": "pass 条件は 2 つある。CUDA pinned 基準値の ±30% 以内であること、かつ理論 PCIe 5.0 x16 片方向帯域以下であること。",
+      "en": "A method must satisfy two conditions to pass: it must stay within +/-30% of the CUDA pinned reference and it must remain below the theoretical one-way PCIe 5.0 x16 limit."
+    },
+    {
+      "ja": "もし H2D-like か D2H-like のどちらかで通る method が見つからなければ、この D3D12 path は raw PCIe measurement 用としては invalid と読む。",
+      "en": "If no method passes for either H2D-like or D2H-like, this D3D12 path should be treated as invalid for raw PCIe measurement."
+    },
+    {
+      "ja": "今回の実装では GPU timestamp batch は COPY command list で E_INVALIDARG になり、少なくともこの形では method として使えなかった。",
+      "en": "In this implementation, GPU timestamp batch failed with E_INVALIDARG on the COPY command list, so at least in this form it was not usable as a timing method."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "この sanity test では D3D12 raw copy timing は invalid になった。D2H-like は CPU wall method で CUDA pinned 基準に近い値を返したが、H2D-like は全 method で 110-127 GiB/s と理論値を大きく超え、PCIe bandwidth 測定としては使えなかった。",
+      "en": "This sanity test marked D3D12 raw copy timing as invalid. D2H-like copies produced CUDA-like values under CPU wall methods, but H2D-like copies stayed at 110-127 GiB/s across all methods and exceeded the theoretical limit by a large margin, so they cannot be treated as PCIe bandwidth measurements."
+    },
+    "highlights": [
+      {
+        "ja": "status = invalid, validated_direction_count = 1",
+        "en": "status = invalid, validated_direction_count = 1"
+      },
+      {
+        "ja": "accepted_d2h_method = cpu_wall_batch, accepted_h2d_method = none",
+        "en": "accepted_d2h_method = cpu_wall_batch, accepted_h2d_method = none"
+      },
+      {
+        "ja": "D2H-like cpu_wall_single: 50.335-51.019 GiB/s, D2H-like cpu_wall_batch: 51.210-51.254 GiB/s",
+        "en": "D2H-like cpu_wall_single: 50.335-51.019 GiB/s, D2H-like cpu_wall_batch: 51.210-51.254 GiB/s"
+      },
+      {
+        "ja": "H2D-like cpu_wall_single: 110.410-126.173 GiB/s, H2D-like cpu_wall_batch: 124.199-127.323 GiB/s",
+        "en": "H2D-like cpu_wall_single: 110.410-126.173 GiB/s, H2D-like cpu_wall_batch: 124.199-127.323 GiB/s"
+      },
+      {
+        "ja": "theoretical_one_way_pcie_5_x16_gib_per_s = 58.687292",
+        "en": "theoretical_one_way_pcie_5_x16_gib_per_s = 58.687292"
+      },
+      {
+        "ja": "gpu_timestamp_batch failed with CommandList::Close: HRESULT 0x80070057 on all tested sizes",
+        "en": "gpu_timestamp_batch failed with CommandList::Close: HRESULT 0x80070057 on all tested sizes"
+      }
+    ]
+  },
+  "build": {
+    "toolchain": "msvc_d3d12"
+  }
+}

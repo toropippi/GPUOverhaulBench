@@ -1,0 +1,239 @@
+{
+  "bench_id": "d3d12_pcie_bandwidth_validation",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "accepted_d2h_method": "cpu_wall_batch",
+      "accepted_h2d_method": "",
+      "adapter_name": "NVIDIA GeForce RTX 5090",
+      "cases": [
+        {
+          "batch_repeats": 16,
+          "d2h_like": {
+            "cpu_wall_batch": {
+              "accepted": true,
+              "avg_ms": 39.02125,
+              "gib_per_s": 51.254124,
+              "success": true,
+              "within_cuda_reference": true,
+              "within_theoretical_limit": true
+            },
+            "cpu_wall_single": {
+              "accepted": true,
+              "avg_ms": 2.48336,
+              "gib_per_s": 50.33503,
+              "success": true,
+              "within_cuda_reference": true,
+              "within_theoretical_limit": true
+            },
+            "gpu_timestamp_batch": {
+              "accepted": false,
+              "avg_ms": 0.0,
+              "error": "CommandList::Close: HRESULT 0x80070057",
+              "gib_per_s": 0.0,
+              "success": false,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            }
+          },
+          "h2d_like": {
+            "cpu_wall_batch": {
+              "accepted": false,
+              "avg_ms": 16.103185,
+              "gib_per_s": 124.199033,
+              "success": true,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            },
+            "cpu_wall_single": {
+              "accepted": false,
+              "avg_ms": 1.132145,
+              "gib_per_s": 110.409886,
+              "success": true,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            },
+            "gpu_timestamp_batch": {
+              "accepted": false,
+              "avg_ms": 0.0,
+              "error": "CommandList::Close: HRESULT 0x80070057",
+              "gib_per_s": 0.0,
+              "success": false,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            }
+          },
+          "iterations": 20,
+          "size_mb": 128,
+          "warmup": 3
+        },
+        {
+          "batch_repeats": 4,
+          "d2h_like": {
+            "cpu_wall_batch": {
+              "accepted": true,
+              "avg_ms": 39.048295,
+              "gib_per_s": 51.218626,
+              "success": true,
+              "within_cuda_reference": true,
+              "within_theoretical_limit": true
+            },
+            "cpu_wall_single": {
+              "accepted": true,
+              "avg_ms": 9.82655,
+              "gib_per_s": 50.882558,
+              "success": true,
+              "within_cuda_reference": true,
+              "within_theoretical_limit": true
+            },
+            "gpu_timestamp_batch": {
+              "accepted": false,
+              "avg_ms": 0.0,
+              "error": "CommandList::Close: HRESULT 0x80070057",
+              "gib_per_s": 0.0,
+              "success": false,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            }
+          },
+          "h2d_like": {
+            "cpu_wall_batch": {
+              "accepted": false,
+              "avg_ms": 15.70813,
+              "gib_per_s": 127.322603,
+              "success": true,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            },
+            "cpu_wall_single": {
+              "accepted": false,
+              "avg_ms": 4.000595,
+              "gib_per_s": 124.981409,
+              "success": true,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            },
+            "gpu_timestamp_batch": {
+              "accepted": false,
+              "avg_ms": 0.0,
+              "error": "CommandList::Close: HRESULT 0x80070057",
+              "gib_per_s": 0.0,
+              "success": false,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            }
+          },
+          "iterations": 20,
+          "size_mb": 512,
+          "warmup": 3
+        },
+        {
+          "batch_repeats": 2,
+          "d2h_like": {
+            "cpu_wall_batch": {
+              "accepted": true,
+              "avg_ms": 39.055025,
+              "gib_per_s": 51.2098,
+              "success": true,
+              "within_cuda_reference": true,
+              "within_theoretical_limit": true
+            },
+            "cpu_wall_single": {
+              "accepted": true,
+              "avg_ms": 19.60059,
+              "gib_per_s": 51.018872,
+              "success": true,
+              "within_cuda_reference": true,
+              "within_theoretical_limit": true
+            },
+            "gpu_timestamp_batch": {
+              "accepted": false,
+              "avg_ms": 0.0,
+              "error": "CommandList::Close: HRESULT 0x80070057",
+              "gib_per_s": 0.0,
+              "success": false,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            }
+          },
+          "h2d_like": {
+            "cpu_wall_batch": {
+              "accepted": false,
+              "avg_ms": 15.721865,
+              "gib_per_s": 127.211371,
+              "success": true,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            },
+            "cpu_wall_single": {
+              "accepted": false,
+              "avg_ms": 7.925595,
+              "gib_per_s": 126.173492,
+              "success": true,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            },
+            "gpu_timestamp_batch": {
+              "accepted": false,
+              "avg_ms": 0.0,
+              "error": "CommandList::Close: HRESULT 0x80070057",
+              "gib_per_s": 0.0,
+              "success": false,
+              "within_cuda_reference": false,
+              "within_theoretical_limit": false
+            }
+          },
+          "iterations": 20,
+          "size_mb": 1024,
+          "warmup": 3
+        }
+      ],
+      "timing_backend": "mixed_cpu_wall_and_gpu_timestamp",
+      "validated_direction_count": 1
+    },
+    "parameters": {
+      "api": "d3d12",
+      "copy_directions": [
+        "H2D-like",
+        "D2H-like"
+      ],
+      "cuda_reference_d2h_gib_per_s": 53.012081,
+      "cuda_reference_h2d_gib_per_s": 53.310166,
+      "iterations": 20,
+      "methods": [
+        "cpu_wall_single",
+        "cpu_wall_batch",
+        "gpu_timestamp_batch"
+      ],
+      "reference_tolerance_ratio": 0.3,
+      "sizes_mb": [
+        128,
+        512,
+        1024
+      ],
+      "theoretical_one_way_pcie_5_x16_gib_per_s": 58.687292,
+      "warmup": 3
+    },
+    "primary_metric": "validated_direction_count",
+    "status": "invalid",
+    "unit": "count",
+    "validation": {
+      "passed": true
+    }
+  }
+}
