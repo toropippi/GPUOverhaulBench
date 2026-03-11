@@ -9,7 +9,7 @@ This document defines the contract for creating or editing benchmarks in this re
 
 ## Required Files
 Each benchmark lives in `benches/<bench-id>/` and must contain:
-- `bench.cu`
+- `bench.cu` or `bench.cpp`
 - `meta.json`
 - `run.py`
 - `results/`
@@ -42,9 +42,14 @@ Rules:
 - `question` should prefer `{ "ja": "...", "en": "..." }`.
 - `comparisons` should prefer an array of `{ "ja": "...", "en": "..." }`.
 - `considerations` should prefer an array of `{ "ja": "...", "en": "..." }`.
+- `build.toolchain` may be set when the benchmark does not use the default CUDA build path.
 - `considerations` is for interpretation, not for raw measured values.
 - `observed_results` may duplicate key numbers from `results/latest.json` in a more human-readable form.
 - `meta.json` should explain what the benchmark is trying to answer and how the result should be read.
+
+Current `build.toolchain` values:
+- omitted or `nvcc`
+- `msvc_opencl`
 
 ## Benchmark Output Contract
 The benchmark binary must emit exactly one JSON document to stdout.
@@ -85,6 +90,8 @@ Output rules:
 - `benches/<bench-id>/run.py` should remain a thin wrapper.
 - The local wrapper should only forward to `tools/run.py` with the appropriate `BENCH_ID`.
 - `tools/run.py` owns build, execution, context collection, validation, and writing `results/latest.json`.
+- CUDA benches default to `nvcc` and `bench.cu`.
+- OpenCL benches should use `build.toolchain = "msvc_opencl"` and `bench.cpp`.
 
 ## Result File Role
 - `results/latest.json` is the place for measured output.
