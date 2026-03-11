@@ -10,6 +10,11 @@ This repository is optimized for many small CUDA C++ benchmarks with minimal man
   - `run.py`
   - `results/`
 
+Reference template:
+- `benches/_template_benchmark/meta.json`
+- `benches/_template_benchmark/results/latest.json`
+- `benches/_template_benchmark/run.py`
+
 - Shared CUDA helper code belongs in `benches/_shared/`.
 - Shared Python execution code belongs in `tools/`.
 
@@ -27,6 +32,11 @@ This repository is optimized for many small CUDA C++ benchmarks with minimal man
 - `theoretical_reference`
 
 `considerations` is for interpretation, not for raw measured values. The goal is that a reader can open one `meta.json` and understand what matters before reading the result file.
+
+For reader-facing text, prefer bilingual values when practical:
+- `question`: `{ "ja": "...", "en": "..." }`
+- `comparisons`: array of `{ "ja": "...", "en": "..." }`
+- `considerations`: array of `{ "ja": "...", "en": "..." }`
 
 ## Required Benchmark Contract
 - The benchmark binary must emit exactly one JSON document to stdout.
