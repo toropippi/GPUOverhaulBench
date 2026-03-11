@@ -1,0 +1,95 @@
+{
+  "id": "opencl_alloc_host_ptr_vs_pageable_kernel_overlap",
+  "title": "OpenCL ALLOC_HOST_PTR vs Pageable Copy and Kernel Overlap",
+  "question": {
+    "ja": "OpenCL で clEnqueueWriteBuffer / clEnqueueReadBuffer を別 queue の low-memory kernel と同時に投げるとき、CL_MEM_ALLOC_HOST_PTR + map/unmap は pageable malloc より overlap を引き出せるか。",
+    "en": "In OpenCL, when clEnqueueWriteBuffer / clEnqueueReadBuffer are issued together with a low-memory kernel on separate queues, does CL_MEM_ALLOC_HOST_PTR + map/unmap enable better overlap than pageable malloc?"
+  },
+  "tags": [
+    "opencl",
+    "transfer",
+    "alloc_host_ptr",
+    "pageable",
+    "kernel",
+    "overlap"
+  ],
+  "focus": [
+    "ALLOC_HOST_PTR vs pageable overlap behavior",
+    "H2D-like write and D2H-like read in one bench",
+    "Wall time vs x+y and vs max(x, y)",
+    "Whether OpenCL shows a pinned-like advantage"
+  ],
+  "primary_metrics": [
+    "min_alloc_host_ptr_wall_vs_solo_sum_ratio",
+    "min_pageable_wall_vs_solo_sum_ratio",
+    "pageable_to_alloc_host_ptr_overlap_penalty"
+  ],
+  "comparisons": [
+    {
+      "ja": "ALLOC_HOST_PTR と pageable malloc の overlap wall time の違い",
+      "en": "Difference in overlap wall time between ALLOC_HOST_PTR and pageable malloc"
+    },
+    {
+      "ja": "WriteBuffer + kernel と ReadBuffer + kernel の違い",
+      "en": "Difference between WriteBuffer + kernel and ReadBuffer + kernel"
+    },
+    {
+      "ja": "同時実行 wall time と x+y および max(x, y) の比較",
+      "en": "Simultaneous wall time compared against x+y and max(x, y)"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は OpenCL の host memory model を CUDA の pinned/pageable と完全同一視するものではなく、CL_MEM_ALLOC_HOST_PTR + map/unmap を pinned-like 経路として近似比較する bench です。",
+      "en": "This benchmark does not claim OpenCL host memory semantics are identical to CUDA pinned/pageable memory. It treats CL_MEM_ALLOC_HOST_PTR + map/unmap as a pinned-like path for practical comparison."
+    },
+    {
+      "ja": "主判定は wall time です。queue 間の順序を固定する event wait は入れず、最後に両 queue の完了を待って overlap の成否を読みます。",
+      "en": "The main judgment uses wall time. No event waits are inserted between queues; the benchmark waits only for both queues to finish at the end and reads overlap from that."
+    },
+    {
+      "ja": "今回の結果では OpenCL でも差が明確に出ました。ALLOC_HOST_PTR は wall time がほぼ max(x, y) に寄り、pageable malloc はほぼ x+y に寄りました。つまりこの NVIDIA OpenCL runtime では ALLOC_HOST_PTR が pinned-like 経路としてかなり強く機能しています。",
+      "en": "The current results show a clear split in OpenCL as well. ALLOC_HOST_PTR stays close to max(x, y), while pageable malloc stays close to x+y. On this NVIDIA OpenCL runtime, ALLOC_HOST_PTR behaves very strongly like a pinned-like path."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "この RTX 5090 + NVIDIA OpenCL 3.0 CUDA 環境では、ALLOC_HOST_PTR は H2D/D2H とも強く overlap し、pageable malloc はほぼ overlap しませんでした。OpenCL でも pinned-like host memory の有無が copy+kernel overlap を大きく左右しています。",
+      "en": "On this RTX 5090 + NVIDIA OpenCL 3.0 CUDA environment, ALLOC_HOST_PTR overlapped strongly for both H2D and D2H, while pageable malloc showed almost no overlap. OpenCL copy+kernel overlap is strongly affected by whether a pinned-like host memory path is used."
+    },
+    "highlights": [
+      {
+        "ja": "Platform: NVIDIA CUDA, Device: NVIDIA GeForce RTX 5090, Device version: OpenCL 3.0 CUDA",
+        "en": "Platform: NVIDIA CUDA, Device: NVIDIA GeForce RTX 5090, Device version: OpenCL 3.0 CUDA"
+      },
+      {
+        "ja": "min_alloc_host_ptr_wall_vs_solo_sum_ratio = 0.508287",
+        "en": "min_alloc_host_ptr_wall_vs_solo_sum_ratio = 0.508287"
+      },
+      {
+        "ja": "min_pageable_wall_vs_solo_sum_ratio = 0.996147",
+        "en": "min_pageable_wall_vs_solo_sum_ratio = 0.996147"
+      },
+      {
+        "ja": "pageable_to_alloc_host_ptr_overlap_penalty = 1.959811",
+        "en": "pageable_to_alloc_host_ptr_overlap_penalty = 1.959811"
+      },
+      {
+        "ja": "128 MB D2H: ALLOC_HOST_PTR ratio 0.524562, pageable ratio 0.996147",
+        "en": "128 MB D2H: ALLOC_HOST_PTR ratio 0.524562, pageable ratio 0.996147"
+      },
+      {
+        "ja": "512 MB H2D: ALLOC_HOST_PTR ratio 0.528049, pageable ratio 1.041700",
+        "en": "512 MB H2D: ALLOC_HOST_PTR ratio 0.528049, pageable ratio 1.041700"
+      },
+      {
+        "ja": "1024 MB D2H: ALLOC_HOST_PTR ratio 0.508287, pageable ratio 1.043705",
+        "en": "1024 MB D2H: ALLOC_HOST_PTR ratio 0.508287, pageable ratio 1.043705"
+      }
+    ]
+  },
+  "build": {
+    "toolchain": "msvc_opencl"
+  }
+}
