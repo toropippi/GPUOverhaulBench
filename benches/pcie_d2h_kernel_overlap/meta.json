@@ -1,0 +1,135 @@
+{
+  "id": "pcie_d2h_kernel_overlap",
+  "title": "PCIe Copy and Kernel Overlap",
+  "question": {
+    "ja": "1 本の H2D または D2H async copy と、ほぼメモリ読み書きに依存しない low-memory kernel を別 stream で同時発行したとき、wall time は x+y に近いか、それとも max(x, y) に近いか。方向で挙動は変わるか。",
+    "en": "When issuing one H2D or D2H async copy together with one low-memory kernel on separate streams, does wall time behave more like x+y or like max(x, y), and does the behavior differ by copy direction?"
+  },
+  "tags": [
+    "transfer",
+    "pcie",
+    "h2d",
+    "d2h",
+    "kernel",
+    "overlap",
+    "async"
+  ],
+  "focus": [
+    "Solo H2D time and solo D2H time",
+    "Solo low-memory kernel time matched to each copy direction",
+    "Simultaneous wall time vs x+y and vs max(x, y)",
+    "Difference between H2D+kernel and D2H+kernel"
+  ],
+  "primary_metrics": [
+    "min_h2d_wall_vs_solo_sum_ratio",
+    "min_d2h_wall_vs_solo_sum_ratio",
+    "best_h2d_overlap_copy_gib_per_s",
+    "best_d2h_overlap_copy_gib_per_s"
+  ],
+  "comparisons": [
+    {
+      "ja": "H2D + kernel と D2H + kernel の比較",
+      "en": "H2D + kernel vs D2H + kernel"
+    },
+    {
+      "ja": "同時実行 wall time と solo copy + solo kernel の和の比較",
+      "en": "Simultaneous wall time vs solo copy plus solo kernel"
+    },
+    {
+      "ja": "同時実行 wall time と max(solo copy, solo kernel) の比較",
+      "en": "Simultaneous wall time vs max(solo copy, solo kernel)"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "copy は pinned memory のみを使い、copy に使うデータ領域は kernel が触るメモリと完全に分離している。これにより copy engine と kernel 実行の重なりだけを見やすくしている。",
+      "en": "The benchmark uses pinned memory only, and the data region used for copy is fully separate from the memory touched by the kernel. This isolates copy-engine and kernel overlap more cleanly."
+    },
+    {
+      "ja": "kernel はレジスタ中心の反復計算で、global memory への書き込みは最後に 1 回だけに抑えている。目的は memory-bandwidth competition を避け、copy と compute の重なりを確認すること。",
+      "en": "The kernel is dominated by register-heavy iterative math and only writes to global memory once at the end. The goal is to avoid memory-bandwidth competition and test copy-versus-compute overlap more directly."
+    },
+    {
+      "ja": "具体的には各 thread が 3 つの 32-bit 整数状態をレジスタに持ち、ループ内で XOR shift と線形合同法に近い整数ミキシングを繰り返す。ループ中は global memory を読まず、最後に 1 回だけ混合結果を output に書くため、ほぼ copy 帯域を奪わない低メモリアクセス kernel として使っている。",
+      "en": "Concretely, each thread keeps three 32-bit integer states in registers and repeatedly applies XOR-shift-style and linear-congruential-style integer mixing inside the loop. The loop does not read global memory, and each thread writes the mixed result to output only once at the end, so the kernel acts as a low-memory-access workload that does not significantly compete with copy bandwidth."
+    },
+    {
+      "ja": "各 size と各方向でまず solo copy 時間 x を測り、その x に近づくように kernel loop count を自動調整して solo kernel 時間 y を合わせる。そのうえで同時実行し、wall time が x+y に近いか max(x, y) に近いかで overlap の実効性を判定する。",
+      "en": "For each size and each copy direction, the benchmark first measures solo copy time x, then automatically tunes the kernel loop count so that solo kernel time y approaches x. It then runs both together and judges overlap by whether wall time is closer to x+y or to max(x, y)."
+    },
+    {
+      "ja": "asyncEngineCount > 0 は GPU との非同期コピーを kernel 実行と重ねられることを意味し、asyncEngineCount == 2 は H2D 1 本 + D2H 1 本 + kernel を同時に進められる整理になる。したがって 1 の場合は双方向通信そのものができないのではなく、双方向同時オーバーラップを強く期待しにくい、と理解するのが正確である。",
+      "en": "asyncEngineCount > 0 means asynchronous copies can overlap with kernel execution, and asyncEngineCount == 2 corresponds to being able to advance one H2D copy, one D2H copy, and one kernel together. Therefore, when the value is 1, it does not mean bidirectional transfer is impossible; it more precisely means strong simultaneous bidirectional overlap should not be expected."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "environment": {
+      "gpu": "NVIDIA GeForce RTX 5090",
+      "driver_version": "576.88",
+      "cuda_runtime_version": "12.9",
+      "os": "Windows-11-10.0.26200-SP0"
+    },
+    "summary": {
+      "ja": "最新実行では H2D + kernel も D2H + kernel もどちらも強く重なった。min_h2d_wall_vs_solo_sum_ratio は 0.532392、min_d2h_wall_vs_solo_sum_ratio は 0.523448 で、どちらも 0.5 付近にあり、wall time は x+y ではなくほぼ max(x, y) に近い。方向差は小さく、D2H のほうがわずかに良いが、実用上は H2D でも D2H でも copy と low-memory kernel の overlap は成立していると読める。",
+      "en": "In the latest run, both H2D + kernel and D2H + kernel overlapped strongly. min_h2d_wall_vs_solo_sum_ratio was 0.532392 and min_d2h_wall_vs_solo_sum_ratio was 0.523448, both close to 0.5, so wall time behaved much more like max(x, y) than like x+y. The direction gap was small, with D2H only slightly better, so in practical terms both H2D and D2H overlap well with a low-memory kernel on this system."
+    },
+    "highlights": [
+      {
+        "label": "asyncEngineCount",
+        "value": 1
+      },
+      {
+        "label": "Minimum H2D wall vs solo-sum ratio",
+        "value": 0.532392
+      },
+      {
+        "label": "Minimum D2H wall vs solo-sum ratio",
+        "value": 0.523448
+      },
+      {
+        "label": "Best H2D overlap copy throughput",
+        "value_gib_per_s": 50.726351
+      },
+      {
+        "label": "Best D2H overlap copy throughput",
+        "value_gib_per_s": 50.444364
+      }
+    ],
+    "size_sweep_snapshot": [
+      {
+        "size_mb": 128,
+        "h2d_copy_solo_ms": 2.357918,
+        "h2d_kernel_solo_ms": 2.418434,
+        "h2d_overlap_wall_ms": 2.66951,
+        "h2d_wall_vs_solo_sum_ratio": 0.558901,
+        "d2h_copy_solo_ms": 2.353731,
+        "d2h_kernel_solo_ms": 2.362115,
+        "d2h_overlap_wall_ms": 2.570035,
+        "d2h_wall_vs_solo_sum_ratio": 0.544979
+      },
+      {
+        "size_mb": 512,
+        "h2d_copy_solo_ms": 9.375646,
+        "h2d_kernel_solo_ms": 9.598346,
+        "h2d_overlap_wall_ms": 10.1016,
+        "h2d_wall_vs_solo_sum_ratio": 0.532392,
+        "d2h_copy_solo_ms": 9.427593,
+        "d2h_kernel_solo_ms": 9.508202,
+        "d2h_overlap_wall_ms": 9.91191,
+        "d2h_wall_vs_solo_sum_ratio": 0.523448
+      },
+      {
+        "size_mb": 1024,
+        "h2d_copy_solo_ms": 18.715288,
+        "h2d_kernel_solo_ms": 18.241537,
+        "h2d_overlap_wall_ms": 19.71362,
+        "h2d_wall_vs_solo_sum_ratio": 0.533423,
+        "d2h_copy_solo_ms": 19.147789,
+        "d2h_kernel_solo_ms": 19.297914,
+        "d2h_overlap_wall_ms": 20.15184,
+        "d2h_wall_vs_solo_sum_ratio": 0.524164
+      }
+    ]
+  }
+}

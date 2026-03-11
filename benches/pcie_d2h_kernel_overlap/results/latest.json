@@ -1,0 +1,198 @@
+{
+  "bench_id": "pcie_d2h_kernel_overlap",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "async_engine_count": 1,
+      "best_d2h_overlap_copy_gib_per_s": 50.444364,
+      "best_h2d_overlap_copy_gib_per_s": 50.726351,
+      "cases": [
+        {
+          "d2h": {
+            "copy_solo": {
+              "avg_ms": 2.353731,
+              "gib_per_s": 53.107165,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 2.362115,
+              "loop_count": 168482,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 2.570035,
+              "copy_gib_per_s": 48.63747,
+              "copy_stream_avg_ms": 2.374096,
+              "kernel_stream_avg_ms": 2.46888,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.088023,
+              "wall_vs_solo_sum_ratio": 0.544979
+            }
+          },
+          "h2d": {
+            "copy_solo": {
+              "avg_ms": 2.357918,
+              "gib_per_s": 53.012862,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 2.418434,
+              "loop_count": 173397,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 2.66951,
+              "copy_gib_per_s": 46.825073,
+              "copy_stream_avg_ms": 2.383727,
+              "kernel_stream_avg_ms": 2.572045,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.103818,
+              "wall_vs_solo_sum_ratio": 0.558901
+            }
+          },
+          "iterations": 20,
+          "size_mb": 128,
+          "warmup": 3
+        },
+        {
+          "d2h": {
+            "copy_solo": {
+              "avg_ms": 9.427593,
+              "gib_per_s": 53.035805,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 9.508202,
+              "loop_count": 668744,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 9.91191,
+              "copy_gib_per_s": 50.444364,
+              "copy_stream_avg_ms": 9.493245,
+              "kernel_stream_avg_ms": 9.730758,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.042459,
+              "wall_vs_solo_sum_ratio": 0.523448
+            }
+          },
+          "h2d": {
+            "copy_solo": {
+              "avg_ms": 9.375646,
+              "gib_per_s": 53.329657,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 9.598346,
+              "loop_count": 675176,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 10.1016,
+              "copy_gib_per_s": 49.497109,
+              "copy_stream_avg_ms": 9.406906,
+              "kernel_stream_avg_ms": 9.861417,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.052431,
+              "wall_vs_solo_sum_ratio": 0.532392
+            }
+          },
+          "iterations": 10,
+          "size_mb": 512,
+          "warmup": 3
+        },
+        {
+          "d2h": {
+            "copy_solo": {
+              "avg_ms": 19.147789,
+              "gib_per_s": 52.225351,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 19.297914,
+              "loop_count": 1366211,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 20.15184,
+              "copy_gib_per_s": 49.62326,
+              "copy_stream_avg_ms": 19.17856,
+              "kernel_stream_avg_ms": 20.016409,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.04425,
+              "wall_vs_solo_sum_ratio": 0.524164
+            }
+          },
+          "h2d": {
+            "copy_solo": {
+              "avg_ms": 18.715288,
+              "gib_per_s": 53.432253,
+              "success": true
+            },
+            "kernel_solo": {
+              "avg_ms": 18.241537,
+              "loop_count": 1329936,
+              "success": true
+            },
+            "overlap": {
+              "avg_wall_ms": 19.71362,
+              "copy_gib_per_s": 50.726351,
+              "copy_stream_avg_ms": 18.948615,
+              "kernel_stream_avg_ms": 19.460204,
+              "success": true,
+              "wall_vs_solo_max_ratio": 1.053343,
+              "wall_vs_solo_sum_ratio": 0.533423
+            }
+          },
+          "iterations": 5,
+          "size_mb": 1024,
+          "warmup": 2
+        }
+      ],
+      "device_overlap": 1,
+      "min_d2h_wall_vs_solo_max_ratio": 1.042459,
+      "min_d2h_wall_vs_solo_sum_ratio": 0.523448,
+      "min_h2d_wall_vs_solo_max_ratio": 1.052431,
+      "min_h2d_wall_vs_solo_sum_ratio": 0.532392,
+      "timing_backend": "cuda_event_and_wall_clock"
+    },
+    "parameters": {
+      "copy_directions": [
+        "H2D",
+        "D2H"
+      ],
+      "iterations": 50,
+      "memory_types": [
+        "pinned"
+      ],
+      "sizes_mb": [
+        128,
+        512,
+        1024
+      ],
+      "stream_count": 2,
+      "warmup": 5
+    },
+    "primary_metric": "min_h2d_wall_vs_solo_sum_ratio",
+    "status": "ok",
+    "unit": "ratio",
+    "validation": {
+      "passed": true
+    }
+  }
+}
