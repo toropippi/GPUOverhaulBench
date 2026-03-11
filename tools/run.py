@@ -13,6 +13,9 @@ from schema import validate_meta, validate_result
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BENCHES_DIR = REPO_ROOT / "benches"
 SHARED_INCLUDE = BENCHES_DIR / "_shared"
+VSWHERE_PATH = Path(r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe")
+OPENCL_INCLUDE_DIR = Path(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include")
+OPENCL_LIB_PATH = Path(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\OpenCL.lib")
 
 def load_meta(bench_id: str) -> tuple[dict, Path]:
     bench_dir = BENCHES_DIR / bench_id
@@ -24,15 +27,54 @@ def load_meta(bench_id: str) -> tuple[dict, Path]:
     return meta, bench_dir
 
 
-def build_benchmark(bench_id: str, bench_dir: Path) -> tuple[Path, str]:
+def get_toolchain(meta: dict) -> str:
+    build = meta.get("build", {})
+    toolchain = build.get("toolchain", "nvcc")
+    if toolchain not in {"nvcc", "msvc_opencl"}:
+        raise RuntimeError(f"Unsupported build.toolchain: {toolchain}")
+    return toolchain
+
+
+def locate_vsdevcmd() -> Path:
+    if not VSWHERE_PATH.exists():
+        raise RuntimeError(f"vswhere.exe not found: {VSWHERE_PATH}")
+
+    completed = subprocess.run(
+        [
+            str(VSWHERE_PATH),
+            "-latest",
+            "-products",
+            "*",
+            "-requires",
+            "Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+            "-property",
+            "installationPath",
+        ],
+        capture_output=True,
+        text=True,
+        errors="replace",
+    )
+    install_path = completed.stdout.strip()
+    if completed.returncode != 0 or not install_path:
+        raise RuntimeError(completed.stderr.strip() or "Visual Studio installation not found")
+
+    vsdevcmd = Path(install_path) / "Common7" / "Tools" / "VsDevCmd.bat"
+    if not vsdevcmd.exists():
+        raise RuntimeError(f"VsDevCmd.bat not found: {vsdevcmd}")
+    return vsdevcmd
+
+
+def build_with_nvcc(bench_id: str, bench_dir: Path, build_dir: Path, exe_path: Path) -> tuple[Path, str]:
+    source_path = bench_dir / "bench.cu"
+    if not source_path.exists():
+        raise RuntimeError(f"Missing CUDA source file: {source_path}")
     build_dir = bench_dir / "build"
     build_dir.mkdir(parents=True, exist_ok=True)
-    exe_path = build_dir / f"{bench_id}.exe"
     command = [
         "nvcc",
         "-O3",
         "-std=c++17",
-        str(bench_dir / "bench.cu"),
+        str(source_path),
         "-I",
         str(SHARED_INCLUDE),
         "-o",
@@ -42,6 +84,46 @@ def build_benchmark(bench_id: str, bench_dir: Path) -> tuple[Path, str]:
     if completed.returncode != 0:
         raise RuntimeError(completed.stderr.strip() or completed.stdout.strip() or "nvcc build failed")
     return exe_path, (completed.stderr.strip() or completed.stdout.strip())
+
+
+def build_with_msvc_opencl(bench_id: str, bench_dir: Path, build_dir: Path, exe_path: Path) -> tuple[Path, str]:
+    source_path = bench_dir / "bench.cpp"
+    if not source_path.exists():
+        raise RuntimeError(f"Missing OpenCL source file: {source_path}")
+    if not OPENCL_INCLUDE_DIR.exists():
+        raise RuntimeError(f"OpenCL include directory not found: {OPENCL_INCLUDE_DIR}")
+    if not OPENCL_LIB_PATH.exists():
+        raise RuntimeError(f"OpenCL import library not found: {OPENCL_LIB_PATH}")
+
+    vsdevcmd = locate_vsdevcmd()
+    command = (
+        f'call "{vsdevcmd}" -no_logo -arch=x64 -host_arch=x64 && '
+        f'cl /nologo /EHsc /std:c++17 /O2 '
+        f'/I"{SHARED_INCLUDE}" /I"{OPENCL_INCLUDE_DIR}" '
+        f'"{source_path}" /Fo".\\\\" /Fe".\\{bench_id}.exe" '
+        f'/link /LIBPATH:"{OPENCL_LIB_PATH.parent}" OpenCL.lib'
+    )
+    completed = subprocess.run(
+        command,
+        cwd=build_dir,
+        shell=True,
+        capture_output=True,
+        text=True,
+        errors="replace",
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(completed.stderr.strip() or completed.stdout.strip() or "MSVC OpenCL build failed")
+    return exe_path, (completed.stderr.strip() or completed.stdout.strip())
+
+
+def build_benchmark(meta: dict, bench_id: str, bench_dir: Path) -> tuple[Path, str]:
+    build_dir = bench_dir / "build"
+    build_dir.mkdir(parents=True, exist_ok=True)
+    exe_path = build_dir / f"{bench_id}.exe"
+    toolchain = get_toolchain(meta)
+    if toolchain == "nvcc":
+        return build_with_nvcc(bench_id, bench_dir, build_dir, exe_path)
+    return build_with_msvc_opencl(bench_id, bench_dir, build_dir, exe_path)
 
 
 def run_benchmark(exe_path: Path) -> tuple[dict, str]:
@@ -92,7 +174,7 @@ def main() -> int:
         exe_path = bench_dir / "build" / f"{args.bench_id}.exe"
 
         if do_build:
-            exe_path, _ = build_benchmark(args.bench_id, bench_dir)
+            exe_path, _ = build_benchmark(meta, args.bench_id, bench_dir)
             print(f"Built {args.bench_id}: {exe_path}")
 
         if not do_run:
