@@ -1,0 +1,127 @@
+{
+  "bench_id": "pcie_d2h_kernel_same_region_corruption",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "cases": [
+        {
+          "corruption": {
+            "avg_wall_ms": 2.478567,
+            "mixed_bytes": 0,
+            "mixed_ratio": 0.0,
+            "new_pattern_bytes": 1286146688,
+            "new_pattern_ratio": 0.798545,
+            "old_pattern_bytes": 324466048,
+            "old_pattern_ratio": 0.201455,
+            "other_bytes": 0,
+            "other_ratio": 0.0,
+            "success": true
+          },
+          "iterations": 12,
+          "size_mb": 128,
+          "solo_copy": {
+            "avg_ms": 2.398408,
+            "success": true
+          },
+          "solo_kernel": {
+            "avg_ms": 2.205858,
+            "loop_count": 170,
+            "success": true
+          },
+          "warmup": 2
+        },
+        {
+          "corruption": {
+            "avg_wall_ms": 9.796917,
+            "mixed_bytes": 0,
+            "mixed_ratio": 0.0,
+            "new_pattern_bytes": 1648917376,
+            "new_pattern_ratio": 0.511891,
+            "old_pattern_bytes": 1572308096,
+            "old_pattern_ratio": 0.488109,
+            "other_bytes": 0,
+            "other_ratio": 0.0,
+            "success": true
+          },
+          "iterations": 6,
+          "size_mb": 512,
+          "solo_copy": {
+            "avg_ms": 9.60295,
+            "success": true
+          },
+          "solo_kernel": {
+            "avg_ms": 9.161533,
+            "loop_count": 173,
+            "success": true
+          },
+          "warmup": 2
+        },
+        {
+          "corruption": {
+            "avg_wall_ms": 22.938675,
+            "mixed_bytes": 0,
+            "mixed_ratio": 0.0,
+            "new_pattern_bytes": 691136640,
+            "new_pattern_ratio": 0.160918,
+            "old_pattern_bytes": 3603830656,
+            "old_pattern_ratio": 0.839082,
+            "other_bytes": 0,
+            "other_ratio": 0.0,
+            "success": true
+          },
+          "iterations": 4,
+          "size_mb": 1024,
+          "solo_copy": {
+            "avg_ms": 22.17465,
+            "success": true
+          },
+          "solo_kernel": {
+            "avg_ms": 22.14325,
+            "loop_count": 201,
+            "success": true
+          },
+          "warmup": 1
+        }
+      ],
+      "mixed_ratio": 0.0,
+      "new_pattern_ratio": 0.511891,
+      "old_pattern_ratio": 0.488109,
+      "other_ratio": 0.0,
+      "representative_case_mb": 512,
+      "timing_backend": "wall_clock"
+    },
+    "parameters": {
+      "copy_direction": "D2H",
+      "iterations": 50,
+      "shared_region": true,
+      "sizes_mb": [
+        128,
+        512,
+        1024
+      ],
+      "stream_count": 2,
+      "warmup": 5
+    },
+    "primary_metric": "mixed_ratio",
+    "status": "ok",
+    "unit": "ratio",
+    "validation": {
+      "passed": true
+    }
+  }
+}

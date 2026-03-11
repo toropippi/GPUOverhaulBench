@@ -1,0 +1,77 @@
+{
+  "id": "pcie_d2h_kernel_same_region_corruption",
+  "title": "PCIe D2H Copy and Same-Region Corruption",
+  "question": {
+    "ja": "D2H copy と kernel write が同じ device アドレス範囲そのものを別 stream で同時に触ると、copy 結果には旧値と新値の混在やその他の破損が見えるか。",
+    "en": "When a D2H copy and a kernel write touch the exact same device address range on separate streams, does the copied result show a mixture of old values, new values, or other corruption?"
+  },
+  "tags": [
+    "transfer",
+    "pcie",
+    "d2h",
+    "kernel",
+    "same-region",
+    "race",
+    "corruption"
+  ],
+  "focus": [
+    "Race-condition data corruption",
+    "Old-pattern vs new-pattern coexistence",
+    "Mixed and other bytes",
+    "Representative corrupted case"
+  ],
+  "primary_metrics": [
+    "mixed_ratio",
+    "other_ratio",
+    "representative_case_mb"
+  ],
+  "comparisons": [
+    {
+      "ja": "旧値パターンと新値パターンの比率",
+      "en": "Old-pattern vs new-pattern ratio"
+    },
+    {
+      "ja": "mixed bytes と other bytes の比率",
+      "en": "Mixed bytes vs other bytes"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は correctness を守るためのものではなく、race 条件で copy 結果が壊れることを確認するテスト寄り bench です。",
+      "en": "This benchmark is not meant to preserve correctness; it is a test-like benchmark intended to confirm that copied results become corrupted under a race condition."
+    },
+    {
+      "ja": "device buffer は最初に旧値パターン 0x5A5A5A5A で埋め、kernel は thread ごとの新値パターンを書きます。copy 後の host データを old-only, new-only, mixed, other に分類して観測します。",
+      "en": "The device buffer is first filled with the old pattern 0x5A5A5A5A, and the kernel writes a per-thread new pattern. After the copy, host data is classified into old-only, new-only, mixed, and other categories."
+    },
+    {
+      "ja": "今回の結果では mixed byte や other byte は出ませんでしたが、旧値だけのワードと新値だけのワードが同時に現れました。つまり byte 単位の壊れではなく、word 単位で旧値と新値が混在する形の race が見えています。",
+      "en": "In the current results, no mixed-byte or other-byte corruption appeared, but words containing only old values and words containing only new values coexisted. That means the observed race looks like word-level coexistence of old and new values rather than byte-level tearing."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "same-region race では破損は明確に観測されました。ただし出方は byte-mixed ではなく、旧値だけのワードと新値だけのワードが同じ転送結果内に共存する形でした。",
+      "en": "Corruption was clearly observed under the same-region race. However, it appeared not as byte-mixed tearing but as coexistence of old-only words and new-only words within the same copied result."
+    },
+    "highlights": [
+      {
+        "ja": "128 MB: old 20.15%, new 79.85%, mixed 0%, other 0%",
+        "en": "128 MB: old 20.15%, new 79.85%, mixed 0%, other 0%"
+      },
+      {
+        "ja": "512 MB: old 48.81%, new 51.19%, mixed 0%, other 0%",
+        "en": "512 MB: old 48.81%, new 51.19%, mixed 0%, other 0%"
+      },
+      {
+        "ja": "1024 MB: old 83.91%, new 16.09%, mixed 0%, other 0%",
+        "en": "1024 MB: old 83.91%, new 16.09%, mixed 0%, other 0%"
+      },
+      {
+        "ja": "代表ケースは 512 MB で、old/new がほぼ半々でした。mixed_ratio は 0 でも、旧値と新値の共存そのものが race による corruption の証拠です。",
+        "en": "The representative case was 512 MB, where old and new values were nearly half-and-half. Even with mixed_ratio at 0, the coexistence of old and new values is itself evidence of race-induced corruption."
+      }
+    ]
+  }
+}
