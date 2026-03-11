@@ -1,0 +1,13 @@
+build/
+results/*.jsonl
+results/*.json
+runner/__pycache__/
+*.py[cod]
+*.obj
+*.exp
+*.lib
+*.exe
+*.pdb
+*.ilk
+*.log
+*.tmp
