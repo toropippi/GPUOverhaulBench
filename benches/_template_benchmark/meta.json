@@ -1,0 +1,32 @@
+{
+  "id": "template_benchmark",
+  "title": "Template Benchmark Title",
+  "question": {
+    "ja": "このベンチで何を明らかにしたいかを日本語で書く。",
+    "en": "Describe in English what this benchmark is intended to reveal."
+  },
+  "tags": ["template", "replace-me"],
+  "focus": [
+    "Primary reading point",
+    "Secondary reading point"
+  ],
+  "primary_metrics": [
+    "replace_with_primary_metric_name"
+  ],
+  "comparisons": [
+    {
+      "ja": "比較したい軸を日本語で書く。",
+      "en": "Describe the comparison axis in English."
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "結果を読むときの注意点や考察の観点を日本語で書く。",
+      "en": "Write the main interpretation note or caveat in English."
+    }
+  ],
+  "theoretical_reference": {
+    "name": "replace_if_needed",
+    "value": "replace_if_needed"
+  }
+}

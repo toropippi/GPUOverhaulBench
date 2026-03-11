@@ -1,15 +1,15 @@
 # GPUOverhaulBench
 
-Small, self-contained CUDA C++ benchmarks for investigating GPU behavior with minimal manual metadata.
+Small, self-contained CUDA C++ benchmarks for investigating GPU behavior.
 
-## Goals
-- Keep each benchmark self-contained.
-- Let users enter a benchmark folder and run it directly.
-- Keep shared code minimal and close to the benchmarks.
-- Store shareable results next to the benchmark that produced them.
+## What This Repository Is
+- Each benchmark lives in its own folder under `benches/`.
+- You can enter a benchmark folder and run it directly with `python run.py`.
+- Shared helper code is kept small and stays close to the benchmarks.
 
 ## Repository Layout
 - `benches/_shared/bench_support.hpp`
+- `benches/_template_benchmark/`
 - `benches/<bench-id>/meta.json`
 - `benches/<bench-id>/bench.cu`
 - `benches/<bench-id>/run.py`
@@ -17,12 +17,6 @@ Small, self-contained CUDA C++ benchmarks for investigating GPU behavior with mi
 - `tools/run.py`
 - `tools/context.py`
 - `tools/schema.py`
-- `AGENT_BENCH_RULES.md`
-
-## Current Reference Benchmarks
-- `pcie_h2d_bw`
-- `pcie_d2h_bw`
-- `device_memcpy_bw`
 
 ## Requirements
 - Windows
@@ -30,64 +24,48 @@ Small, self-contained CUDA C++ benchmarks for investigating GPU behavior with mi
 - CUDA Toolkit with `nvcc`
 - Python 3.13 or compatible
 
-## Run a Benchmark
+## Running a Benchmark
 ```powershell
-cd benches\pcie_h2d_bw
+cd benches\<bench-id>
 python run.py
 ```
 
 Build only:
 
 ```powershell
-cd benches\pcie_h2d_bw
+cd benches\<bench-id>
 python run.py --build
 ```
 
 Run an already built benchmark:
 
 ```powershell
-cd benches\pcie_h2d_bw
+cd benches\<bench-id>
 python run.py --run
 ```
 
-Write the result to a specific file:
+Write to a custom result file:
 
 ```powershell
-cd benches\pcie_h2d_bw
+cd benches\<bench-id>
 python run.py --out results\manual_name.json
 ```
 
-## Result Format
-Each execution writes one JSON file into `benches/<bench-id>/results/` by default.
+Example:
 
-Each result contains:
-- `meta`
-- `context`
-- `result`
-- `run_id`
-- `built_at`
-- `executed_at`
+```powershell
+cd benches\pcie_host_device_bw
+python run.py
+```
 
-This keeps source, local runner, and shareable outputs in one place.
+## Results
+- The default output is `benches/<bench-id>/results/latest.json`.
+- The result file contains `bench_id`, `context`, and `result`.
 
-## Adding a New Benchmark
-1. Create `benches/<bench-id>/meta.json`.
-2. Create `benches/<bench-id>/bench.cu`.
-3. Add `benches/<bench-id>/run.py` by copying a thin wrapper from an existing benchmark and changing only `BENCH_ID`.
-4. Create `benches/<bench-id>/results/`.
-5. Follow `AGENT_BENCH_RULES.md`.
-6. Run `python run.py` from that benchmark folder.
+## Adding a Benchmark
+1. Copy `benches/_template_benchmark/` to `benches/<bench-id>/`.
+2. Update `meta.json`, `bench.cu`, and `run.py`.
+3. Run `python run.py` inside that benchmark folder.
 
-Recommended `meta.json` additions beyond the required fields:
-- `focus`
-- `primary_metrics`
-- `comparisons`
-- `considerations`
-- `theoretical_reference`
-
-This keeps each benchmark self-describing even before opening a result file.
-
-## Notes
-- Benchmark binaries must print exactly one JSON document to stdout.
-- `tools/run.py` validates the benchmark output before writing the JSON result.
-- `benches/<bench-id>/build/` is generated locally and should not be committed.
+## Authoring Rules
+Detailed benchmark authoring rules, metadata conventions, and output contracts are defined in `AGENT_BENCH_RULES.md`.

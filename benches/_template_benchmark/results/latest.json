@@ -1,0 +1,45 @@
+{
+  "bench_id": "template_benchmark",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.x"
+    },
+    "gpu": {
+      "driver_version": "5xx.xx",
+      "memory_total_mb": "24564",
+      "name": "Example GPU"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.xxxxx-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "cases": [
+        {
+          "gib_per_s": 12.345,
+          "size_mb": 128,
+          "success": true
+        }
+      ],
+      "replace_with_summary_metric": 12.345,
+      "timing_backend": "cuda_event"
+    },
+    "parameters": {
+      "iterations": 50,
+      "sizes_mb": [
+        128
+      ],
+      "warmup": 5
+    },
+    "primary_metric": "replace_with_primary_metric_name",
+    "status": "ok",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": true
+    }
+  }
+}

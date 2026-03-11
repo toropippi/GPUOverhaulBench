@@ -1,0 +1,215 @@
+{
+  "bench_id": "pcie_host_device_bw",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "analysis": [
+      {
+        "ja": "Pinned 転送は H2D 約 52.42 GiB/s、D2H 約 52.13 GiB/s まで到達し、PCIe 5.0 x16 の片方向理論値 63.015 GB/s を GiB/s 換算した約 58.69 GiB/s に対しておよそ 89% 前後だった。",
+        "en": "Pinned transfers reached about 52.42 GiB/s for H2D and 52.13 GiB/s for D2H, which is roughly 89% of the one-way PCIe 5.0 x16 theoretical limit after converting 63.015 GB/s into about 58.69 GiB/s."
+      },
+      {
+        "ja": "Pageable 転送は H2D 約 19.41 GiB/s、D2H 約 15.39 GiB/s にとどまり、理論値比では 26〜33% 程度だった。今回の大きな差は PCIe リンク帯域不足よりも pageable 転送経路の追加 overhead を示唆している。",
+        "en": "Pageable transfers stayed at about 19.41 GiB/s for H2D and 15.39 GiB/s for D2H, or only around 26-33% of the theoretical limit. The large gap in this run points more to extra overhead in the pageable transfer path than to insufficient PCIe link bandwidth."
+      },
+      {
+        "ja": "Pinned と pageable の差はサイズと方向により変動したが、最大では約 4.54x まで開いた。Pageable 側で内部 staging buffer と追加コピーが発生している可能性が高い。",
+        "en": "The gap between pinned and pageable varied by size and direction, but reached about 4.54x at maximum. A likely explanation is the use of an internal staging buffer and extra copies on the pageable path."
+      }
+    ],
+    "measurement": {
+      "best_d2h_pageable_bandwidth_gib_per_s": 15.388582,
+      "best_d2h_pinned_bandwidth_gib_per_s": 52.132471,
+      "best_h2d_pageable_bandwidth_gib_per_s": 19.405566,
+      "best_h2d_pinned_bandwidth_gib_per_s": 52.41785,
+      "cases": [
+        {
+          "d2h": {
+            "pageable": {
+              "avg_ms": 0.534259,
+              "gib_per_s": 14.623051,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 0.16094,
+              "gib_per_s": 48.542878,
+              "success": true
+            },
+            "speedup": 3.319613
+          },
+          "h2d": {
+            "pageable": {
+              "avg_ms": 0.402591,
+              "gib_per_s": 19.405566,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 0.159032,
+              "gib_per_s": 49.125433,
+              "success": true
+            },
+            "speedup": 2.531512
+          },
+          "size_mb": 8
+        },
+        {
+          "d2h": {
+            "pageable": {
+              "avg_ms": 2.920386,
+              "gib_per_s": 10.70064,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 0.643195,
+              "gib_per_s": 48.585591,
+              "success": true
+            },
+            "speedup": 4.540438
+          },
+          "h2d": {
+            "pageable": {
+              "avg_ms": 1.904417,
+              "gib_per_s": 16.409223,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 0.647084,
+              "gib_per_s": 48.293606,
+              "success": true
+            },
+            "speedup": 2.943077
+          },
+          "size_mb": 32
+        },
+        {
+          "d2h": {
+            "pageable": {
+              "avg_ms": 8.122906,
+              "gib_per_s": 15.388582,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 2.448713,
+              "gib_per_s": 51.047216,
+              "success": true
+            },
+            "speedup": 3.317214
+          },
+          "h2d": {
+            "pageable": {
+              "avg_ms": 8.437723,
+              "gib_per_s": 14.814423,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 2.767591,
+              "gib_per_s": 45.165639,
+              "success": true
+            },
+            "speedup": 3.048761
+          },
+          "size_mb": 128
+        },
+        {
+          "d2h": {
+            "pageable": {
+              "avg_ms": 38.212319,
+              "gib_per_s": 13.084785,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 9.695565,
+              "gib_per_s": 51.569969,
+              "success": true
+            },
+            "speedup": 3.941216
+          },
+          "h2d": {
+            "pageable": {
+              "avg_ms": 36.437458,
+              "gib_per_s": 13.722143,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 9.874423,
+              "gib_per_s": 50.635872,
+              "success": true
+            },
+            "speedup": 3.690085
+          },
+          "size_mb": 512
+        },
+        {
+          "d2h": {
+            "pageable": {
+              "avg_ms": 71.396851,
+              "gib_per_s": 14.00622,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 19.181903,
+              "gib_per_s": 52.132471,
+              "success": true
+            },
+            "speedup": 3.722094
+          },
+          "h2d": {
+            "pageable": {
+              "avg_ms": 60.503149,
+              "gib_per_s": 16.528065,
+              "success": true
+            },
+            "pinned": {
+              "avg_ms": 19.077471,
+              "gib_per_s": 52.41785,
+              "success": true
+            },
+            "speedup": 3.171445
+          },
+          "size_mb": 1024
+        }
+      ],
+      "max_speedup": 4.540438,
+      "timing_backend": "cuda_event"
+    },
+    "parameters": {
+      "directions": [
+        "H2D",
+        "D2H"
+      ],
+      "iterations": 50,
+      "memory_types": [
+        "pageable",
+        "pinned"
+      ],
+      "sizes_mb": [
+        8,
+        32,
+        128,
+        512,
+        1024
+      ],
+      "warmup": 5
+    },
+    "primary_metric": "best_h2d_pinned_bandwidth_gib_per_s",
+    "status": "ok",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": true
+    }
+  }
+}
