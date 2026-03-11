@@ -1,0 +1,314 @@
+{
+  "bench_id": "pcie_pinned_vs_pageable_kernel_overlap",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "async_engine_count": 1,
+      "cases": [
+        {
+          "iterations": 20,
+          "pageable": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 7.795275,
+                "gib_per_s": 16.035355,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 7.93524,
+                "loop_count": 558319,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 16.33064,
+                "copy_gib_per_s": 7.654323,
+                "success": true,
+                "wall_vs_solo_max_ratio": 2.057989,
+                "wall_vs_solo_sum_ratio": 1.03815
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 7.539035,
+                "gib_per_s": 16.580371,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 7.669135,
+                "loop_count": 541793,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 15.140695,
+                "copy_gib_per_s": 8.255896,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.974238,
+                "wall_vs_solo_sum_ratio": 0.995563
+              }
+            }
+          },
+          "pinned": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 2.38042,
+                "gib_per_s": 52.511742,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 2.403845,
+                "loop_count": 171318,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 2.586665,
+                "copy_gib_per_s": 48.324773,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.076053,
+                "wall_vs_solo_sum_ratio": 0.540661
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 2.3836,
+                "gib_per_s": 52.441685,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 2.446555,
+                "loop_count": 173937,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 2.574425,
+                "copy_gib_per_s": 48.554532,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.052265,
+                "wall_vs_solo_sum_ratio": 0.53299
+              }
+            }
+          },
+          "size_mb": 128,
+          "warmup": 3
+        },
+        {
+          "iterations": 10,
+          "pageable": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 41.43736,
+                "gib_per_s": 12.066406,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 42.68975,
+                "loop_count": 2922577,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 77.70551,
+                "copy_gib_per_s": 6.43455,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.820238,
+                "wall_vs_solo_sum_ratio": 0.923668
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 29.1784,
+                "gib_per_s": 17.135964,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 30.03247,
+                "loop_count": 2058329,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 62.11826,
+                "copy_gib_per_s": 8.049163,
+                "success": true,
+                "wall_vs_solo_max_ratio": 2.06837,
+                "wall_vs_solo_sum_ratio": 1.049102
+              }
+            }
+          },
+          "pinned": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 9.57727,
+                "gib_per_s": 52.206944,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 9.58972,
+                "loop_count": 670558,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 9.98849,
+                "copy_gib_per_s": 50.057616,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.041583,
+                "wall_vs_solo_sum_ratio": 0.52113
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 9.42667,
+                "gib_per_s": 53.041,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 9.5573,
+                "loop_count": 670703,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 10.1069,
+                "copy_gib_per_s": 49.471153,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.057506,
+                "wall_vs_solo_sum_ratio": 0.532391
+              }
+            }
+          },
+          "size_mb": 512,
+          "warmup": 3
+        },
+        {
+          "iterations": 5,
+          "pageable": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 78.72484,
+                "gib_per_s": 12.702471,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 80.7186,
+                "loop_count": 5528058,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 145.69414,
+                "copy_gib_per_s": 6.863694,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.804964,
+                "wall_vs_solo_sum_ratio": 0.913767
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 63.15158,
+                "gib_per_s": 15.834917,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 60.51182,
+                "loop_count": 4194304,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 118.5913,
+                "copy_gib_per_s": 8.432322,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.877883,
+                "wall_vs_solo_sum_ratio": 0.958985
+              }
+            }
+          },
+          "pinned": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 19.1734,
+                "gib_per_s": 52.155591,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 19.56768,
+                "loop_count": 1387348,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 20.77968,
+                "copy_gib_per_s": 48.123936,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.061939,
+                "wall_vs_solo_sum_ratio": 0.536373
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 19.56834,
+                "gib_per_s": 51.102955,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 19.19796,
+                "loop_count": 1369715,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 21.48106,
+                "copy_gib_per_s": 46.552638,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.097746,
+                "wall_vs_solo_sum_ratio": 0.554117
+              }
+            }
+          },
+          "size_mb": 1024,
+          "warmup": 2
+        }
+      ],
+      "device_overlap": 1,
+      "min_pageable_d2h_wall_vs_solo_sum_ratio": 0.913767,
+      "min_pageable_h2d_wall_vs_solo_sum_ratio": 0.958985,
+      "min_pageable_wall_vs_solo_sum_ratio": 0.913767,
+      "min_pinned_d2h_wall_vs_solo_sum_ratio": 0.52113,
+      "min_pinned_h2d_wall_vs_solo_sum_ratio": 0.532391,
+      "min_pinned_wall_vs_solo_sum_ratio": 0.52113,
+      "pageable_to_pinned_overlap_penalty": 1.753434,
+      "timing_backend": "wall_clock"
+    },
+    "parameters": {
+      "copy_directions": [
+        "H2D",
+        "D2H"
+      ],
+      "iterations": 50,
+      "memory_types": [
+        "pinned",
+        "pageable"
+      ],
+      "sizes_mb": [
+        128,
+        512,
+        1024
+      ],
+      "stream_count": 2,
+      "warmup": 5
+    },
+    "primary_metric": "min_pageable_wall_vs_solo_sum_ratio",
+    "status": "ok",
+    "unit": "ratio",
+    "validation": {
+      "passed": true
+    }
+  }
+}

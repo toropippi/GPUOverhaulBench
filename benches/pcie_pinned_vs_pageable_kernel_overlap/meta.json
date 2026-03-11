@@ -1,0 +1,97 @@
+{
+  "id": "pcie_pinned_vs_pageable_kernel_overlap",
+  "title": "PCIe Pinned vs Pageable Copy and Kernel Overlap",
+  "question": {
+    "ja": "copy と kernel を別 stream で投げても、host memory が pinned でないと overlap は崩れるか。H2D と D2H の両方で pinned と pageable を同条件比較して確認する。",
+    "en": "Even when copy and kernel are issued on separate streams, does overlap collapse unless host memory is pinned? Compare pinned and pageable behavior under the same conditions for both H2D and D2H."
+  },
+  "tags": [
+    "transfer",
+    "pcie",
+    "pinned",
+    "pageable",
+    "kernel",
+    "overlap",
+    "async"
+  ],
+  "focus": [
+    "Pinned vs pageable overlap behavior",
+    "H2D + kernel and D2H + kernel under the same setup",
+    "Wall time vs x+y and vs max(x, y)",
+    "Whether separate streams alone are sufficient"
+  ],
+  "primary_metrics": [
+    "min_pinned_wall_vs_solo_sum_ratio",
+    "min_pageable_wall_vs_solo_sum_ratio",
+    "pageable_to_pinned_overlap_penalty"
+  ],
+  "comparisons": [
+    {
+      "ja": "pinned と pageable の overlap wall time の違い",
+      "en": "Difference in overlap wall time between pinned and pageable memory"
+    },
+    {
+      "ja": "H2D + kernel と D2H + kernel の違い",
+      "en": "Difference between H2D + kernel and D2H + kernel"
+    },
+    {
+      "ja": "同時実行 wall time と x+y および max(x, y) の比較",
+      "en": "Simultaneous wall time compared against x+y and max(x, y)"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は copy 用メモリと kernel が触るメモリを分離しています。same-region race は扱わず、copy+kernel overlap の成立条件だけを見ます。",
+      "en": "This benchmark keeps the copy buffer and the memory touched by the kernel fully separate. It is not a same-region race benchmark; it isolates the conditions required for copy+kernel overlap."
+    },
+    {
+      "ja": "主判定は wall time です。pageable では cudaMemcpyAsync が host 側でより同期的に振る舞う可能性があり、separate stream でも kernel launch が後ろへ押されるかを見ます。",
+      "en": "The main judgment uses wall time. With pageable memory, cudaMemcpyAsync may behave more synchronously on the host side, and this benchmark checks whether kernel launch gets pushed back even when streams are separated."
+    },
+    {
+      "ja": "今回の結果では pinned は wall time がほぼ max(x, y) に寄り、pageable はほぼ x+y に寄りました。つまり stream を分けるだけでは不十分で、実効的な overlap には pinned host memory が必要だと読めます。",
+      "en": "In the current results, pinned stays close to max(x, y) while pageable stays close to x+y. That means separating streams alone is not enough, and effective overlap requires pinned host memory in practice."
+    },
+    {
+      "ja": "各 size と各条件で、まず solo copy 時間 x を測り、その x に近づくように low-memory kernel の loop count を自動調整して solo kernel 時間 y を揃えます。その上で overlap wall time が x+y 側か max(x, y) 側かを読みます。",
+      "en": "For each size and condition, the benchmark first measures solo copy time x, then automatically tunes the low-memory kernel loop count so that solo kernel time y approaches x. It then reads whether overlap wall time is closer to x+y or to max(x, y)."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "この環境では pinned は H2D/D2H とも明確に overlap し、pageable は stream を分けてもほぼ overlap しませんでした。CUDA の \"overlap には pinned host memory が必要\" という条件を、そのまま bench で確認できています。",
+      "en": "On this system, pinned memory overlaps clearly for both H2D and D2H, while pageable memory shows almost no overlap even when streams are separated. This directly confirms the CUDA condition that effective overlap requires pinned host memory."
+    },
+    "highlights": [
+      {
+        "ja": "min_pinned_wall_vs_solo_sum_ratio = 0.521130",
+        "en": "min_pinned_wall_vs_solo_sum_ratio = 0.521130"
+      },
+      {
+        "ja": "min_pageable_wall_vs_solo_sum_ratio = 0.913767",
+        "en": "min_pageable_wall_vs_solo_sum_ratio = 0.913767"
+      },
+      {
+        "ja": "pageable_to_pinned_overlap_penalty = 1.753434",
+        "en": "pageable_to_pinned_overlap_penalty = 1.753434"
+      },
+      {
+        "ja": "128 MB H2D: pinned ratio 0.532990, pageable ratio 0.995563",
+        "en": "128 MB H2D: pinned ratio 0.532990, pageable ratio 0.995563"
+      },
+      {
+        "ja": "128 MB D2H: pinned ratio 0.540661, pageable ratio 1.038150",
+        "en": "128 MB D2H: pinned ratio 0.540661, pageable ratio 1.038150"
+      },
+      {
+        "ja": "512 MB D2H: pinned ratio 0.521130, pageable ratio 0.923668",
+        "en": "512 MB D2H: pinned ratio 0.521130, pageable ratio 0.923668"
+      },
+      {
+        "ja": "1024 MB D2H: pinned ratio 0.536373, pageable ratio 0.913767",
+        "en": "1024 MB D2H: pinned ratio 0.536373, pageable ratio 0.913767"
+      }
+    ]
+  }
+}
