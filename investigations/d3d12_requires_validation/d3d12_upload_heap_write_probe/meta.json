@@ -1,0 +1,42 @@
+{
+  "id": "d3d12_upload_heap_write_probe",
+  "title": "D3D12 Upload Heap Host Write Probe",
+  "question": {
+    "ja": "D3D12 の UPLOAD heap への CPU 書き込み自体は、通常 RAM 書き込みや memcpy と比べてどれくらい遅いか。UPLOAD 書き込みが PCIe 経由のような host-write 速度を示すのか。",
+    "en": "How slow is direct CPU writing into a D3D12 UPLOAD heap compared with normal RAM writes and memcpy? Does host writing to the UPLOAD heap itself behave like a PCIe-limited path?"
+  },
+  "tags": [
+    "d3d12",
+    "upload",
+    "host-write",
+    "write-combine",
+    "diagnostic"
+  ],
+  "focus": [
+    "Host-side throughput into mapped UPLOAD heap memory",
+    "Comparison against normal RAM memset, pattern fill, and memcpy",
+    "Separating CPU-side preparation cost from GPU copy timing"
+  ],
+  "primary_metrics": [
+    "best_upload_memcpy_gib_per_s",
+    "best_upload_memset_gib_per_s",
+    "best_upload_pattern64_gib_per_s"
+  ],
+  "considerations": [
+    {
+      "ja": "これは GPU copy bench ではなく host-write probe。CPU が UPLOAD heap をどう書けるかを見る。",
+      "en": "This is a host-write probe, not a GPU copy benchmark. It measures how the CPU can write into the UPLOAD heap."
+    },
+    {
+      "ja": "UPLOAD heap は abstracted heap type なので、速度だけで物理経路を断定しない。まず normal RAM との差を見る。",
+      "en": "UPLOAD is an abstracted heap type, so speed alone does not prove the physical path. The first comparison is against normal RAM behavior."
+    },
+    {
+      "ja": "memset/memcpy と pattern fill を分けて、遅さがストア先ではなくデータ生成にある可能性も切り分ける。",
+      "en": "memset/memcpy and pattern fill are separated so we can distinguish slow stores from slow data generation."
+    }
+  ],
+  "build": {
+    "toolchain": "msvc_d3d12"
+  }
+}

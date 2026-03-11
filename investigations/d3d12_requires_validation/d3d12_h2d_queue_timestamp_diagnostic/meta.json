@@ -1,0 +1,83 @@
+{
+  "id": "d3d12_h2d_queue_timestamp_diagnostic",
+  "title": "D3D12 H2D Queue Timestamp Diagnostic Matrix",
+  "question": {
+    "ja": "D3D12 の UPLOAD -> DEFAULT queue timestamp 計測が理論値を超える主因は、queue/timestamp、resource reuse、あるいは bus-limited ではない経路のどれか。",
+    "en": "Is the main cause of an over-theoretical D3D12 UPLOAD-to-DEFAULT queue-timestamp result the queue/timestamp path itself, resource reuse effects, or a path that is not actually bus-limited?"
+  },
+  "tags": [
+    "d3d12",
+    "diagnostic",
+    "timestamp",
+    "h2d",
+    "reuse",
+    "queue"
+  ],
+  "focus": [
+    "Single-case D3D12 copy diagnostics with per-iteration GPU timestamps",
+    "Matrix-driven comparison across queue, mode, and reuse policies",
+    "Phase-based hypothesis testing without CUDA or external tools",
+    "Keeping shipping benches unchanged until a cause wins"
+  ],
+  "primary_metrics": [
+    "confirmed_hypothesis_count",
+    "phase5_selected_count",
+    "required_run_success_count"
+  ],
+  "comparisons": [
+    {
+      "ja": "COPY queue と DIRECT queue の差",
+      "en": "Difference between COPY queue and DIRECT queue"
+    },
+    {
+      "ja": "same_resources と rotation/recreate の差",
+      "en": "Difference between same_resources and rotation/recreate strategies"
+    },
+    {
+      "ja": "h2d_like と d2h_like / default_to_default control path の差",
+      "en": "Difference between h2d_like and the d2h_like/default_to_default control paths"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は原因究明用です。shipping bench の metric label や accepted 条件は、原因が確定するまで変えません。",
+      "en": "This benchmark is for diagnosis. Shipping benchmark labels and accepted criteria stay unchanged until a cause is confirmed."
+    },
+    {
+      "ja": "D3D12 only で比較し、CUDA や PIX/GPUView は使いません。",
+      "en": "The comparison is D3D12-only and does not depend on CUDA or external tools like PIX/GPUView."
+    },
+    {
+      "ja": "validation は timing 区間の外で full copy と memcmp を行い、4 byte probe や compute は timing path に入れません。",
+      "en": "Validation stays outside the timing interval and uses full-copy memcmp. No 4-byte probe or compute work is placed on the timed path."
+    },
+    {
+      "ja": "理論値超過だけでは原因は決まりません。queue、reuse、control path を比較して差分が再現することを重視します。",
+      "en": "Exceeding theory alone does not identify the cause. The diagnosis relies on reproducible differences across queue, reuse, and control-path comparisons."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "sample latest.json では required run は全成功し、Phase 5 で queue 仮説が再確認されました。bus_not_limited は signal は出たものの focused rerun では未確定でした。",
+      "en": "In the sample latest.json, all required runs succeeded and the queue hypothesis was reconfirmed in Phase 5. bus_not_limited produced a signal but did not remain confirmed after the focused rerun."
+    },
+    "highlights": [
+      {
+        "ja": "status = ok, confirmed_hypothesis_count = 1",
+        "en": "status = ok, confirmed_hypothesis_count = 1"
+      },
+      {
+        "ja": "phase5_selected_hypotheses = [queue, bus_not_limited]",
+        "en": "phase5_selected_hypotheses = [queue, bus_not_limited]"
+      },
+      {
+        "ja": "signal_flags.queue = true, signal_flags.reuse = false, signal_flags.bus_not_limited = true",
+        "en": "signal_flags.queue = true, signal_flags.reuse = false, signal_flags.bus_not_limited = true"
+      }
+    ]
+  },
+  "build": {
+    "toolchain": "msvc_d3d12"
+  }
+}

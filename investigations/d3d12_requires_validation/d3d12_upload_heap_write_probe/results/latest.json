@@ -1,0 +1,161 @@
+{
+  "bench_id": "d3d12_upload_heap_write_probe",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "context": {
+      "architecture": {
+        "cache_coherent_uma": false,
+        "feature_query_used": "architecture1",
+        "node_index": 0,
+        "tile_based_renderer": false,
+        "uma": false
+      },
+      "upload_heap_properties": {
+        "CPUPageProperty": 2,
+        "CPUPagePropertyName": "write_combine",
+        "CreationNodeMask": 1,
+        "MemoryPoolPreference": 1,
+        "MemoryPoolPreferenceName": "l0",
+        "Type": 4,
+        "TypeName": "custom",
+        "VisibleNodeMask": 1,
+        "source_heap_type": "upload"
+      }
+    },
+    "measurement": {
+      "aggregate": {
+        "adapter_name": "NVIDIA GeForce RTX 5090",
+        "architecture": {
+          "cache_coherent_uma": false,
+          "feature_query_used": "architecture1",
+          "node_index": 0,
+          "tile_based_renderer": false,
+          "uma": false
+        },
+        "average_upload_memcpy_over_shadow_memcpy_ratio": 1.505549,
+        "best_upload_memcpy_gib_per_s": 25.011338,
+        "best_upload_memset_gib_per_s": 29.349268,
+        "best_upload_pattern64_gib_per_s": 27.616833,
+        "driver_version": "15.7688.32.0",
+        "upload_heap_properties": {
+          "CPUPageProperty": 2,
+          "CPUPagePropertyName": "write_combine",
+          "CreationNodeMask": 1,
+          "MemoryPoolPreference": 1,
+          "MemoryPoolPreferenceName": "l0",
+          "Type": 4,
+          "TypeName": "custom",
+          "VisibleNodeMask": 1,
+          "source_heap_type": "upload"
+        }
+      },
+      "cases": [
+        {
+          "host_memset_gib_per_s": 70.060392,
+          "host_memset_ms": 1.784175,
+          "host_pattern64_gib_per_s": 22.489767,
+          "host_pattern64_ms": 5.558083,
+          "iterations": 12,
+          "shadow_to_shadow_memcpy_gib_per_s": 22.026432,
+          "shadow_to_shadow_memcpy_ms": 5.675,
+          "shadow_to_upload_memcpy_gib_per_s": 23.742667,
+          "shadow_to_upload_memcpy_ms": 5.264783,
+          "size_mb": 128,
+          "upload_memset_gib_per_s": 29.349268,
+          "upload_memset_ms": 4.25905,
+          "upload_pattern64_gib_per_s": 27.616833,
+          "upload_pattern64_ms": 4.526225,
+          "warmup": 2
+        },
+        {
+          "host_memset_gib_per_s": 71.429592,
+          "host_memset_ms": 3.49995,
+          "host_pattern64_gib_per_s": 21.041262,
+          "host_pattern64_ms": 11.881417,
+          "iterations": 12,
+          "shadow_to_shadow_memcpy_gib_per_s": 22.431668,
+          "shadow_to_shadow_memcpy_ms": 11.144958,
+          "shadow_to_upload_memcpy_gib_per_s": 25.011338,
+          "shadow_to_upload_memcpy_ms": 9.995467,
+          "size_mb": 256,
+          "upload_memset_gib_per_s": 29.012305,
+          "upload_memset_ms": 8.617033,
+          "upload_pattern64_gib_per_s": 26.317313,
+          "upload_pattern64_ms": 9.49945,
+          "warmup": 2
+        },
+        {
+          "host_memset_gib_per_s": 68.812232,
+          "host_memset_ms": 7.26615,
+          "host_pattern64_gib_per_s": 21.963524,
+          "host_pattern64_ms": 22.765017,
+          "iterations": 12,
+          "shadow_to_shadow_memcpy_gib_per_s": 21.445575,
+          "shadow_to_shadow_memcpy_ms": 23.314833,
+          "shadow_to_upload_memcpy_gib_per_s": 24.088037,
+          "shadow_to_upload_memcpy_ms": 20.757192,
+          "size_mb": 512,
+          "upload_memset_gib_per_s": 29.212049,
+          "upload_memset_ms": 17.116225,
+          "upload_pattern64_gib_per_s": 27.609196,
+          "upload_pattern64_ms": 18.109908,
+          "warmup": 2
+        },
+        {
+          "host_memset_gib_per_s": 57.719447,
+          "host_memset_ms": 17.325183,
+          "host_pattern64_gib_per_s": 13.078249,
+          "host_pattern64_ms": 76.462833,
+          "iterations": 12,
+          "shadow_to_shadow_memcpy_gib_per_s": 3.436701,
+          "shadow_to_shadow_memcpy_ms": 290.9767,
+          "shadow_to_upload_memcpy_gib_per_s": 9.299926,
+          "shadow_to_upload_memcpy_ms": 107.527742,
+          "size_mb": 1024,
+          "upload_memset_gib_per_s": 28.96684,
+          "upload_memset_ms": 34.522233,
+          "upload_pattern64_gib_per_s": 19.94233,
+          "upload_pattern64_ms": 50.144592,
+          "warmup": 2
+        }
+      ],
+      "timing_backend": "cpu_host_write"
+    },
+    "notes": [
+      "Host-side write probe only; no GPU copy is recorded here.",
+      "Compare upload_memcpy against shadow_to_shadow_memcpy to see whether mapped UPLOAD writes look PCIe-like or system-memory-like.",
+      "Compare pattern64 against memcpy to separate store bandwidth from data-generation cost."
+    ],
+    "parameters": {
+      "iterations": 12,
+      "sizes_mb": [
+        128,
+        256,
+        512,
+        1024
+      ],
+      "warmup": 2
+    },
+    "primary_metric": "best_upload_memcpy_gib_per_s",
+    "status": "ok",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": true
+    }
+  }
+}

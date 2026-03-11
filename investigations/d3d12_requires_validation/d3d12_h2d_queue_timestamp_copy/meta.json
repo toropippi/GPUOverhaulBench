@@ -1,0 +1,69 @@
+{
+  "id": "d3d12_h2d_queue_timestamp_copy",
+  "title": "D3D12 H2D-like Copy Timed by Queue Timestamps",
+  "question": {
+    "ja": "Windows + D3D12 で、UPLOAD heap から DEFAULT heap への copy を queue timestamp で測った結果が、どの条件で raw PCIe H2D-like と解釈できるか。",
+    "en": "Under what conditions can a queue-timestamp measurement of an UPLOAD-to-DEFAULT D3D12 copy be interpreted as a raw PCIe-like H2D path?"
+  },
+  "tags": [
+    "d3d12",
+    "h2d",
+    "timestamp",
+    "copy",
+    "heap-properties",
+    "uma"
+  ],
+  "focus": [
+    "Queue timestamp timing of the copy interval itself",
+    "Architecture and heap-property queries needed for interpretation",
+    "Separating timing success from raw-PCIe eligibility",
+    "Full-copy validation outside the timing interval"
+  ],
+  "primary_metrics": [
+    "best_gpu_copy_gib_per_s",
+    "raw_pcie_h2d_eligible",
+    "average_cpu_over_gpu_ratio"
+  ],
+  "comparisons": [
+    {
+      "ja": "COPY queue timestamp 成功と raw_pcie_h2d_eligible の差",
+      "en": "Difference between successful COPY-queue timestamp timing and raw_pcie_h2d_eligible"
+    },
+    {
+      "ja": "UMA / non-UMA と GetCustomHeapProperties の組み合わせによる解釈の差",
+      "en": "Interpretation differences caused by UMA/non-UMA and GetCustomHeapProperties"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench が測っているのは queue timestamp で囲んだ UPLOAD -> DEFAULT copy 区間です。",
+      "en": "This benchmark measures the UPLOAD-to-DEFAULT copy interval bracketed by queue timestamps."
+    },
+    {
+      "ja": "この bench は raw PCIe 帯域そのもの、compute を含む end-to-end 時間、4B readback proxy を測っていません。",
+      "en": "This benchmark does not measure raw PCIe bandwidth itself, end-to-end time including compute, or a 4-byte readback proxy."
+    },
+    {
+      "ja": "UMA の場合は UPLOAD と DEFAULT が同じ L0 系メモリに対応しうるため、raw PCIe H2D と呼べません。",
+      "en": "If UMA is true, UPLOAD and DEFAULT can map to the same L0-class memory, so the path must not be labeled raw PCIe H2D."
+    },
+    {
+      "ja": "non-UMA でも heap 名だけでは不十分で、GetCustomHeapProperties で UPLOAD=L0+WRITE_COMBINE、DEFAULT=L1+NOT_AVAILABLE を確認してから解釈する必要があります。",
+      "en": "Even on non-UMA systems, heap names alone are insufficient; use GetCustomHeapProperties to confirm UPLOAD=L0+WRITE_COMBINE and DEFAULT=L1+NOT_AVAILABLE before interpreting the path."
+    },
+    {
+      "ja": "accepted は timing + validation の技術的成功のみを表し、raw_pcie_h2d_eligible は物理解釈の妥当性を表します。",
+      "en": "accepted represents only technical timing+validation success, while raw_pcie_h2d_eligible represents whether the path is physically consistent with a raw-PCIe-like interpretation."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "latest.json を参照してください。COPY queue timestamp が使え、かつ heap/architecture 条件も満たす場合にのみ raw PCIe H2D-like と解釈します。",
+      "en": "See results/latest.json. The result is interpreted as raw-PCIe-like only when COPY queue timestamps are available and the heap/architecture conditions also match."
+    }
+  },
+  "build": {
+    "toolchain": "msvc_d3d12"
+  }
+}

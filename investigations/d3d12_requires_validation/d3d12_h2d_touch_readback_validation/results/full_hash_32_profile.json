@@ -1,0 +1,83 @@
+{
+  "bench_id": "d3d12_h2d_touch_readback_validation",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "accepted_case_count": 0,
+      "adapter_name": "NVIDIA GeForce RTX 5090",
+      "average_end_to_end_overhead_ratio": 1.255825,
+      "best_end_to_end_bandwidth_gib_per_s": 241.592578,
+      "cases": [
+        {
+          "end_to_end": {
+            "accepted": false,
+            "avg_ms": 0.12935,
+            "expected_value": 1433014389,
+            "gib_per_s": 241.592578,
+            "observed_value": 1433014389,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "end_to_end_overhead_ratio": 1.255825,
+          "expected_hash_gib_per_s": 4.443907,
+          "expected_hash_ms": 7.0321,
+          "fill_shadow_gib_per_s": 0.645149,
+          "fill_shadow_ms": 48.4384,
+          "h2d_only": {
+            "accepted": false,
+            "avg_ms": 0.103,
+            "expected_value": 0,
+            "gib_per_s": 303.398058,
+            "observed_value": 0,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "iterations": 2,
+          "size_mb": 32,
+          "validation_path_overhead_ms": 0.02635,
+          "validation_path_overhead_ratio": 1.255825,
+          "warmup": 1
+        }
+      ],
+      "theoretical_one_way_pcie_5_x16_gib_per_s": 58.687292,
+      "timing_backend": "cpu_wall_end_to_end"
+    },
+    "parameters": {
+      "api": "d3d12",
+      "copy_direction": "H2D-like",
+      "cuda_reference_h2d_gib_per_s": 53.310166,
+      "hash_threads_per_group": 256,
+      "iterations": 2,
+      "sizes_mb": [
+        32
+      ],
+      "validation_method": "gpu_full_buffer_hash_4b_readback",
+      "warmup": 1
+    },
+    "primary_metric": "best_end_to_end_bandwidth_gib_per_s",
+    "status": "invalid",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": true
+    }
+  }
+}

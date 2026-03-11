@@ -1,0 +1,34 @@
+{
+  "bench_id": "d3d12_h2d_touch_readback_validation",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "timing_backend": "runner"
+    },
+    "notes": [
+      "bench.cpp\nLINK : fatal error LNK1104: \u7e5d\u8f14\u3043\u7e67\uff64\u7e5d\uff6b '.\\d3d12_h2d_touch_readback_validation.exe' \u7e67\u5e1d\u5e55\u7e3a\u4e0a\uff05\u7e3a\uff68\u7e3a\u5f8c\u3012\u7e3a\u962a\u222a\u7e3a\u5e19\uff53\u7e32\ufffd"
+    ],
+    "parameters": {},
+    "primary_metric": "none",
+    "status": "failed",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": false
+    }
+  }
+}

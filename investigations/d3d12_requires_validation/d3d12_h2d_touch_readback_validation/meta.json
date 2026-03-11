@@ -1,0 +1,92 @@
+{
+  "id": "d3d12_h2d_touch_readback_validation",
+  "title": "D3D12 H2D Copy with GPU Touch and 4B Readback",
+  "question": {
+    "ja": "D3D12 の H2D-like copy の直後に GPU 側で最小 compute kernel による source buffer touch を入れ、その結果 4 byte を CPU へ readback した end-to-end 時間を測ると、見かけの H2D 帯域は CUDA pinned PCIe 値に近づくか。目的は、H2D copy が本当に GPU から見えている時点まで待たせることで、raw copy より妥当な H2D timing を得られるか確認すること。",
+    "en": "If a minimal GPU-side touch kernel is inserted immediately after a D3D12 H2D-like copy and its 4-byte result is read back to the CPU, does the resulting end-to-end H2D bandwidth move closer to the CUDA pinned PCIe value? The goal is to check whether forcing the GPU to consume the copied data yields a more plausible H2D timing than raw copy timing alone."
+  },
+  "tags": [
+    "d3d12",
+    "pcie",
+    "h2d",
+    "touch",
+    "readback",
+    "validation",
+    "compute"
+  ],
+  "focus": [
+    "End-to-end H2D timing with GPU-side dependency",
+    "Difference between H2D-only and H2D+touch+4B readback",
+    "CUDA pinned H2D reference consistency",
+    "Whether H2D dominates the total time"
+  ],
+  "primary_metrics": [
+    "best_end_to_end_bandwidth_gib_per_s",
+    "accepted_case_count",
+    "average_end_to_end_overhead_ratio"
+  ],
+  "comparisons": [
+    {
+      "ja": "H2D-only と H2D->GPU touch->4B readback の違い",
+      "en": "Difference between H2D-only and H2D->GPU touch->4B readback"
+    },
+    {
+      "ja": "end-to-end H2D bandwidth と CUDA pinned H2D PCIe bandwidth の違い",
+      "en": "Difference between end-to-end H2D bandwidth and CUDA pinned H2D PCIe bandwidth"
+    },
+    {
+      "ja": "end-to-end bandwidth が理論 PCIe 5.0 x16 片方向帯域以下に収まるか",
+      "en": "Whether end-to-end bandwidth remains below the theoretical one-way PCIe 5.0 x16 limit"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は H2D の直後に GPU 側 dependency を入れて timing を引き延ばすことで、copy 完了が GPU から見えている時点まで待たせる。raw H2D-like copy のみの timing より保守的な測り方である。",
+      "en": "This benchmark stretches the H2D timing by adding a GPU-side dependency immediately after the copy, so it waits until the copied data is observably visible on the GPU. It is a more conservative measurement than raw H2D-like copy timing."
+    },
+    {
+      "ja": "kernel は source buffer の複数位置を疑似ランダムに読み、4 byte の accumulator を別 buffer に書く。最後にその 4 byte を readback して CPU で expected 値と照合する。",
+      "en": "The kernel reads multiple pseudo-random positions from the source buffer, writes a 4-byte accumulator into a separate buffer, and that 4-byte value is then read back and checked against a CPU-computed expected value."
+    },
+    {
+      "ja": "4 byte readback 自体の時間は小さいので、もし end-to-end 時間が CUDA H2D に近づくなら、全体の支配項は H2D copy だったと読める。",
+      "en": "The 4-byte readback itself is small, so if the end-to-end time moves close to the CUDA H2D value, the overall timing can be read as still being dominated by the H2D copy."
+    },
+    {
+      "ja": "pass の目安は CUDA pinned H2D 基準値の ±30% 以内かつ理論 PCIe 5.0 x16 片方向帯域以下であること。",
+      "en": "A pass is treated as being within +/-30% of the CUDA pinned H2D reference while also staying below the theoretical one-way PCIe 5.0 x16 limit."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "GPU 側で source buffer を実際に読ませ、4 byte の readback まで待っても、この D3D12 H2D-like path は CUDA pinned H2D に近づきませんでした。validation 自体は通りましたが、end-to-end 帯域は 498-659 GiB/s と理論 PCIe 5.0 x16 片方向帯域を大きく超えたままで、raw PCIe H2D timing としては invalid です。",
+      "en": "Even after forcing the GPU to consume the copied source buffer and waiting for a 4-byte readback, this D3D12 H2D-like path did not move closer to the CUDA pinned H2D result. Validation passed, but the end-to-end bandwidth still stayed at 498-659 GiB/s, far above the theoretical one-way PCIe 5.0 x16 limit, so this path remains invalid as a raw PCIe H2D timing method."
+    },
+    "highlights": [
+      {
+        "ja": "status = invalid, validation.passed = true",
+        "en": "status = invalid, validation.passed = true"
+      },
+      {
+        "ja": "H2D-only: 498.952, 621.284, 647.232 GiB/s at 128/512/1024 MB",
+        "en": "H2D-only: 498.952, 621.284, 647.232 GiB/s at 128/512/1024 MB"
+      },
+      {
+        "ja": "end-to-end: 498.485, 618.192, 658.979 GiB/s at 128/512/1024 MB",
+        "en": "end-to-end: 498.485, 618.192, 658.979 GiB/s at 128/512/1024 MB"
+      },
+      {
+        "ja": "average_end_to_end_overhead_ratio = 0.996038",
+        "en": "average_end_to_end_overhead_ratio = 0.996038"
+      },
+      {
+        "ja": "accepted_case_count = 0 against CUDA pinned H2D 53.310166 GiB/s and PCIe theory 58.687292 GiB/s",
+        "en": "accepted_case_count = 0 against CUDA pinned H2D 53.310166 GiB/s and PCIe theory 58.687292 GiB/s"
+      }
+    ]
+  },
+  "build": {
+    "toolchain": "msvc_d3d12"
+  }
+}

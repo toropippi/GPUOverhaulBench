@@ -1,0 +1,233 @@
+{
+  "bench_id": "d3d12_h2d_touch_readback_validation",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "accepted_case_count": 0,
+      "adapter_name": "NVIDIA GeForce RTX 5090",
+      "average_end_to_end_overhead_ratio": 1.591476,
+      "best_end_to_end_bandwidth_gib_per_s": 387.062438,
+      "best_upload_write_to_consume_gib_per_s": 8.98521,
+      "cases": [
+        {
+          "end_to_end": {
+            "accepted": false,
+            "avg_ms": 0.51215,
+            "expected_value": 2821817866,
+            "gib_per_s": 244.06912,
+            "observed_value": 2821817866,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "end_to_end_overhead_ratio": 1.33808,
+          "expected_hash_gib_per_s": 3.024518,
+          "expected_hash_ms": 41.3289,
+          "fill_shadow_gib_per_s": 1.169834,
+          "fill_shadow_ms": 213.7055,
+          "h2d_only": {
+            "accepted": false,
+            "avg_ms": 0.38275,
+            "expected_value": 0,
+            "gib_per_s": 326.583932,
+            "observed_value": 0,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "iterations": 4,
+          "size_mb": 128,
+          "upload_write_to_consume": {
+            "accepted": false,
+            "avg_ms": 16.534,
+            "expected_value": 2821817866,
+            "gib_per_s": 7.560179,
+            "observed_value": 2821817866,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": true
+          },
+          "validation_path_overhead_ms": 0.1294,
+          "validation_path_overhead_ratio": 1.33808,
+          "warmup": 1
+        },
+        {
+          "end_to_end": {
+            "accepted": false,
+            "avg_ms": 0.922875,
+            "expected_value": 2159084428,
+            "gib_per_s": 270.892591,
+            "observed_value": 2159084428,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "end_to_end_overhead_ratio": 1.785576,
+          "expected_hash_gib_per_s": 2.174429,
+          "expected_hash_ms": 114.9727,
+          "fill_shadow_gib_per_s": 1.157971,
+          "fill_shadow_ms": 431.7898,
+          "h2d_only": {
+            "accepted": false,
+            "avg_ms": 0.51685,
+            "expected_value": 0,
+            "gib_per_s": 483.699332,
+            "observed_value": 0,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "iterations": 4,
+          "size_mb": 256,
+          "upload_write_to_consume": {
+            "accepted": false,
+            "avg_ms": 27.8235,
+            "expected_value": 2159084428,
+            "gib_per_s": 8.98521,
+            "observed_value": 2159084428,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": true
+          },
+          "validation_path_overhead_ms": 0.406025,
+          "validation_path_overhead_ratio": 1.785576,
+          "warmup": 1
+        },
+        {
+          "end_to_end": {
+            "accepted": false,
+            "avg_ms": 1.3746,
+            "expected_value": 4124631331,
+            "gib_per_s": 363.74218,
+            "observed_value": 4124631331,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "end_to_end_overhead_ratio": 1.698925,
+          "expected_hash_gib_per_s": 2.592971,
+          "expected_hash_ms": 192.829,
+          "fill_shadow_gib_per_s": 1.15612,
+          "fill_shadow_ms": 864.9624,
+          "h2d_only": {
+            "accepted": false,
+            "avg_ms": 0.8091,
+            "expected_value": 0,
+            "gib_per_s": 617.970585,
+            "observed_value": 0,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "iterations": 4,
+          "size_mb": 512,
+          "upload_write_to_consume": {
+            "accepted": false,
+            "avg_ms": 58.76445,
+            "expected_value": 4124631331,
+            "gib_per_s": 8.508546,
+            "observed_value": 4124631331,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": true
+          },
+          "validation_path_overhead_ms": 0.5655,
+          "validation_path_overhead_ratio": 1.698925,
+          "warmup": 1
+        },
+        {
+          "end_to_end": {
+            "accepted": false,
+            "avg_ms": 2.583562,
+            "expected_value": 3175045936,
+            "gib_per_s": 387.062438,
+            "observed_value": 3175045936,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "end_to_end_overhead_ratio": 1.543324,
+          "expected_hash_gib_per_s": 2.787918,
+          "expected_hash_ms": 358.6906,
+          "fill_shadow_gib_per_s": 1.155037,
+          "fill_shadow_ms": 1731.5463,
+          "h2d_only": {
+            "accepted": false,
+            "avg_ms": 1.674025,
+            "expected_value": 0,
+            "gib_per_s": 597.362644,
+            "observed_value": 0,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": false
+          },
+          "iterations": 8,
+          "size_mb": 1024,
+          "upload_write_to_consume": {
+            "accepted": false,
+            "avg_ms": 160.051212,
+            "expected_value": 3175045936,
+            "gib_per_s": 6.248,
+            "observed_value": 3175045936,
+            "success": true,
+            "validation_passed": true,
+            "within_cuda_reference": false,
+            "within_theoretical_limit": true
+          },
+          "validation_path_overhead_ms": 0.909537,
+          "validation_path_overhead_ratio": 1.543324,
+          "warmup": 1
+        }
+      ],
+      "theoretical_one_way_pcie_5_x16_gib_per_s": 58.687292,
+      "timing_backend": "cpu_wall_end_to_end"
+    },
+    "parameters": {
+      "api": "d3d12",
+      "copy_direction": "H2D-like",
+      "cuda_reference_h2d_gib_per_s": 53.310166,
+      "hash_threads_per_group": 256,
+      "iterations": 4,
+      "sizes_mb": [
+        128,
+        256,
+        512,
+        1024
+      ],
+      "validation_method": "gpu_full_buffer_hash_4b_readback",
+      "warmup": 1
+    },
+    "primary_metric": "best_end_to_end_bandwidth_gib_per_s",
+    "status": "invalid",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": true
+    }
+  }
+}

@@ -1,0 +1,1 @@
+﻿{"status":"failed","primary_metric":"best_end_to_end_bandwidth_gib_per_s","unit":"GiB/s","parameters":{"api":"d3d12","sizes_mb":[1024,2048,3072,4096],"iterations":1,"warmup":1},"measurement":{"timing_backend":"cpu_wall_end_to_end"},"validation":{"passed":false},"notes":["CreateCommittedResource: HRESULT 0x8007000E"]}

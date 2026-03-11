@@ -1,0 +1,169 @@
+{
+  "bench_id": "d3d12_h2d_touch_readback_validation",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "aggregate": {
+        "full_hash_sample_count": 2
+      },
+      "samples": [
+        {
+          "file": "full_hash_128_sample_raw.json",
+          "result": {
+            "measurement": {
+              "accepted_case_count": 0,
+              "adapter_name": "NVIDIA GeForce RTX 5090",
+              "average_end_to_end_overhead_ratio": 36.930713,
+              "best_end_to_end_bandwidth_gib_per_s": 8.527883,
+              "cases": [
+                {
+                  "end_to_end": {
+                    "accepted": false,
+                    "avg_ms": 14.6578,
+                    "expected_value": 2821817866,
+                    "gib_per_s": 8.527883,
+                    "observed_value": 2821817866,
+                    "success": true,
+                    "validation_passed": true,
+                    "within_cuda_reference": false,
+                    "within_theoretical_limit": true
+                  },
+                  "end_to_end_overhead_ratio": 36.930713,
+                  "h2d_only": {
+                    "accepted": false,
+                    "avg_ms": 0.3969,
+                    "expected_value": 0,
+                    "gib_per_s": 314.940791,
+                    "observed_value": 0,
+                    "success": true,
+                    "validation_passed": true,
+                    "within_cuda_reference": false,
+                    "within_theoretical_limit": false
+                  },
+                  "iterations": 1,
+                  "size_mb": 128,
+                  "warmup": 1
+                }
+              ],
+              "theoretical_one_way_pcie_5_x16_gib_per_s": 58.687292,
+              "timing_backend": "cpu_wall_end_to_end"
+            },
+            "parameters": {
+              "api": "d3d12",
+              "copy_direction": "H2D-like",
+              "cuda_reference_h2d_gib_per_s": 53.310166,
+              "hash_threads_per_group": 256,
+              "iterations": 1,
+              "sizes_mb": [
+                128
+              ],
+              "validation_method": "gpu_full_buffer_hash_4b_readback",
+              "warmup": 1
+            },
+            "primary_metric": "best_end_to_end_bandwidth_gib_per_s",
+            "status": "invalid",
+            "unit": "GiB/s",
+            "validation": {
+              "passed": true
+            }
+          }
+        },
+        {
+          "file": "full_hash_512_sample_raw.json",
+          "result": {
+            "measurement": {
+              "accepted_case_count": 0,
+              "adapter_name": "NVIDIA GeForce RTX 5090",
+              "average_end_to_end_overhead_ratio": 21.74968,
+              "best_end_to_end_bandwidth_gib_per_s": 21.009728,
+              "cases": [
+                {
+                  "end_to_end": {
+                    "accepted": false,
+                    "avg_ms": 23.7985,
+                    "expected_value": 4124631331,
+                    "gib_per_s": 21.009728,
+                    "observed_value": 4124631331,
+                    "success": true,
+                    "validation_passed": true,
+                    "within_cuda_reference": false,
+                    "within_theoretical_limit": true
+                  },
+                  "end_to_end_overhead_ratio": 21.74968,
+                  "h2d_only": {
+                    "accepted": false,
+                    "avg_ms": 1.0942,
+                    "expected_value": 0,
+                    "gib_per_s": 456.954853,
+                    "observed_value": 0,
+                    "success": true,
+                    "validation_passed": true,
+                    "within_cuda_reference": false,
+                    "within_theoretical_limit": false
+                  },
+                  "iterations": 1,
+                  "size_mb": 512,
+                  "warmup": 1
+                }
+              ],
+              "theoretical_one_way_pcie_5_x16_gib_per_s": 58.687292,
+              "timing_backend": "cpu_wall_end_to_end"
+            },
+            "parameters": {
+              "api": "d3d12",
+              "copy_direction": "H2D-like",
+              "cuda_reference_h2d_gib_per_s": 53.310166,
+              "hash_threads_per_group": 256,
+              "iterations": 1,
+              "sizes_mb": [
+                512
+              ],
+              "validation_method": "gpu_full_buffer_hash_4b_readback",
+              "warmup": 1
+            },
+            "primary_metric": "best_end_to_end_bandwidth_gib_per_s",
+            "status": "invalid",
+            "unit": "GiB/s",
+            "validation": {
+              "passed": true
+            }
+          }
+        }
+      ],
+      "timing_backend": "cpu_wall_end_to_end"
+    },
+    "notes": [
+      "Local sample runs for GPU full-buffer hash plus 4B readback validation."
+    ],
+    "parameters": {
+      "iterations": 1,
+      "sizes_mb": [
+        128,
+        512
+      ],
+      "validation_method": "gpu_full_buffer_hash_4b_readback",
+      "warmup": 1
+    },
+    "primary_metric": "full_hash_sample_count",
+    "status": "ok",
+    "unit": "count",
+    "validation": {
+      "passed": true
+    }
+  }
+}

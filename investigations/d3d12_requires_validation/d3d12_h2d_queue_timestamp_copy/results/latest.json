@@ -1,0 +1,200 @@
+{
+  "bench_id": "d3d12_h2d_queue_timestamp_copy",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "context": {
+      "architecture": {
+        "cache_coherent_uma": false,
+        "feature_query_used": "architecture1",
+        "node_index": 0,
+        "tile_based_renderer": false,
+        "uma": false
+      },
+      "default_heap_properties": {
+        "CPUPageProperty": 1,
+        "CPUPagePropertyName": "not_available",
+        "CreationNodeMask": 1,
+        "MemoryPoolPreference": 2,
+        "MemoryPoolPreferenceName": "l1",
+        "Type": 4,
+        "TypeName": "custom",
+        "VisibleNodeMask": 1,
+        "source_heap_type": "default"
+      },
+      "readback_heap_properties": {
+        "CPUPageProperty": 3,
+        "CPUPagePropertyName": "write_back",
+        "CreationNodeMask": 1,
+        "MemoryPoolPreference": 1,
+        "MemoryPoolPreferenceName": "l0",
+        "Type": 4,
+        "TypeName": "custom",
+        "VisibleNodeMask": 1,
+        "source_heap_type": "readback"
+      },
+      "upload_heap_properties": {
+        "CPUPageProperty": 2,
+        "CPUPagePropertyName": "write_combine",
+        "CreationNodeMask": 1,
+        "MemoryPoolPreference": 1,
+        "MemoryPoolPreferenceName": "l0",
+        "Type": 4,
+        "TypeName": "custom",
+        "VisibleNodeMask": 1,
+        "source_heap_type": "upload"
+      }
+    },
+    "measurement": {
+      "aggregate": {
+        "adapter_name": "NVIDIA GeForce RTX 5090",
+        "average_cpu_over_gpu_ratio": 1.051359,
+        "best_gpu_copy_gib_per_s": 120.451742,
+        "cache_coherent_uma": false,
+        "default_heap_properties": {
+          "CPUPageProperty": 1,
+          "CPUPagePropertyName": "not_available",
+          "CreationNodeMask": 1,
+          "MemoryPoolPreference": 2,
+          "MemoryPoolPreferenceName": "l1",
+          "Type": 4,
+          "TypeName": "custom",
+          "VisibleNodeMask": 1,
+          "source_heap_type": "default"
+        },
+        "driver_runtime_context": {
+          "driver_version": "15.7688.32.0",
+          "queue_type_used": "copy",
+          "runtime": "d3d12",
+          "toolchain": "msvc_d3d12"
+        },
+        "metric_label": "discrete_l0_to_l1_h2d_like_copy_bandwidth",
+        "node_index": 0,
+        "path_interpretation": "copy path is consistent with system-memory(L0) to video-memory(L1) upload-to-default copy",
+        "raw_pcie_h2d_eligible": true,
+        "readback_heap_properties": {
+          "CPUPageProperty": 3,
+          "CPUPagePropertyName": "write_back",
+          "CreationNodeMask": 1,
+          "MemoryPoolPreference": 1,
+          "MemoryPoolPreferenceName": "l0",
+          "Type": 4,
+          "TypeName": "custom",
+          "VisibleNodeMask": 1,
+          "source_heap_type": "readback"
+        },
+        "tile_based_renderer": false,
+        "uma": false,
+        "upload_heap_properties": {
+          "CPUPageProperty": 2,
+          "CPUPagePropertyName": "write_combine",
+          "CreationNodeMask": 1,
+          "MemoryPoolPreference": 1,
+          "MemoryPoolPreferenceName": "l0",
+          "Type": 4,
+          "TypeName": "custom",
+          "VisibleNodeMask": 1,
+          "source_heap_type": "upload"
+        }
+      },
+      "cases": [
+        {
+          "accepted": true,
+          "copy_queue_timestamp_supported": true,
+          "cpu_wall_gib_per_s": 108.159557,
+          "cpu_wall_ms_avg": 1.1557,
+          "gpu_copy_gib_per_s": 120.451742,
+          "gpu_copy_ms_avg": 1.03776,
+          "iterations": 10,
+          "metric_label": "discrete_l0_to_l1_h2d_like_copy_bandwidth",
+          "path_interpretation": "copy path is consistent with system-memory(L0) to video-memory(L1) upload-to-default copy",
+          "queue_type_used": "copy",
+          "raw_pcie_h2d_eligible": true,
+          "size_mb": 128,
+          "timestamp_frequency_hz": 1000000000,
+          "validation_method": "default_to_readback_full_copy_memcmp",
+          "validation_passed": true,
+          "warmup": 2
+        },
+        {
+          "accepted": true,
+          "copy_queue_timestamp_supported": true,
+          "cpu_wall_gib_per_s": 81.11629,
+          "cpu_wall_ms_avg": 6.16399,
+          "gpu_copy_gib_per_s": 83.134608,
+          "gpu_copy_ms_avg": 6.014342,
+          "iterations": 10,
+          "metric_label": "discrete_l0_to_l1_h2d_like_copy_bandwidth",
+          "path_interpretation": "copy path is consistent with system-memory(L0) to video-memory(L1) upload-to-default copy",
+          "queue_type_used": "copy",
+          "raw_pcie_h2d_eligible": true,
+          "size_mb": 512,
+          "timestamp_frequency_hz": 1000000000,
+          "validation_method": "default_to_readback_full_copy_memcmp",
+          "validation_passed": true,
+          "warmup": 2
+        },
+        {
+          "accepted": true,
+          "copy_queue_timestamp_supported": true,
+          "cpu_wall_gib_per_s": 118.556457,
+          "cpu_wall_ms_avg": 8.4348,
+          "gpu_copy_gib_per_s": 120.399766,
+          "gpu_copy_ms_avg": 8.305664,
+          "iterations": 10,
+          "metric_label": "discrete_l0_to_l1_h2d_like_copy_bandwidth",
+          "path_interpretation": "copy path is consistent with system-memory(L0) to video-memory(L1) upload-to-default copy",
+          "queue_type_used": "copy",
+          "raw_pcie_h2d_eligible": true,
+          "size_mb": 1024,
+          "timestamp_frequency_hz": 1000000000,
+          "validation_method": "default_to_readback_full_copy_memcmp",
+          "validation_passed": true,
+          "warmup": 2
+        }
+      ],
+      "copy_queue_timestamp_supported": true,
+      "queue_type_used": "copy",
+      "timestamp_frequency_hz": 1000000000,
+      "timing_backend": "queue_timestamp"
+    },
+    "notes": [
+      "DEFAULT/UPLOAD/READBACK are abstracted heap types.",
+      "Use GetCustomHeapProperties and architecture flags to interpret the measured path.",
+      "If UMA is true, this bench must not be labeled raw PCIe H2D.",
+      "queue_type_used=copy copy_queue_timestamp_supported=true timestamp_frequency_hz=1000000000 uma=false cache_coherent_uma=false raw_pcie_h2d_eligible=true"
+    ],
+    "parameters": {
+      "api": "d3d12",
+      "copy_direction": "upload_to_default",
+      "iterations": 10,
+      "sizes_mb": [
+        128,
+        512,
+        1024
+      ],
+      "validation_method": "default_to_readback_full_copy_memcmp",
+      "warmup": 2
+    },
+    "primary_metric": "best_gpu_copy_gib_per_s",
+    "status": "ok",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": true
+    }
+  }
+}
