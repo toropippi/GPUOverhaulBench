@@ -1,0 +1,87 @@
+{
+  "id": "pcie_pinned_vs_pageable_same_region_corruption",
+  "title": "PCIe Pinned vs Pageable Same-Region Corruption",
+  "question": {
+    "ja": "D2H copy と kernel write が同じ device アドレス範囲そのものを別 stream で同時に触るとき、pinned と pageable で copy 結果の壊れ方はどう変わるか。",
+    "en": "When a D2H copy and a kernel write touch the exact same device address range on separate streams, how does the corruption pattern change between pinned and pageable host memory?"
+  },
+  "tags": [
+    "transfer",
+    "pcie",
+    "d2h",
+    "pinned",
+    "pageable",
+    "same-region",
+    "race",
+    "corruption"
+  ],
+  "focus": [
+    "Pinned vs pageable corruption pattern",
+    "Old-pattern vs new-pattern coexistence",
+    "Mixed and other bytes",
+    "Representative case per memory type"
+  ],
+  "primary_metrics": [
+    "pinned_representative_old_pattern_ratio",
+    "pinned_representative_new_pattern_ratio",
+    "pageable_representative_old_pattern_ratio",
+    "pageable_representative_new_pattern_ratio"
+  ],
+  "comparisons": [
+    {
+      "ja": "pinned と pageable の old/new 比率の違い",
+      "en": "Difference in old/new ratios between pinned and pageable"
+    },
+    {
+      "ja": "pinned と pageable の mixed/other ratio の違い",
+      "en": "Difference in mixed/other ratios between pinned and pageable"
+    },
+    {
+      "ja": "同じ race 条件でも host memory 種別で host 側に見える結果がどう変わるか",
+      "en": "How the host-visible result changes with host memory type under the same race condition"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は correctness を守るためのものではなく、same-region race 下で copy 結果がどう見えるかを pinned と pageable で比較するテスト寄り bench です。",
+      "en": "This benchmark is not meant to preserve correctness; it is a test-like benchmark that compares how copied results appear under a same-region race for pinned and pageable memory."
+    },
+    {
+      "ja": "主観測は host 側で見える old-only, new-only, mixed, other の比率です。時間も記録しますが、主題は corruption pattern の違いです。",
+      "en": "The primary observation is the ratio of old-only, new-only, mixed, and other values seen on the host side. Time is recorded too, but the main topic is the difference in corruption patterns."
+    },
+    {
+      "ja": "今回の結果では pinned では旧値と新値が同時に見えた一方、pageable では全サイズで host 側が旧値 100% でした。これは pageable D2H copy が host から見てより同期的に進み、kernel 書き込みが host 結果に現れにくいことを示唆します。",
+      "en": "In the current results, pinned showed old and new values coexisting, while pageable showed 100% old values at every size. This suggests that pageable D2H copies behave more synchronously from the host's point of view, so the kernel writes are less likely to become visible in the copied host result."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "この環境では same-region D2H race の見え方が pinned と pageable で大きく分かれました。pinned では host 側に旧値と新値が共存し、pageable では host 側が常に旧値 100% でした。",
+      "en": "On this system, same-region D2H race behavior split sharply between pinned and pageable. With pinned memory, the host saw old and new values coexist, while with pageable memory the host always saw 100% old values."
+    },
+    "highlights": [
+      {
+        "ja": "Pinned representative case: 512 MB, old 32.51%, new 67.49%, mixed 0%, other 0%",
+        "en": "Pinned representative case: 512 MB, old 32.51%, new 67.49%, mixed 0%, other 0%"
+      },
+      {
+        "ja": "Pinned 128 MB: old 25.34%, new 74.66%",
+        "en": "Pinned 128 MB: old 25.34%, new 74.66%"
+      },
+      {
+        "ja": "Pinned 1024 MB: old 13.34%, new 86.66%",
+        "en": "Pinned 1024 MB: old 13.34%, new 86.66%"
+      },
+      {
+        "ja": "Pageable representative case: 128 MB, old 100.00%, new 0%, mixed 0%, other 0%",
+        "en": "Pageable representative case: 128 MB, old 100.00%, new 0%, mixed 0%, other 0%"
+      },
+      {
+        "ja": "Pageable 512 MB and 1024 MB でも old 100.00% が維持されました。",
+        "en": "Pageable kept old 100.00% even at 512 MB and 1024 MB."
+      }
+    ]
+  }
+}

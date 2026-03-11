@@ -1,0 +1,211 @@
+{
+  "bench_id": "pcie_pinned_vs_pageable_same_region_corruption",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "cases": [
+        {
+          "iterations": 12,
+          "pageable": {
+            "corruption": {
+              "avg_wall_ms": 14.347158,
+              "mixed_bytes": 0,
+              "mixed_ratio": 0.0,
+              "new_pattern_bytes": 0,
+              "new_pattern_ratio": 0.0,
+              "old_pattern_bytes": 1610612736,
+              "old_pattern_ratio": 1.0,
+              "other_bytes": 0,
+              "other_ratio": 0.0,
+              "success": true
+            },
+            "solo_copy": {
+              "avg_ms": 7.688683,
+              "success": true
+            },
+            "solo_kernel": {
+              "avg_ms": 6.880892,
+              "loop_count": 498,
+              "success": true
+            }
+          },
+          "pinned": {
+            "corruption": {
+              "avg_wall_ms": 2.442775,
+              "mixed_bytes": 0,
+              "mixed_ratio": 0.0,
+              "new_pattern_bytes": 1202459776,
+              "new_pattern_ratio": 0.746585,
+              "old_pattern_bytes": 408152960,
+              "old_pattern_ratio": 0.253415,
+              "other_bytes": 0,
+              "other_ratio": 0.0,
+              "success": true
+            },
+            "solo_copy": {
+              "avg_ms": 2.379808,
+              "success": true
+            },
+            "solo_kernel": {
+              "avg_ms": 2.201258,
+              "loop_count": 170,
+              "success": true
+            }
+          },
+          "size_mb": 128,
+          "warmup": 2
+        },
+        {
+          "iterations": 6,
+          "pageable": {
+            "corruption": {
+              "avg_wall_ms": 67.47325,
+              "mixed_bytes": 0,
+              "mixed_ratio": 0.0,
+              "new_pattern_bytes": 0,
+              "new_pattern_ratio": 0.0,
+              "old_pattern_bytes": 3221225472,
+              "old_pattern_ratio": 1.0,
+              "other_bytes": 0,
+              "other_ratio": 0.0,
+              "success": true
+            },
+            "solo_copy": {
+              "avg_ms": 35.999983,
+              "success": true
+            },
+            "solo_kernel": {
+              "avg_ms": 34.966883,
+              "loop_count": 621,
+              "success": true
+            }
+          },
+          "pinned": {
+            "corruption": {
+              "avg_wall_ms": 9.7857,
+              "mixed_bytes": 0,
+              "mixed_ratio": 0.0,
+              "new_pattern_bytes": 2173871616,
+              "new_pattern_ratio": 0.674859,
+              "old_pattern_bytes": 1047353856,
+              "old_pattern_ratio": 0.325141,
+              "other_bytes": 0,
+              "other_ratio": 0.0,
+              "success": true
+            },
+            "solo_copy": {
+              "avg_ms": 9.5335,
+              "success": true
+            },
+            "solo_kernel": {
+              "avg_ms": 9.124533,
+              "loop_count": 169,
+              "success": true
+            }
+          },
+          "size_mb": 512,
+          "warmup": 2
+        },
+        {
+          "iterations": 4,
+          "pageable": {
+            "corruption": {
+              "avg_wall_ms": 130.291975,
+              "mixed_bytes": 0,
+              "mixed_ratio": 0.0,
+              "new_pattern_bytes": 0,
+              "new_pattern_ratio": 0.0,
+              "old_pattern_bytes": 4294967296,
+              "old_pattern_ratio": 1.0,
+              "other_bytes": 0,
+              "other_ratio": 0.0,
+              "success": true
+            },
+            "solo_copy": {
+              "avg_ms": 67.3928,
+              "success": true
+            },
+            "solo_kernel": {
+              "avg_ms": 65.4316,
+              "loop_count": 635,
+              "success": true
+            }
+          },
+          "pinned": {
+            "corruption": {
+              "avg_wall_ms": 19.15,
+              "mixed_bytes": 0,
+              "mixed_ratio": 0.0,
+              "new_pattern_bytes": 3721998848,
+              "new_pattern_ratio": 0.866595,
+              "old_pattern_bytes": 572968448,
+              "old_pattern_ratio": 0.133405,
+              "other_bytes": 0,
+              "other_ratio": 0.0,
+              "success": true
+            },
+            "solo_copy": {
+              "avg_ms": 18.94,
+              "success": true
+            },
+            "solo_kernel": {
+              "avg_ms": 17.952025,
+              "loop_count": 173,
+              "success": true
+            }
+          },
+          "size_mb": 1024,
+          "warmup": 1
+        }
+      ],
+      "pageable_representative_case_mb": 128,
+      "pageable_representative_mixed_ratio": 0.0,
+      "pageable_representative_new_pattern_ratio": 0.0,
+      "pageable_representative_old_pattern_ratio": 1.0,
+      "pageable_representative_other_ratio": 0.0,
+      "pinned_representative_case_mb": 512,
+      "pinned_representative_mixed_ratio": 0.0,
+      "pinned_representative_new_pattern_ratio": 0.674859,
+      "pinned_representative_old_pattern_ratio": 0.325141,
+      "pinned_representative_other_ratio": 0.0,
+      "timing_backend": "wall_clock"
+    },
+    "parameters": {
+      "copy_direction": "D2H",
+      "iterations": 50,
+      "memory_types": [
+        "pinned",
+        "pageable"
+      ],
+      "shared_region": true,
+      "sizes_mb": [
+        128,
+        512,
+        1024
+      ],
+      "stream_count": 2,
+      "warmup": 5
+    },
+    "primary_metric": "pageable_representative_old_pattern_ratio",
+    "status": "ok",
+    "unit": "ratio",
+    "validation": {
+      "passed": true
+    }
+  }
+}
