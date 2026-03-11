@@ -5,7 +5,10 @@
     "ja": "このベンチで何を明らかにしたいかを日本語で書く。",
     "en": "Describe in English what this benchmark is intended to reveal."
   },
-  "tags": ["template", "replace-me"],
+  "tags": [
+    "template",
+    "replace-me"
+  ],
   "focus": [
     "Primary reading point",
     "Secondary reading point"
@@ -21,10 +24,22 @@
   ],
   "considerations": [
     {
-      "ja": "結果を読むときの注意点や考察の観点を日本語で書く。",
+      "ja": "結果をどう読むべきか、どこに注意すべきかを日本語で書く。",
       "en": "Write the main interpretation note or caveat in English."
     }
   ],
+  "observed_results": {
+    "summary": {
+      "ja": "latest.json の主要結果を人間向けに要約してよい。ここには読みやすい形で数値を重複させてよい。",
+      "en": "You may summarize the key numbers from latest.json here in a more human-readable form."
+    },
+    "highlights": [
+      {
+        "label": "replace_with_metric_label",
+        "value": "replace_with_value"
+      }
+    ]
+  },
   "theoretical_reference": {
     "name": "replace_if_needed",
     "value": "replace_if_needed"

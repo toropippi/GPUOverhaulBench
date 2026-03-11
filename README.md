@@ -61,6 +61,9 @@ python run.py
 ## Results
 - The default output is `benches/<bench-id>/results/latest.json`.
 - The result file contains `bench_id`, `context`, and `result`.
+- Keep `latest.json` as measured output only.
+- Put interpretation, readable summaries, and copied key numbers in `meta.json`.
+- The runner validates this separation and rejects explanatory fields such as `analysis` in result output.
 
 ## Adding a Benchmark
 1. Copy `benches/_template_benchmark/` to `benches/<bench-id>/`.

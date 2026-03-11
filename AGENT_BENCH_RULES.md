@@ -35,6 +35,7 @@ Recommended `meta.json` fields:
 - `primary_metrics`
 - `comparisons`
 - `considerations`
+- `observed_results`
 - `theoretical_reference`
 
 Rules:
@@ -42,6 +43,7 @@ Rules:
 - `comparisons` should prefer an array of `{ "ja": "...", "en": "..." }`.
 - `considerations` should prefer an array of `{ "ja": "...", "en": "..." }`.
 - `considerations` is for interpretation, not for raw measured values.
+- `observed_results` may duplicate key numbers from `results/latest.json` in a more human-readable form.
 - `meta.json` should explain what the benchmark is trying to answer and how the result should be read.
 
 ## Benchmark Output Contract
@@ -57,12 +59,13 @@ Required top-level result fields:
 
 Optional:
 - `notes`
-- `analysis`
 
 Output rules:
 - Do not print human-formatted tables to stdout.
-- Put benchmark-specific details under `parameters`, `measurement`, `notes`, and `analysis`.
-- Keep the output compact and machine-readable.
+- Put raw benchmark detail under `parameters`, `measurement`, and `notes`.
+- Keep `results/latest.json` numeric and compact. Do not put long prose interpretation in result output.
+- Put interpretation, reading guidance, benchmark meaning, and any human-oriented summary of key results in `meta.json`, especially under `question`, `comparisons`, `considerations`, and `observed_results`.
+- Do not emit explanatory keys such as `analysis`, `summary`, `interpretation`, `question`, `comparisons`, or `considerations` anywhere inside the result JSON.
 
 ## Measurement Rules
 - Separate work into `setup`, `warmup`, `measure`, `validate`, `teardown`.
@@ -82,6 +85,11 @@ Output rules:
 - `benches/<bench-id>/run.py` should remain a thin wrapper.
 - The local wrapper should only forward to `tools/run.py` with the appropriate `BENCH_ID`.
 - `tools/run.py` owns build, execution, context collection, validation, and writing `results/latest.json`.
+
+## Result File Role
+- `results/latest.json` is the place for measured output.
+- It should contain raw metrics, parameters, validation state, and execution context.
+- It should not duplicate the benchmark's explanatory text from `meta.json`.
 
 ## Privacy Rules
 - Do not include hostnames in published result files.

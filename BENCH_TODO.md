@@ -7,7 +7,7 @@ The rule is: `1 bench = 1 purpose`.
 
 | Status | Bench ID | Area | Purpose | What To Measure | Merged From | Notes |
 |---|---|---|---|---|---|---|
-| Done | `pcie_host_device_bw` | `transfer.pcie` | PCIe 5.0 x16 に対する H2D/D2H 実効帯域と pinned/pageable 差を明らかにする | H2D/D2H bandwidth, pinned/pageable speedup, size sweep, theoretical utilization | `pcie_h2d_pageable_bw`, `pcie_h2d_pinned_bw`, `pcie_d2h_pageable_bw`, `pcie_d2h_pinned_bw`, `pcie_h2d_size_sweep`, `pcie_d2h_size_sweep` | 現在の repo に存在する統合済みベンチ |
+| Done | `pcie_host_device_bw` | `transfer.pcie` | PCIe 5.0 x16 に対する H2D/D2H 実効帯域と pinned/pageable 差を明らかにする | H2D/D2H bandwidth, pinned/pageable speedup, size sweep through 8GB, theoretical utilization | `pcie_h2d_pageable_bw`, `pcie_h2d_pinned_bw`, `pcie_d2h_pageable_bw`, `pcie_d2h_pinned_bw`, `pcie_h2d_size_sweep`, `pcie_d2h_size_sweep` | 現在の repo に存在する統合済みベンチ。大サイズでは反復回数を自動で下げる |
 | Historical Prototype | `device_memcpy_bw` | `memory.global` | GPU 内の単純 D2D コピー帯域の基準値を得る | device-to-device copy bandwidth by size | `dev_memcpy_linear_bw` | 以前の試作前提の整理項目。現行 repo には bench folder がないため、必要なら再作成する |
 
 ## Core CUDA Single-GPU
