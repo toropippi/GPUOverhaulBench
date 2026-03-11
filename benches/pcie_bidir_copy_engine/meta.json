@@ -1,0 +1,129 @@
+{
+  "id": "pcie_bidir_copy_engine",
+  "title": "PCIe Bidirectional Simultaneous Transfer",
+  "question": {
+    "ja": "pinned host memory を使い、H2D と D2H を別 stream で同時発行したとき、この GPU で実効的な双方向同時通信が成立するか。成立するなら合計帯域はどれくらい出るか。",
+    "en": "When using pinned host memory and issuing H2D and D2H copies simultaneously on separate streams, does this GPU show effective bidirectional transfer overlap, and if so, what combined bandwidth is achieved?"
+  },
+  "tags": [
+    "transfer",
+    "pcie",
+    "bidirectional",
+    "copy-engine",
+    "pinned",
+    "async"
+  ],
+  "focus": [
+    "Solo H2D time vs solo D2H time vs simultaneous wall time",
+    "Combined bidirectional bandwidth",
+    "wall_vs_solo_sum_ratio as the overlap diagnostic",
+    "Effect of asyncEngineCount on observed behavior"
+  ],
+  "primary_metrics": [
+    "best_combined_bidirectional_bandwidth_gib_per_s",
+    "min_wall_vs_solo_sum_ratio",
+    "async_engine_count"
+  ],
+  "comparisons": [
+    {
+      "ja": "単独 H2D と単独 D2H の時間の和に対する、同時発行時 wall time の比較",
+      "en": "Simultaneous wall time vs the sum of solo H2D and solo D2H times"
+    },
+    {
+      "ja": "単独転送と双方向同時発行の合計帯域の比較",
+      "en": "Combined bidirectional bandwidth vs solo transfer baselines"
+    },
+    {
+      "ja": "size sweep による重なり方の比較",
+      "en": "Overlap behavior across transfer sizes"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "このベンチは pinned memory のみを使う。pageable memory を混ぜると内部 staging や同期挙動が入り、copy engine の双方向同時性そのものを見にくくなるため。",
+      "en": "This benchmark uses pinned memory only. Mixing pageable memory would introduce internal staging and synchronization behavior that obscures the copy-engine question itself."
+    },
+    {
+      "ja": "判定の中心は wall_vs_solo_sum_ratio。値が 1 に近ければほぼ直列、0.5 付近まで下がれば H2D と D2H が大きく重なっていると読める。",
+      "en": "The main diagnostic is wall_vs_solo_sum_ratio. Values near 1 imply mostly serialized behavior, while values approaching 0.5 indicate substantial H2D and D2H overlap."
+    },
+    {
+      "ja": "asyncEngineCount が 1 の場合、独立した H2D/D2H copy engine を強く期待しにくい。このベンチでは、その条件下で実測上どこまで重なるか、あるいはほぼ重ならないかを確認することが目的になる。",
+      "en": "When asyncEngineCount is 1, it is hard to expect strongly independent H2D and D2H copy engines. The purpose of this benchmark is to verify whether overlap still appears in practice under that condition, or whether behavior is effectively serialized."
+    },
+    {
+      "ja": "asyncEngineCount > 0 は GPU との非同期コピーを kernel 実行と重ねられることを意味し、asyncEngineCount == 2 は H2D 1 本 + D2H 1 本 + kernel を同時に進められる整理になる。したがって 1 の場合は双方向通信そのものができないのではなく、双方向同時オーバーラップを強く期待しにくい、と理解するのが正確である。",
+      "en": "asyncEngineCount > 0 means asynchronous copies can overlap with kernel execution, and asyncEngineCount == 2 corresponds to being able to advance one H2D copy, one D2H copy, and one kernel together. Therefore, when the value is 1, it does not mean bidirectional transfer is impossible; it more precisely means strong simultaneous bidirectional overlap should not be expected."
+    },
+    {
+      "ja": "event time は各 stream 内のコピー時間を示し、双方向同時性の主判定は pair 全体の wall time で行う。stream 内時間だけを見ると、同時発行による実効的な得失を見誤る。",
+      "en": "Event timing shows copy duration inside each stream, but the main bidirectional-overlap judgment comes from the pair's wall time. Looking only at per-stream event times can miss whether simultaneous issuance actually improved end-to-end behavior."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "environment": {
+      "gpu": "NVIDIA GeForce RTX 5090",
+      "driver_version": "576.88",
+      "cuda_runtime_version": "12.9",
+      "os": "Windows-11-10.0.26200-SP0"
+    },
+    "summary": {
+      "ja": "4 GB まで再実行した最新結果では asyncEngineCount が 1 で、min_wall_vs_solo_sum_ratio は 0.995228 だった。これは同時発行時 wall time がほぼ solo H2D + solo D2H の和に一致していることを意味し、この環境では双方向同時通信が実効的にはほとんど重なっていないと読める。combined 帯域も最大 53.08 GiB/s で、一方向 pinned 帯域級にとどまり、理想的な full-duplex 的な倍増にはならなかった。",
+      "en": "In the latest rerun up to 4 GB, asyncEngineCount was 1 and min_wall_vs_solo_sum_ratio was 0.995228. That means simultaneous wall time was essentially equal to solo H2D plus solo D2H, so on this system bidirectional issuance behaves as effectively non-overlapped. The best combined bandwidth was 53.08 GiB/s, staying near one-way pinned bandwidth rather than showing an ideal full-duplex doubling."
+    },
+    "highlights": [
+      {
+        "label": "asyncEngineCount",
+        "value": 1
+      },
+      {
+        "label": "Best combined bidirectional bandwidth",
+        "value_gib_per_s": 53.07912
+      },
+      {
+        "label": "Minimum wall vs solo-sum ratio",
+        "value": 0.995228
+      },
+      {
+        "label": "Minimum wall vs solo-max ratio",
+        "value": 1.841597
+      }
+    ],
+    "size_sweep_snapshot": [
+      {
+        "size_mb": 128,
+        "h2d_solo_gib_per_s": 53.314717,
+        "d2h_solo_gib_per_s": 53.066956,
+        "bidir_combined_gib_per_s": 51.744622,
+        "wall_vs_solo_sum_ratio": 1.027944
+      },
+      {
+        "size_mb": 512,
+        "h2d_solo_gib_per_s": 53.40729,
+        "d2h_solo_gib_per_s": 53.007323,
+        "bidir_combined_gib_per_s": 52.184513,
+        "wall_vs_solo_sum_ratio": 1.019585
+      },
+      {
+        "size_mb": 1024,
+        "h2d_solo_gib_per_s": 52.823199,
+        "d2h_solo_gib_per_s": 52.115192,
+        "bidir_combined_gib_per_s": 52.718356,
+        "wall_vs_solo_sum_ratio": 0.995228
+      },
+      {
+        "size_mb": 4096,
+        "h2d_solo_gib_per_s": 52.929241,
+        "d2h_solo_gib_per_s": 53.025088,
+        "bidir_combined_gib_per_s": 52.920343,
+        "wall_vs_solo_sum_ratio": 1.001073
+      }
+    ]
+  },
+  "theoretical_reference": {
+    "pcie_generation": "5.0",
+    "link_width": "x16",
+    "one_way_bandwidth_GBps_decimal": 63.015
+  }
+}

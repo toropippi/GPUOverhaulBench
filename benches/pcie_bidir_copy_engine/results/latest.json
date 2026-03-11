@@ -1,0 +1,176 @@
+{
+  "bench_id": "pcie_bidir_copy_engine",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "async_engine_count": 1,
+      "best_combined_bidirectional_bandwidth_gib_per_s": 53.07912,
+      "cases": [
+        {
+          "bidir": {
+            "avg_wall_ms": 6.633157,
+            "combined_gib_per_s": 37.689446,
+            "d2h_stream_avg_ms": 2.977396,
+            "h2d_stream_avg_ms": 2.988887,
+            "success": true,
+            "wall_vs_solo_max_ratio": 2.687929,
+            "wall_vs_solo_sum_ratio": 1.373587
+          },
+          "d2h_solo": {
+            "avg_ms": 2.467757,
+            "gib_per_s": 50.653277,
+            "success": true
+          },
+          "h2d_solo": {
+            "avg_ms": 2.361318,
+            "gib_per_s": 52.936528,
+            "success": true
+          },
+          "iterations": 30,
+          "size_mb": 128,
+          "warmup": 3
+        },
+        {
+          "bidir": {
+            "avg_wall_ms": 23.488607,
+            "combined_gib_per_s": 42.573832,
+            "d2h_stream_avg_ms": 11.672024,
+            "h2d_stream_avg_ms": 11.428679,
+            "success": true,
+            "wall_vs_solo_max_ratio": 1.841597,
+            "wall_vs_solo_sum_ratio": 1.031192
+          },
+          "d2h_solo": {
+            "avg_ms": 10.02364,
+            "gib_per_s": 49.882079,
+            "success": true
+          },
+          "h2d_solo": {
+            "avg_ms": 12.754476,
+            "gib_per_s": 39.201924,
+            "success": true
+          },
+          "iterations": 15,
+          "size_mb": 512,
+          "warmup": 3
+        },
+        {
+          "bidir": {
+            "avg_wall_ms": 37.93745,
+            "combined_gib_per_s": 52.718356,
+            "d2h_stream_avg_ms": 18.926676,
+            "h2d_stream_avg_ms": 18.927046,
+            "success": true,
+            "wall_vs_solo_max_ratio": 1.977117,
+            "wall_vs_solo_sum_ratio": 0.995228
+          },
+          "d2h_solo": {
+            "avg_ms": 19.188263,
+            "gib_per_s": 52.115192,
+            "success": true
+          },
+          "h2d_solo": {
+            "avg_ms": 18.931076,
+            "gib_per_s": 52.823199,
+            "success": true
+          },
+          "iterations": 6,
+          "size_mb": 1024,
+          "warmup": 2
+        },
+        {
+          "bidir": {
+            "avg_wall_ms": 75.3592,
+            "combined_gib_per_s": 53.07912,
+            "d2h_stream_avg_ms": 37.678383,
+            "h2d_stream_avg_ms": 37.607529,
+            "success": true,
+            "wall_vs_solo_max_ratio": 1.997896,
+            "wall_vs_solo_sum_ratio": 1.000943
+          },
+          "d2h_solo": {
+            "avg_ms": 37.719276,
+            "gib_per_s": 53.023286,
+            "success": true
+          },
+          "h2d_solo": {
+            "avg_ms": 37.568901,
+            "gib_per_s": 53.23552,
+            "success": true
+          },
+          "iterations": 4,
+          "size_mb": 2048,
+          "warmup": 2
+        },
+        {
+          "bidir": {
+            "avg_wall_ms": 151.1706,
+            "combined_gib_per_s": 52.920343,
+            "d2h_stream_avg_ms": 75.588097,
+            "h2d_stream_avg_ms": 75.526718,
+            "success": true,
+            "wall_vs_solo_max_ratio": 2.000336,
+            "wall_vs_solo_sum_ratio": 1.001073
+          },
+          "d2h_solo": {
+            "avg_ms": 75.435989,
+            "gib_per_s": 53.025088,
+            "success": true
+          },
+          "h2d_solo": {
+            "avg_ms": 75.572594,
+            "gib_per_s": 52.929241,
+            "success": true
+          },
+          "iterations": 2,
+          "size_mb": 4096,
+          "warmup": 1
+        }
+      ],
+      "device_overlap": 1,
+      "min_wall_vs_solo_max_ratio": 1.841597,
+      "min_wall_vs_solo_sum_ratio": 0.995228,
+      "timing_backend": "cuda_event_and_wall_clock"
+    },
+    "parameters": {
+      "directions": [
+        "H2D",
+        "D2H"
+      ],
+      "iterations": 50,
+      "memory_types": [
+        "pinned"
+      ],
+      "sizes_mb": [
+        128,
+        512,
+        1024,
+        2048,
+        4096
+      ],
+      "stream_count": 2,
+      "warmup": 5
+    },
+    "primary_metric": "best_combined_bidirectional_bandwidth_gib_per_s",
+    "status": "ok",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": true
+    }
+  }
+}
