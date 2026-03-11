@@ -50,6 +50,7 @@ Rules:
 Current `build.toolchain` values:
 - omitted or `nvcc`
 - `msvc_opencl`
+- `msvc_d3d12`
 
 ## Benchmark Output Contract
 The benchmark binary must emit exactly one JSON document to stdout.
@@ -92,6 +93,7 @@ Output rules:
 - `tools/run.py` owns build, execution, context collection, validation, and writing `results/latest.json`.
 - CUDA benches default to `nvcc` and `bench.cu`.
 - OpenCL benches should use `build.toolchain = "msvc_opencl"` and `bench.cpp`.
+- D3D12 benches should use `build.toolchain = "msvc_d3d12"` and `bench.cpp`.
 
 ## Result File Role
 - `results/latest.json` is the place for measured output.

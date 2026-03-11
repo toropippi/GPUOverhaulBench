@@ -16,6 +16,10 @@ SHARED_INCLUDE = BENCHES_DIR / "_shared"
 VSWHERE_PATH = Path(r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe")
 OPENCL_INCLUDE_DIR = Path(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\include")
 OPENCL_LIB_PATH = Path(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\lib\x64\OpenCL.lib")
+WINDOWS_SDK_VERSION = "10.0.26100.0"
+WINDOWS_SDK_INCLUDE_ROOT = Path(r"C:\Program Files (x86)\Windows Kits\10\Include") / WINDOWS_SDK_VERSION
+WINDOWS_SDK_LIB_ROOT = Path(r"C:\Program Files (x86)\Windows Kits\10\Lib") / WINDOWS_SDK_VERSION
+WINDOWS_SDK_UM_LIB_DIR = WINDOWS_SDK_LIB_ROOT / "um" / "x64"
 
 def load_meta(bench_id: str) -> tuple[dict, Path]:
     bench_dir = BENCHES_DIR / bench_id
@@ -30,7 +34,7 @@ def load_meta(bench_id: str) -> tuple[dict, Path]:
 def get_toolchain(meta: dict) -> str:
     build = meta.get("build", {})
     toolchain = build.get("toolchain", "nvcc")
-    if toolchain not in {"nvcc", "msvc_opencl"}:
+    if toolchain not in {"nvcc", "msvc_opencl", "msvc_d3d12"}:
         raise RuntimeError(f"Unsupported build.toolchain: {toolchain}")
     return toolchain
 
@@ -116,6 +120,46 @@ def build_with_msvc_opencl(bench_id: str, bench_dir: Path, build_dir: Path, exe_
     return exe_path, (completed.stderr.strip() or completed.stdout.strip())
 
 
+def build_with_msvc_d3d12(bench_id: str, bench_dir: Path, build_dir: Path, exe_path: Path) -> tuple[Path, str]:
+    source_path = bench_dir / "bench.cpp"
+    if not source_path.exists():
+        raise RuntimeError(f"Missing D3D12 source file: {source_path}")
+    for include_dir in (
+        WINDOWS_SDK_INCLUDE_ROOT / "shared",
+        WINDOWS_SDK_INCLUDE_ROOT / "um",
+        WINDOWS_SDK_INCLUDE_ROOT / "ucrt",
+    ):
+        if not include_dir.exists():
+            raise RuntimeError(f"Windows SDK include directory not found: {include_dir}")
+    for lib_name in ("d3d12.lib", "dxgi.lib", "dxguid.lib", "d3dcompiler.lib"):
+        lib_path = WINDOWS_SDK_UM_LIB_DIR / lib_name
+        if not lib_path.exists():
+            raise RuntimeError(f"Windows SDK library not found: {lib_path}")
+
+    vsdevcmd = locate_vsdevcmd()
+    command = (
+        f'call "{vsdevcmd}" -no_logo -arch=x64 -host_arch=x64 && '
+        f'cl /nologo /EHsc /std:c++17 /O2 '
+        f'/I"{SHARED_INCLUDE}" '
+        f'/I"{WINDOWS_SDK_INCLUDE_ROOT / "shared"}" '
+        f'/I"{WINDOWS_SDK_INCLUDE_ROOT / "um"}" '
+        f'/I"{WINDOWS_SDK_INCLUDE_ROOT / "ucrt"}" '
+        f'"{source_path}" /Fo".\\\\" /Fe".\\{bench_id}.exe" '
+        f'/link /LIBPATH:"{WINDOWS_SDK_UM_LIB_DIR}" d3d12.lib dxgi.lib dxguid.lib d3dcompiler.lib'
+    )
+    completed = subprocess.run(
+        command,
+        cwd=build_dir,
+        shell=True,
+        capture_output=True,
+        text=True,
+        errors="replace",
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(completed.stderr.strip() or completed.stdout.strip() or "MSVC D3D12 build failed")
+    return exe_path, (completed.stderr.strip() or completed.stdout.strip())
+
+
 def build_benchmark(meta: dict, bench_id: str, bench_dir: Path) -> tuple[Path, str]:
     build_dir = bench_dir / "build"
     build_dir.mkdir(parents=True, exist_ok=True)
@@ -123,7 +167,9 @@ def build_benchmark(meta: dict, bench_id: str, bench_dir: Path) -> tuple[Path, s
     toolchain = get_toolchain(meta)
     if toolchain == "nvcc":
         return build_with_nvcc(bench_id, bench_dir, build_dir, exe_path)
-    return build_with_msvc_opencl(bench_id, bench_dir, build_dir, exe_path)
+    if toolchain == "msvc_opencl":
+        return build_with_msvc_opencl(bench_id, bench_dir, build_dir, exe_path)
+    return build_with_msvc_d3d12(bench_id, bench_dir, build_dir, exe_path)
 
 
 def run_benchmark(exe_path: Path) -> tuple[dict, str]:

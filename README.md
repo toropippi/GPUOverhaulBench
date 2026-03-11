@@ -23,6 +23,7 @@ Small, self-contained GPU benchmarks for investigating GPU behavior.
 - NVIDIA GPU with CUDA support
 - CUDA Toolkit with `nvcc`
 - OpenCL runtime and import library when running OpenCL benchmarks
+- Windows SDK and Visual Studio C++ toolchain when running D3D12 benchmarks
 - Python 3.13 or compatible
 
 ## Running a Benchmark
@@ -74,7 +75,7 @@ python run.py
 ## Authoring Rules
 Detailed benchmark authoring rules, metadata conventions, and output contracts are defined in `AGENT_BENCH_RULES.md`.
 
-The shared runner in `tools/run.py` supports both CUDA (`nvcc`) and OpenCL (`MSVC + OpenCL.lib`) benchmarks.
+The shared runner in `tools/run.py` supports CUDA (`nvcc`), OpenCL (`MSVC + OpenCL.lib`), and D3D12 (`MSVC + Windows SDK`) benchmarks.
 
 ## Design Backlog
 The consolidated benchmark backlog lives in `BENCH_TODO.md`.
