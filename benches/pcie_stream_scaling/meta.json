@@ -1,0 +1,85 @@
+{
+  "id": "pcie_stream_scaling",
+  "title": "PCIe Stream Scaling",
+  "question": {
+    "ja": "固定レイテンシの影響が大きい 4 B から 1 MiB の小サイズ転送で、同方向の H2D または D2H copy を複数 stream に分けて同時実行すると aggregate throughput は本当に増えるか。single-stream 基準に対する scaling factor は実際に並列化の効果を示すか。",
+    "en": "In the small-transfer regime from 4 B to 1 MiB, where fixed latency is more visible, does issuing same-direction H2D or D2H copies on multiple streams increase aggregate throughput, and does scaling relative to the single-stream baseline show real parallelization?"
+  },
+  "tags": [
+    "transfer",
+    "pcie",
+    "stream",
+    "scaling",
+    "cuda",
+    "pinned"
+  ],
+  "focus": [
+    "Aggregate H2D bandwidth vs stream count in the small-transfer regime",
+    "Aggregate D2H bandwidth vs stream count in the small-transfer regime",
+    "Scaling relative to the single-stream baseline at the same transfer size",
+    "Whether adding streams helps when fixed latency dominates"
+  ],
+  "primary_metrics": [
+    "best_h2d_scaling_factor",
+    "best_d2h_scaling_factor",
+    "best_h2d_aggregate_bandwidth_gib_per_s",
+    "best_d2h_aggregate_bandwidth_gib_per_s"
+  ],
+  "comparisons": [
+    {
+      "ja": "stream_count=1 と stream_count>1 の aggregate throughput 比較",
+      "en": "Compare aggregate throughput at stream_count=1 against stream_count>1"
+    },
+    {
+      "ja": "H2D と D2H の scaling の違い",
+      "en": "Compare H2D scaling against D2H scaling"
+    },
+    {
+      "ja": "4 B から 1 MiB までのサイズごとの scaling 挙動の比較",
+      "en": "Compare scaling behavior across transfer sizes"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は pinned host memory のみを使う。pageable memory を混ぜると host-side staging の影響が入って stream 数による違いを読みづらくする。",
+      "en": "This benchmark uses pinned host memory only. Pageable memory would add host-side staging effects that obscure throughput scaling with stream count."
+    },
+    {
+      "ja": "各 stream は独立した host/device buffer を使う。同一領域への copy 競合は作らない。",
+      "en": "Each stream uses independent host and device buffers. No same-region copy behavior is involved."
+    },
+    {
+      "ja": "主指標は per-stream event time ではなく、全 stream の発行と完了を含む batched wall time から計算した aggregate bandwidth である。小サイズは 1 iteration 内で複数 round を繰り返し、その平均 1 round 時間に正規化している。",
+      "en": "The main metric is aggregate bandwidth computed from batched wall time covering issuance and completion of all streams, not per-stream event time. Tiny transfers are timed in repeated rounds inside one iteration and then normalized back to one logical round."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "latest.json には各 size_bytes と stream_count ごとの H2D/D2H aggregate bandwidth と、同サイズ single-stream 基準に対する scaling factor が入る。fixed latency が支配的な領域で scaling factor が 1 を超えれば、stream 分割が固定費の一部を隠している可能性がある。",
+      "en": "latest.json reports H2D/D2H aggregate bandwidth and scaling factor versus the same-size single-stream baseline for each size_bytes and stream_count. If scaling factors rise above 1 in the latency-dominated region, it suggests stream-level parallelization is hiding part of the fixed latency."
+    },
+    "conclusion": {
+      "ja": "4 B から 8 KiB までを target_batch_ms=5.5 で再試走した結果、same-direction copy を複数 stream に分けても改善は弱く不安定だった。best case でも H2D は約 1.23x、D2H は約 1.21x にとどまり、サイズや stream_count に対して一貫した強いスケーリングは見られなかった。実用上は、same-direction small transfer に対する stream 分割の効果は限定的とみなすべきである。",
+      "en": "A focused rerun from 4 B to 8 KiB with target_batch_ms=5.5 showed that splitting same-direction copies across multiple streams provides only weak and unstable benefit. Even the best cases reached only about 1.23x for H2D and about 1.21x for D2H, with no consistent strong scaling across size or stream_count. In practice, the benefit of stream splitting for same-direction small transfers should be treated as limited."
+    },
+    "highlights": [
+      {
+        "label": "Best H2D scaling factor",
+        "value": "see latest.json"
+      },
+      {
+        "label": "Best D2H scaling factor",
+        "value": "see latest.json"
+      },
+      {
+        "label": "Focused rerun conclusion",
+        "value": "4 B..8 KiB rerun indicates only weak and inconsistent scaling"
+      }
+    ]
+  },
+  "theoretical_reference": {
+    "name": "PCIe 5.0 x16 one-way bandwidth",
+    "value": "63.015 GB/s decimal (~58.687 GiB/s)"
+  }
+}
