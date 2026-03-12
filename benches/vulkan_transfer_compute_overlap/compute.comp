@@ -1,0 +1,29 @@
+﻿#version 450
+
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(set = 0, binding = 0) buffer OutputBuffer {
+    uint values[];
+} output_buffer;
+
+layout(set = 0, binding = 1) uniform Params {
+    uint loops;
+    uint pad0;
+    uint pad1;
+    uint pad2;
+} params;
+
+void main() {
+    uint tid = gl_GlobalInvocationID.x;
+    uint x = 0x12345678u ^ (tid * 747796405u + 2891336453u);
+    uint y = 0x9E3779B9u + (tid * 1664525u + 1013904223u);
+    uint z = 0xA5A5A5A5u ^ (tid * 2246822519u + 3266489917u);
+    for (uint i = 0; i < params.loops; ++i) {
+        x ^= x << 13;
+        x ^= x >> 17;
+        x ^= x << 5;
+        y = y * 1664525u + 1013904223u;
+        z ^= x + 0x9E3779B9u + (z << 6) + (z >> 2);
+    }
+    output_buffer.values[tid] = x ^ y ^ z;
+}

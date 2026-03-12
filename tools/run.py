@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import json
@@ -21,6 +21,25 @@ WINDOWS_SDK_INCLUDE_ROOT = Path(r"C:\Program Files (x86)\Windows Kits\10\Include
 WINDOWS_SDK_LIB_ROOT = Path(r"C:\Program Files (x86)\Windows Kits\10\Lib") / WINDOWS_SDK_VERSION
 WINDOWS_SDK_UM_LIB_DIR = WINDOWS_SDK_LIB_ROOT / "um" / "x64"
 
+
+def locate_vulkan_sdk() -> Path:
+    root = Path(r"C:\VulkanSDK")
+    if not root.exists():
+        raise RuntimeError("Vulkan SDK root not found: C:\\VulkanSDK")
+    versions = sorted([path for path in root.iterdir() if path.is_dir()], reverse=True)
+    if not versions:
+        raise RuntimeError("No Vulkan SDK versions found under C:\\VulkanSDK")
+    sdk = versions[0]
+    for required in (
+        sdk / "Include" / "vulkan" / "vulkan.h",
+        sdk / "Lib" / "vulkan-1.lib",
+        sdk / "Bin" / "glslangValidator.exe",
+    ):
+        if not required.exists():
+            raise RuntimeError(f"Required Vulkan SDK file not found: {required}")
+    return sdk
+
+
 def load_meta(bench_id: str) -> tuple[dict, Path]:
     bench_dir = BENCHES_DIR / bench_id
     meta_path = bench_dir / "meta.json"
@@ -34,7 +53,7 @@ def load_meta(bench_id: str) -> tuple[dict, Path]:
 def get_toolchain(meta: dict) -> str:
     build = meta.get("build", {})
     toolchain = build.get("toolchain", "nvcc")
-    if toolchain not in {"nvcc", "msvc_opencl", "msvc_d3d12"}:
+    if toolchain not in {"nvcc", "msvc_opencl", "msvc_d3d12", "msvc_vulkan"}:
         raise RuntimeError(f"Unsupported build.toolchain: {toolchain}")
     return toolchain
 
@@ -104,7 +123,7 @@ def build_with_msvc_opencl(bench_id: str, bench_dir: Path, build_dir: Path, exe_
         f'call "{vsdevcmd}" -no_logo -arch=x64 -host_arch=x64 && '
         f'cl /nologo /EHsc /std:c++17 /O2 '
         f'/I"{SHARED_INCLUDE}" /I"{OPENCL_INCLUDE_DIR}" '
-        f'"{source_path}" /Fo".\\\\" /Fe".\\{bench_id}.exe" '
+        f'"{source_path}" /Fe"{exe_path}" '
         f'/link /LIBPATH:"{OPENCL_LIB_PATH.parent}" OpenCL.lib'
     )
     completed = subprocess.run(
@@ -144,7 +163,7 @@ def build_with_msvc_d3d12(bench_id: str, bench_dir: Path, build_dir: Path, exe_p
         f'/I"{WINDOWS_SDK_INCLUDE_ROOT / "shared"}" '
         f'/I"{WINDOWS_SDK_INCLUDE_ROOT / "um"}" '
         f'/I"{WINDOWS_SDK_INCLUDE_ROOT / "ucrt"}" '
-        f'"{source_path}" /Fo".\\\\" /Fe".\\{bench_id}.exe" '
+        f'"{source_path}" /Fe"{exe_path}" '
         f'/link /LIBPATH:"{WINDOWS_SDK_UM_LIB_DIR}" d3d12.lib dxgi.lib dxguid.lib d3dcompiler.lib'
     )
     completed = subprocess.run(
@@ -160,6 +179,61 @@ def build_with_msvc_d3d12(bench_id: str, bench_dir: Path, build_dir: Path, exe_p
     return exe_path, (completed.stderr.strip() or completed.stdout.strip())
 
 
+def build_with_msvc_vulkan(bench_id: str, bench_dir: Path, build_dir: Path, exe_path: Path) -> tuple[Path, str]:
+    source_path = bench_dir / "bench.cpp"
+    shader_source = bench_dir / "compute.comp"
+    if not source_path.exists():
+        raise RuntimeError(f"Missing Vulkan source file: {source_path}")
+    if not shader_source.exists():
+        raise RuntimeError(f"Missing Vulkan shader source file: {shader_source}")
+
+    vulkan_sdk = locate_vulkan_sdk()
+    shader_out = build_dir / "compute.spv"
+    shader_command = [
+        str(vulkan_sdk / "Bin" / "glslangValidator.exe"),
+        "-V",
+        str(shader_source),
+        "-o",
+        str(shader_out),
+    ]
+    shader_completed = subprocess.run(shader_command, capture_output=True, text=True, errors="replace")
+    if shader_completed.returncode != 0:
+        raise RuntimeError(shader_completed.stderr.strip() or shader_completed.stdout.strip() or "glslangValidator failed")
+
+    for include_dir in (
+        WINDOWS_SDK_INCLUDE_ROOT / "shared",
+        WINDOWS_SDK_INCLUDE_ROOT / "um",
+        WINDOWS_SDK_INCLUDE_ROOT / "ucrt",
+        vulkan_sdk / "Include",
+    ):
+        if not include_dir.exists():
+            raise RuntimeError(f"Required include directory not found: {include_dir}")
+
+    vsdevcmd = locate_vsdevcmd()
+    command = (
+        f'call "{vsdevcmd}" -no_logo -arch=x64 -host_arch=x64 && '
+        f'cl /nologo /EHsc /std:c++17 /O2 '
+        f'/I"{WINDOWS_SDK_INCLUDE_ROOT / "shared"}" '
+        f'/I"{WINDOWS_SDK_INCLUDE_ROOT / "um"}" '
+        f'/I"{WINDOWS_SDK_INCLUDE_ROOT / "ucrt"}" '
+        f'/I"{vulkan_sdk / "Include"}" '
+        f'"{source_path}" /Fe"{exe_path}" '
+        f'/link /LIBPATH:"{vulkan_sdk / "Lib"}" vulkan-1.lib'
+    )
+    completed = subprocess.run(
+        command,
+        cwd=build_dir,
+        shell=True,
+        capture_output=True,
+        text=True,
+        errors="replace",
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(completed.stderr.strip() or completed.stdout.strip() or "MSVC Vulkan build failed")
+    build_log = "\n".join(filter(None, [shader_completed.stderr.strip() or shader_completed.stdout.strip(), completed.stderr.strip() or completed.stdout.strip()]))
+    return exe_path, build_log
+
+
 def build_benchmark(meta: dict, bench_id: str, bench_dir: Path) -> tuple[Path, str]:
     build_dir = bench_dir / "build"
     build_dir.mkdir(parents=True, exist_ok=True)
@@ -169,11 +243,19 @@ def build_benchmark(meta: dict, bench_id: str, bench_dir: Path) -> tuple[Path, s
         return build_with_nvcc(bench_id, bench_dir, build_dir, exe_path)
     if toolchain == "msvc_opencl":
         return build_with_msvc_opencl(bench_id, bench_dir, build_dir, exe_path)
-    return build_with_msvc_d3d12(bench_id, bench_dir, build_dir, exe_path)
+    if toolchain == "msvc_d3d12":
+        return build_with_msvc_d3d12(bench_id, bench_dir, build_dir, exe_path)
+    return build_with_msvc_vulkan(bench_id, bench_dir, build_dir, exe_path)
 
 
 def run_benchmark(exe_path: Path) -> tuple[dict, str]:
-    completed = subprocess.run([str(exe_path)], capture_output=True, text=True, errors="replace")
+    completed = subprocess.run(
+        [str(exe_path)],
+        cwd=exe_path.parent,
+        capture_output=True,
+        text=True,
+        errors="replace",
+    )
     stdout = completed.stdout.strip()
     if not stdout:
         raise RuntimeError(completed.stderr.strip() or "benchmark did not emit JSON")
@@ -265,3 +347,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+
+
