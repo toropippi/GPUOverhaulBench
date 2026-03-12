@@ -36,7 +36,7 @@ All overlap ratios are `wall_vs_solo_sum_ratio`, where values near `0.5` mean tr
 - OpenCL is also close for most cases, but its `1024 MiB` H2D-like sample is lower at `45.313 GiB/s`.
 - All three APIs show overlap ratios close to `0.5-0.55`, which is consistent with transfer and compute overlapping well.
 - Vulkan does not show the earlier D3D12-style anomalous `100+ GiB/s` H2D-like result.
-- For an additional Vulkan-only copy sanity check up to `2048 MiB`, see `benches/vulkan_staged_copy_timing_validation/results/latest.json`. That sample stays around `50-52 GiB/s` with GPU timestamps and full readback validation.
+- Vulkan-only staged copy sanity was checked separately during local validation and stayed around `50-52 GiB/s` up to `2048 MiB`.
 
 ## 日本語メモ
 
@@ -47,4 +47,4 @@ All overlap ratios are `wall_vs_solo_sum_ratio`, where values near `0.5` mean tr
 - OpenCL も概ね近いですが、`1024 MiB` の H2D-like は `45.313 GiB/s` と少し低めです。
 - 3 API とも overlap ratio は概ね `0.5-0.55` で、挙動はかなり似ています。
 - Vulkan は D3D12 調査時のような `100+ GiB/s` の不自然な H2D-like 値は出ていません。
-- Vulkan の copy 単体 sanity check は `benches/vulkan_staged_copy_timing_validation/results/latest.json` を参照してください。`2048 MiB` まで `50-52 GiB/s` で安定しています。
+- Vulkan の copy 単体 sanity check はローカル確認で実施済みで、`2048 MiB` まで `50-52 GiB/s` で安定していました。
