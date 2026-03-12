@@ -1,0 +1,211 @@
+{
+  "bench_id": "device_global_memory_bw",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "adaptive_iteration_schedule": true,
+      "best_copy_gib_per_s": 3288.199778,
+      "best_memset_gib_per_s": 1824.873057,
+      "best_read_only_gib_per_s": 1296.075561,
+      "best_read_write_gib_per_s": 3006.843349,
+      "best_write_only_gib_per_s": 1541.145983,
+      "cases": [
+        {
+          "copy": {
+            "avg_ms": 0.013398,
+            "gib_per_s": 1166.184078,
+            "success": true
+          },
+          "iterations": 50,
+          "memset": {
+            "avg_ms": 0.015345,
+            "gib_per_s": 509.114158,
+            "success": true
+          },
+          "read_only": {
+            "avg_ms": 0.015902,
+            "gib_per_s": 491.287916,
+            "success": true
+          },
+          "read_write": {
+            "avg_ms": 0.013424,
+            "gib_per_s": 1163.960007,
+            "success": true
+          },
+          "size_mb": 8,
+          "warmup": 5,
+          "write_only": {
+            "avg_ms": 0.017624,
+            "gib_per_s": 443.279519,
+            "success": true
+          }
+        },
+        {
+          "copy": {
+            "avg_ms": 0.019007,
+            "gib_per_s": 3288.199778,
+            "success": true
+          },
+          "iterations": 50,
+          "memset": {
+            "avg_ms": 0.017124,
+            "gib_per_s": 1824.873057,
+            "success": true
+          },
+          "read_only": {
+            "avg_ms": 0.027853,
+            "gib_per_s": 1121.96998,
+            "success": true
+          },
+          "read_write": {
+            "avg_ms": 0.020786,
+            "gib_per_s": 3006.843349,
+            "success": true
+          },
+          "size_mb": 32,
+          "warmup": 5,
+          "write_only": {
+            "avg_ms": 0.020277,
+            "gib_per_s": 1541.145983,
+            "success": true
+          }
+        },
+        {
+          "copy": {
+            "avg_ms": 0.189039,
+            "gib_per_s": 1322.480155,
+            "success": true
+          },
+          "iterations": 50,
+          "memset": {
+            "avg_ms": 0.085468,
+            "gib_per_s": 1462.543904,
+            "success": true
+          },
+          "read_only": {
+            "avg_ms": 0.112175,
+            "gib_per_s": 1114.326619,
+            "success": true
+          },
+          "read_write": {
+            "avg_ms": 0.191592,
+            "gib_per_s": 1304.854029,
+            "success": true
+          },
+          "size_mb": 128,
+          "warmup": 5,
+          "write_only": {
+            "avg_ms": 0.087556,
+            "gib_per_s": 1427.66022,
+            "success": true
+          }
+        },
+        {
+          "copy": {
+            "avg_ms": 0.738883,
+            "gib_per_s": 1353.39498,
+            "success": true
+          },
+          "iterations": 25,
+          "memset": {
+            "avg_ms": 0.322781,
+            "gib_per_s": 1549.035924,
+            "success": true
+          },
+          "read_only": {
+            "avg_ms": 0.430858,
+            "gib_per_s": 1160.474524,
+            "success": true
+          },
+          "read_write": {
+            "avg_ms": 0.834432,
+            "gib_per_s": 1198.420234,
+            "success": true
+          },
+          "size_mb": 512,
+          "warmup": 5,
+          "write_only": {
+            "avg_ms": 0.352319,
+            "gib_per_s": 1419.169376,
+            "success": true
+          }
+        },
+        {
+          "copy": {
+            "avg_ms": 1.478488,
+            "gib_per_s": 1352.733362,
+            "success": true
+          },
+          "iterations": 12,
+          "memset": {
+            "avg_ms": 0.668549,
+            "gib_per_s": 1495.776005,
+            "success": true
+          },
+          "read_only": {
+            "avg_ms": 0.77156,
+            "gib_per_s": 1296.075561,
+            "success": true
+          },
+          "read_write": {
+            "avg_ms": 1.583093,
+            "gib_per_s": 1263.349398,
+            "success": true
+          },
+          "size_mb": 1024,
+          "warmup": 3,
+          "write_only": {
+            "avg_ms": 0.673747,
+            "gib_per_s": 1484.237402,
+            "success": true
+          }
+        }
+      ],
+      "operations": [
+        "copy",
+        "memset",
+        "read_only",
+        "write_only",
+        "read_write"
+      ],
+      "timing_backend": "cuda_event"
+    },
+    "notes": [
+      "copy uses cudaMemcpyDeviceToDevice and reports total read+write traffic bandwidth (2x bytes).",
+      "memset reports bytes written by cudaMemset.",
+      "read_only reports bytes read; write_only reports bytes written; read_write reports read+write traffic (2x bytes)."
+    ],
+    "parameters": {
+      "iterations": 50,
+      "sizes_mb": [
+        8,
+        32,
+        128,
+        512,
+        1024
+      ],
+      "warmup": 5
+    },
+    "primary_metric": "best_read_only_gib_per_s",
+    "status": "ok",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": true
+    }
+  }
+}

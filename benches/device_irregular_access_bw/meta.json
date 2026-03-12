@@ -1,0 +1,52 @@
+{
+  "id": "device_irregular_access_bw",
+  "title": "Device Irregular Access Bandwidth",
+  "question": {
+    "ja": "順次アクセスの baseline に対して、stride、gather、scatter、random_both のような irregular access が global-memory 帯域をどれだけ落とすか。",
+    "en": "How much do stride, gather, scatter, and random_both irregular access patterns reduce global-memory bandwidth relative to the sequential baseline?"
+  },
+  "tags": [
+    "cuda",
+    "memory",
+    "global",
+    "irregular",
+    "stride",
+    "gather",
+    "scatter",
+    "random"
+  ],
+  "focus": [
+    "Bandwidth degradation versus stride size from 1 B to 1024 B",
+    "Penalty of random source access, random destination access, and both together",
+    "Large-size plateau behavior under irregular access",
+    "Comparison against device_global_memory_bw as the sequential baseline"
+  ],
+  "primary_metrics": [
+    "random_both_1024mb_gib_per_s",
+    "best_stride_read_gib_per_s",
+    "best_gather_gib_per_s",
+    "best_scatter_gib_per_s",
+    "best_random_both_gib_per_s"
+  ],
+  "considerations": [
+    {
+      "ja": "stride は byte-addressed で 1 B から 1024 B を測る。coalescing が崩れたときの read、write、read_write 帯域を観察する。",
+      "en": "Stride is measured as byte-addressed access from 1 B to 1024 B. The goal is to observe read, write, and read_write bandwidth as coalescing breaks down."
+    },
+    {
+      "ja": "gather、scatter、random_both は 4-byte 要素単位で、順列になる affine permutation を使って実装する。同じアドレスへの重複アクセスは作らない。",
+      "en": "gather, scatter, and random_both are implemented on 4-byte elements using invertible mixed-bit permutations that form a true permutation. No repeated-address accesses are introduced."
+    },
+    {
+      "ja": "8 GiB まで通すため、random 系は explicit index array を持たず、式ベースの permutation で source/destination index を決める。",
+      "en": "To support up to 8 GiB, the random-family patterns do not store explicit index arrays. Source and destination indices are generated from formula-based invertible permutations."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "large-size plateau では irregular pattern が sequential baseline より下がることを確認する。特に stride を大きくした read と、source と destination の両方を崩す random_both がどこまで落ちるかを見る。",
+      "en": "At the large-size plateau, the key question is how far the irregular patterns fall below the sequential baseline. The main watchpoints are large-stride reads and random_both, where both source and destination locality are disrupted."
+    }
+  }
+}

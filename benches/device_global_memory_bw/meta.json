@@ -1,0 +1,72 @@
+{
+  "id": "device_global_memory_bw",
+  "title": "Device Global Memory Bandwidth",
+  "question": {
+    "ja": "GPU の global memory に対する基本的な read、write、read_write、device-to-device copy、memset の帯域はどのくらいか。サイズを変えるとどこで帯域が頭打ちになるか。",
+    "en": "What baseline bandwidth does the GPU sustain for global-memory read, write, read_write, device-to-device copy, and memset, and where does bandwidth plateau as size increases?"
+  },
+  "tags": [
+    "cuda",
+    "memory",
+    "global",
+    "bandwidth",
+    "device-to-device"
+  ],
+  "focus": [
+    "Baseline device-to-device copy bandwidth",
+    "Global-memory read-only bandwidth",
+    "Global-memory write-only bandwidth",
+    "Combined read_write bandwidth",
+    "Size dependence and plateau behavior"
+  ],
+  "primary_metrics": [
+    "best_read_only_gib_per_s",
+    "best_write_only_gib_per_s",
+    "best_read_write_gib_per_s",
+    "best_copy_gib_per_s",
+    "best_memset_gib_per_s"
+  ],
+  "comparisons": [
+    {
+      "ja": "copy と kernel ベースの read/write 帯域の比較",
+      "en": "Compare copy bandwidth against kernel-based read/write bandwidth"
+    },
+    {
+      "ja": "read_only、write_only、read_write の比較",
+      "en": "Compare read_only, write_only, and read_write bandwidth"
+    },
+    {
+      "ja": "サイズごとの帯域変化の比較",
+      "en": "Compare bandwidth across working-set sizes"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "copy は cudaMemcpyDeviceToDevice、memset は cudaMemset、read/write 系は単純な grid-stride loop kernel で測る。主眼は copy path と kernel path の差と、large-size plateau の位置を見ることにある。",
+      "en": "copy uses cudaMemcpyDeviceToDevice, memset uses cudaMemset, and read/write paths use simple grid-stride loop kernels. The main point is to compare the copy path against the kernel paths and inspect the large-size plateau."
+    },
+    {
+      "ja": "validation は timing 外で行う。read_only は partial sum を host に戻して expected sum と比較し、write 系は host に戻して全量検証する。",
+      "en": "Validation is outside the timing region. read_only copies back partial sums and compares against the expected sum, while write paths copy back full results for verification."
+    },
+    {
+      "ja": "この bench は baseline global-memory picture を作るためのものであり、cache reuse や irregular access の効果は別 bench に切り出す。",
+      "en": "This bench is for establishing a baseline global-memory picture. Cache reuse and irregular access effects belong in separate benchmarks."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "小さいサイズでは高い値が出るが、cache の影響を含む可能性がある。baseline としては 512 MiB から 1 GiB の plateau を読むのが自然で、この環境では copy が約 1.35 TiB/s、memset が約 1.50 TiB/s、write_only が約 1.42 TiB/s、read_only と read_write が約 1.20 から 1.30 TiB/s だった。",
+      "en": "Small sizes can show elevated numbers that may include cache effects. The more natural baseline is the 512 MiB to 1 GiB plateau. On this system, copy is about 1.35 TiB/s, memset about 1.50 TiB/s, write_only about 1.42 TiB/s, and read_only plus read_write about 1.20 to 1.30 TiB/s."
+    },
+    "interpretation": {
+      "ja": "RTX 5090 の理論メモリ帯域を約 1.8 TB/s とみると、今回の large-size plateau は全体として少し低い。特に read_only と read_write は理論値からの距離がやや大きく、copy、write_only、memset のほうが理論帯域に近い。",
+      "en": "If the RTX 5090 theoretical memory bandwidth is taken as about 1.8 TB/s, the large-size plateau here is somewhat lower overall. read_only and read_write are notably further from theory, while copy, write_only, and memset sit closer to the theoretical bandwidth."
+    }
+  },
+  "theoretical_reference": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "memory_bandwidth": "about 1.8 TB/s"
+  }
+}
