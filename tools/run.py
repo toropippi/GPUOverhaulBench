@@ -184,21 +184,22 @@ def build_with_msvc_vulkan(bench_id: str, bench_dir: Path, build_dir: Path, exe_
     shader_source = bench_dir / "compute.comp"
     if not source_path.exists():
         raise RuntimeError(f"Missing Vulkan source file: {source_path}")
-    if not shader_source.exists():
-        raise RuntimeError(f"Missing Vulkan shader source file: {shader_source}")
 
     vulkan_sdk = locate_vulkan_sdk()
-    shader_out = build_dir / "compute.spv"
-    shader_command = [
-        str(vulkan_sdk / "Bin" / "glslangValidator.exe"),
-        "-V",
-        str(shader_source),
-        "-o",
-        str(shader_out),
-    ]
-    shader_completed = subprocess.run(shader_command, capture_output=True, text=True, errors="replace")
-    if shader_completed.returncode != 0:
-        raise RuntimeError(shader_completed.stderr.strip() or shader_completed.stdout.strip() or "glslangValidator failed")
+    shader_log = ""
+    if shader_source.exists():
+        shader_out = build_dir / "compute.spv"
+        shader_command = [
+            str(vulkan_sdk / "Bin" / "glslangValidator.exe"),
+            "-V",
+            str(shader_source),
+            "-o",
+            str(shader_out),
+        ]
+        shader_completed = subprocess.run(shader_command, capture_output=True, text=True, errors="replace")
+        if shader_completed.returncode != 0:
+            raise RuntimeError(shader_completed.stderr.strip() or shader_completed.stdout.strip() or "glslangValidator failed")
+        shader_log = shader_completed.stderr.strip() or shader_completed.stdout.strip()
 
     for include_dir in (
         WINDOWS_SDK_INCLUDE_ROOT / "shared",
@@ -230,7 +231,7 @@ def build_with_msvc_vulkan(bench_id: str, bench_dir: Path, build_dir: Path, exe_
     )
     if completed.returncode != 0:
         raise RuntimeError(completed.stderr.strip() or completed.stdout.strip() or "MSVC Vulkan build failed")
-    build_log = "\n".join(filter(None, [shader_completed.stderr.strip() or shader_completed.stdout.strip(), completed.stderr.strip() or completed.stdout.strip()]))
+    build_log = "\n".join(filter(None, [shader_log, completed.stderr.strip() or completed.stdout.strip()]))
     return exe_path, build_log
 
 
@@ -347,6 +348,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
 
 
