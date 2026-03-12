@@ -1,0 +1,101 @@
+{
+  "id": "pcie_small_transfer_latency",
+  "title": "PCIe Small Transfer Latency Model",
+  "question": {
+    "ja": "CUDA の pinned host memory を使った H2D と D2H の小サイズ転送は、fixed latency + bytes / bandwidth という単純な式にどの程度近くなるか。4 B から 1 GiB まで掃引したとき、式から見積もられる effective fixed latency はどのくらいか。",
+    "en": "How closely do CUDA pinned-memory H2D and D2H transfers follow a simple fixed-latency-plus-bandwidth model, and what effective fixed latency is implied by fitting that model from 4 B to 1 GiB?"
+  },
+  "tags": [
+    "transfer",
+    "pcie",
+    "latency",
+    "small-transfer",
+    "cuda",
+    "pinned"
+  ],
+  "focus": [
+    "Affine fit of copy time vs transfer size",
+    "Effective fixed per-copy latency under batched CUDA event timing",
+    "Transition from latency-dominated to bandwidth-dominated regime",
+    "H2D vs D2H asymmetry under pinned memory"
+  ],
+  "primary_metrics": [
+    "h2d_fixed_latency_us",
+    "d2h_fixed_latency_us",
+    "h2d_fitted_bandwidth_gib_per_s",
+    "d2h_fitted_bandwidth_gib_per_s"
+  ],
+  "comparisons": [
+    {
+      "ja": "H2D と D2H の fitted fixed latency と fitted bandwidth の比較",
+      "en": "Compare fitted fixed latency and fitted bandwidth between H2D and D2H"
+    },
+    {
+      "ja": "小サイズの latency-dominated 領域と大サイズの bandwidth-dominated 領域の比較",
+      "en": "Compare the latency-dominated small-size regime against the bandwidth-dominated large-size regime"
+    },
+    {
+      "ja": "実測 copy time と affine model の predicted time のずれ",
+      "en": "Compare measured copy time against affine-model predicted time"
+    },
+    {
+      "ja": "大サイズ側の plateau が既存の pcie_host_device_bw bench の実測値と整合するか",
+      "en": "Check whether the large-size plateau stays consistent with the earlier pcie_host_device_bw benchmark"
+    }
+  ],
+  "considerations": [
+    {
+      "ja": "この bench が推定する fixed latency は、batch timing と CUDA event を使ったこの測定法における effective per-copy fixed latency であり、PCIe packet-level latency そのものと断定してはいけない。",
+      "en": "The fitted fixed latency is an effective per-copy fixed latency under this measurement method and should not be labeled raw PCIe packet-level latency."
+    },
+    {
+      "ja": "極小サイズでは CUDA event の分解能不足を避けるために同一サイズの copy を 1 iteration 内で複数回 batched 実行する。reported avg_copy_us は batch 時間を inner_repeats で割った値である。",
+      "en": "Tiny transfers are timed in batches to avoid CUDA event resolution issues, and reported avg_copy_us is the batch time divided by inner_repeats."
+    },
+    {
+      "ja": "モデルがよく合わないこと自体も観測結果であり、R^2 が低くても bench 失敗とはみなさない。",
+      "en": "Poor fit quality is itself an observation; low R^2 is not treated as a benchmark failure."
+    },
+    {
+      "ja": "0 byte 転送の fixed latency は affine fit の切片として読む。今回の sample では H2D は約 2.762892 us、つまり約 2.76e-6 秒である。一方 D2H の単純 affine fit は約 -6.055837 us と負になっており、これは D2H の 0 byte latency を文字どおり表しているのではなく、この単純モデルでは切片の物理解釈が不安定だと読むべきである。加えて実測では 4 byte からしばらくの範囲で avg_copy_us がおおむね 4 us 前後に張り付いているため、実質的な 0 byte 近傍の固定レイテンシも bench 上はこの 4 us 前後だと読むのが自然である。",
+      "en": "Read the 0-byte fixed latency as the intercept of the affine fit. In the current sample, H2D is about 2.762892 us, or about 2.76e-6 seconds. The D2H affine fit gives about -6.055837 us, which should not be read literally as a physical 0-byte latency; instead it shows that the simple model's intercept is not physically stable for D2H. Also, measured avg_copy_us stays around roughly 4 us from 4 bytes through the tiny-size region, so the practical near-zero-byte fixed latency in this benchmark is more naturally read as being around 4 us."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "ja": "latest.json には H2D と D2H の fitted fixed latency、fitted bandwidth、R^2 と、各サイズでの residual が入る。今回の sample では H2D は fixed latency 2.762892 us、fitted bandwidth 53.022501 GiB/s、R^2 0.999998 だった。1 GiB の H2D 実測は 53.042519 GiB/s で、既存の pcie_host_device_bw における pinned H2D peak 53.310166 GiB/s とほぼ整合している。D2H も 1 GiB 実測 51.691264 GiB/s、fitted bandwidth 51.910143 GiB/s で、既存 bench の pinned D2H peak 53.012081 GiB/s に近い。一方 D2H の切片は -6.055837 us で、0 byte latency の物理解釈にはそのまま使えない。",
+      "en": "latest.json reports fitted fixed latency, fitted bandwidth, R^2, and per-size residuals for both H2D and D2H. In the current sample, H2D fit to a 2.762892 us fixed latency, 53.022501 GiB/s fitted bandwidth, and R^2 of 0.999998. The measured 1 GiB H2D point was 53.042519 GiB/s, which is broadly consistent with the earlier pcie_host_device_bw pinned H2D peak of 53.310166 GiB/s. D2H also stayed close, with a measured 1 GiB point of 51.691264 GiB/s, fitted bandwidth of 51.910143 GiB/s, and an earlier pinned D2H peak of 53.012081 GiB/s. However, the D2H intercept was -6.055837 us, so it should not be used as a literal physical 0-byte latency."
+    },
+    "highlights": [
+      {
+        "label": "H2D fitted fixed latency",
+        "value": "2.762892 us (~2.76e-6 s)"
+      },
+      {
+        "label": "D2H fitted fixed latency",
+        "value": "-6.055837 us (not physically interpretable as literal 0-byte latency)"
+      },
+      {
+        "label": "H2D fitted bandwidth",
+        "value": "53.022501 GiB/s"
+      },
+      {
+        "label": "D2H fitted bandwidth",
+        "value": "51.910143 GiB/s"
+      },
+      {
+        "label": "1 GiB H2D measured throughput",
+        "value": "53.042519 GiB/s"
+      },
+      {
+        "label": "1 GiB D2H measured throughput",
+        "value": "51.691264 GiB/s"
+      }
+    ]
+  },
+  "theoretical_reference": {
+    "name": "PCIe 5.0 x16 one-way bandwidth",
+    "value": "63.015 GB/s decimal (~58.687 GiB/s)"
+  }
+}
