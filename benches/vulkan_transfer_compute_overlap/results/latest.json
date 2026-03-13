@@ -23,40 +23,40 @@
         {
           "d2h_like": {
             "copy_solo": {
-              "avg_ms": 2.462288,
-              "gib_per_s": 50.765792,
+              "avg_ms": 2.432648,
+              "gib_per_s": 51.384335,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 2.4748,
-              "loop_count": 25931,
+              "avg_ms": 2.57386,
+              "loop_count": 6880,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 2.59964,
-              "copy_gib_per_s": 48.083581,
+              "avg_wall_ms": 2.800792,
+              "copy_gib_per_s": 44.630233,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.050444,
-              "wall_vs_solo_sum_ratio": 0.526553
+              "wall_vs_solo_max_ratio": 1.088168,
+              "wall_vs_solo_sum_ratio": 0.55943
             }
           },
           "h2d_like": {
             "copy_solo": {
-              "avg_ms": 2.482616,
-              "gib_per_s": 50.350115,
+              "avg_ms": 2.40616,
+              "gib_per_s": 51.949995,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 2.462424,
-              "loop_count": 25615,
+              "avg_ms": 2.631884,
+              "loop_count": 8111,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 2.615724,
-              "copy_gib_per_s": 47.787916,
+              "avg_wall_ms": 2.956768,
+              "copy_gib_per_s": 42.27589,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.053616,
-              "wall_vs_solo_sum_ratio": 0.528959
+              "wall_vs_solo_max_ratio": 1.123442,
+              "wall_vs_solo_sum_ratio": 0.586888
             }
           },
           "iterations": 25,
@@ -66,40 +66,40 @@
         {
           "d2h_like": {
             "copy_solo": {
-              "avg_ms": 9.68924,
-              "gib_per_s": 51.603635,
+              "avg_ms": 9.52519,
+              "gib_per_s": 52.492391,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 8.64138,
-              "loop_count": 95029,
+              "avg_ms": 8.9355,
+              "loop_count": 104784,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 9.66814,
-              "copy_gib_per_s": 51.716256,
+              "avg_wall_ms": 9.52232,
+              "copy_gib_per_s": 52.508212,
               "success": true,
-              "wall_vs_solo_max_ratio": 0.997822,
-              "wall_vs_solo_sum_ratio": 0.527431
+              "wall_vs_solo_max_ratio": 0.999699,
+              "wall_vs_solo_sum_ratio": 0.515816
             }
           },
           "h2d_like": {
             "copy_solo": {
-              "avg_ms": 9.74312,
-              "gib_per_s": 51.318264,
+              "avg_ms": 9.55277,
+              "gib_per_s": 52.340839,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 9.03688,
-              "loop_count": 99691,
+              "avg_ms": 9.32479,
+              "loop_count": 106941,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 9.78776,
-              "copy_gib_per_s": 51.084211,
+              "avg_wall_ms": 9.50851,
+              "copy_gib_per_s": 52.584474,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.004582,
-              "wall_vs_solo_sum_ratio": 0.52118
+              "wall_vs_solo_max_ratio": 0.995367,
+              "wall_vs_solo_sum_ratio": 0.503694
             }
           },
           "iterations": 10,
@@ -109,40 +109,40 @@
         {
           "d2h_like": {
             "copy_solo": {
-              "avg_ms": 19.17978,
-              "gib_per_s": 52.138241,
+              "avg_ms": 18.98662,
+              "gib_per_s": 52.668669,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 17.5561,
-              "loop_count": 191875,
+              "avg_ms": 17.39708,
+              "loop_count": 205287,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 19.15966,
-              "copy_gib_per_s": 52.192993,
+              "avg_wall_ms": 18.96062,
+              "copy_gib_per_s": 52.740891,
               "success": true,
-              "wall_vs_solo_max_ratio": 0.998951,
-              "wall_vs_solo_sum_ratio": 0.521552
+              "wall_vs_solo_max_ratio": 0.998631,
+              "wall_vs_solo_sum_ratio": 0.52113
             }
           },
           "h2d_like": {
             "copy_solo": {
-              "avg_ms": 19.49078,
-              "gib_per_s": 51.30631,
+              "avg_ms": 19.05058,
+              "gib_per_s": 52.49184,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 17.87466,
-              "loop_count": 194537,
+              "avg_ms": 17.81682,
+              "loop_count": 208091,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 19.44094,
-              "copy_gib_per_s": 51.437842,
+              "avg_wall_ms": 18.97226,
+              "copy_gib_per_s": 52.708533,
               "success": true,
-              "wall_vs_solo_max_ratio": 0.997443,
-              "wall_vs_solo_sum_ratio": 0.520292
+              "wall_vs_solo_max_ratio": 0.995889,
+              "wall_vs_solo_sum_ratio": 0.514608
             }
           },
           "iterations": 5,
@@ -150,9 +150,9 @@
           "warmup": 2
         }
       ],
-      "min_d2h_wall_vs_solo_sum_ratio": 0.521552,
-      "min_h2d_wall_vs_solo_sum_ratio": 0.520292,
-      "min_wall_vs_solo_sum_ratio": 0.520292,
+      "min_d2h_wall_vs_solo_sum_ratio": 0.515816,
+      "min_h2d_wall_vs_solo_sum_ratio": 0.503694,
+      "min_wall_vs_solo_sum_ratio": 0.503694,
       "overlap_mode": "async_separate",
       "timing_backend": "wall_clock"
     },
