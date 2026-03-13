@@ -19,37 +19,37 @@
   "result": {
     "measurement": {
       "adaptive_iteration_schedule": true,
-      "best_d2h_pageable_bandwidth_gib_per_s": 16.229913,
-      "best_d2h_pinned_bandwidth_gib_per_s": 53.012081,
-      "best_h2d_pageable_bandwidth_gib_per_s": 21.77269,
-      "best_h2d_pinned_bandwidth_gib_per_s": 53.310166,
+      "best_d2h_pageable_bandwidth_gib_per_s": 17.732721,
+      "best_d2h_pinned_bandwidth_gib_per_s": 53.307189,
+      "best_h2d_pageable_bandwidth_gib_per_s": 21.630516,
+      "best_h2d_pinned_bandwidth_gib_per_s": 53.690155,
       "cases": [
         {
           "d2h": {
             "pageable": {
-              "avg_ms": 0.50641,
-              "gib_per_s": 15.427215,
+              "avg_ms": 0.468648,
+              "gib_per_s": 16.670307,
               "success": true
             },
             "pinned": {
-              "avg_ms": 0.158113,
-              "gib_per_s": 49.410977,
+              "avg_ms": 0.158064,
+              "gib_per_s": 49.426187,
               "success": true
             },
-            "speedup": 3.202845
+            "speedup": 2.964924
           },
           "h2d": {
             "pageable": {
-              "avg_ms": 0.358821,
-              "gib_per_s": 21.77269,
+              "avg_ms": 0.36118,
+              "gib_per_s": 21.630516,
               "success": true
             },
             "pinned": {
-              "avg_ms": 0.167316,
-              "gib_per_s": 46.692951,
+              "avg_ms": 0.153892,
+              "gib_per_s": 50.766171,
               "success": true
             },
-            "speedup": 2.144565
+            "speedup": 2.34697
           },
           "iterations": 50,
           "size_mb": 8,
@@ -58,29 +58,29 @@
         {
           "d2h": {
             "pageable": {
-              "avg_ms": 1.960095,
-              "gib_per_s": 15.943103,
+              "avg_ms": 1.762279,
+              "gib_per_s": 17.732721,
               "success": true
             },
             "pinned": {
-              "avg_ms": 0.595216,
-              "gib_per_s": 52.501906,
+              "avg_ms": 0.614904,
+              "gib_per_s": 50.820974,
               "success": true
             },
-            "speedup": 3.29308
+            "speedup": 2.865943
           },
           "h2d": {
             "pageable": {
-              "avg_ms": 1.843098,
-              "gib_per_s": 16.955151,
+              "avg_ms": 1.609549,
+              "gib_per_s": 19.415381,
               "success": true
             },
             "pinned": {
-              "avg_ms": 0.619119,
-              "gib_per_s": 50.474925,
+              "avg_ms": 0.609984,
+              "gib_per_s": 51.230854,
               "success": true
             },
-            "speedup": 2.976967
+            "speedup": 2.638674
           },
           "iterations": 50,
           "size_mb": 32,
@@ -89,29 +89,29 @@
         {
           "d2h": {
             "pageable": {
-              "avg_ms": 7.701828,
-              "gib_per_s": 16.229913,
+              "avg_ms": 7.407291,
+              "gib_per_s": 16.875265,
               "success": true
             },
             "pinned": {
-              "avg_ms": 2.392903,
-              "gib_per_s": 52.237809,
+              "avg_ms": 2.373598,
+              "gib_per_s": 52.662656,
               "success": true
             },
-            "speedup": 3.218613
+            "speedup": 3.120701
           },
           "h2d": {
             "pageable": {
-              "avg_ms": 7.978528,
-              "gib_per_s": 15.667049,
+              "avg_ms": 6.649567,
+              "gib_per_s": 18.798216,
               "success": true
             },
             "pinned": {
-              "avg_ms": 2.374266,
-              "gib_per_s": 52.647842,
+              "avg_ms": 2.356143,
+              "gib_per_s": 53.052799,
               "success": true
             },
-            "speedup": 3.360418
+            "speedup": 2.822225
           },
           "iterations": 50,
           "size_mb": 128,
@@ -120,29 +120,29 @@
         {
           "d2h": {
             "pageable": {
-              "avg_ms": 34.260549,
-              "gib_per_s": 14.594045,
+              "avg_ms": 28.592163,
+              "gib_per_s": 17.487309,
               "success": true
             },
             "pinned": {
-              "avg_ms": 9.628563,
-              "gib_per_s": 51.928828,
+              "avg_ms": 9.399852,
+              "gib_per_s": 53.192325,
               "success": true
             },
-            "speedup": 3.55822
+            "speedup": 3.041767
           },
           "h2d": {
             "pageable": {
-              "avg_ms": 32.397163,
-              "gib_per_s": 15.43345,
+              "avg_ms": 28.112952,
+              "gib_per_s": 17.785397,
               "success": true
             },
             "pinned": {
-              "avg_ms": 9.709547,
-              "gib_per_s": 51.495711,
+              "avg_ms": 9.330075,
+              "gib_per_s": 53.590137,
               "success": true
             },
-            "speedup": 3.33663
+            "speedup": 3.013154
           },
           "iterations": 25,
           "size_mb": 512,
@@ -151,29 +151,29 @@
         {
           "d2h": {
             "pageable": {
-              "avg_ms": 63.203813,
-              "gib_per_s": 15.82183,
+              "avg_ms": 56.861259,
+              "gib_per_s": 17.586667,
               "success": true
             },
             "pinned": {
-              "avg_ms": 19.73842,
-              "gib_per_s": 50.662617,
+              "avg_ms": 18.759196,
+              "gib_per_s": 53.307189,
               "success": true
             },
-            "speedup": 3.202071
+            "speedup": 3.031114
           },
           "h2d": {
             "pageable": {
-              "avg_ms": 68.243274,
-              "gib_per_s": 14.653459,
+              "avg_ms": 54.812545,
+              "gib_per_s": 18.243999,
               "success": true
             },
             "pinned": {
-              "avg_ms": 19.879165,
-              "gib_per_s": 50.303925,
+              "avg_ms": 18.625389,
+              "gib_per_s": 53.690155,
               "success": true
             },
-            "speedup": 3.432905
+            "speedup": 2.942894
           },
           "iterations": 15,
           "size_mb": 1024,
@@ -182,29 +182,29 @@
         {
           "d2h": {
             "pageable": {
-              "avg_ms": 138.577576,
-              "gib_per_s": 14.432349,
+              "avg_ms": 115.511856,
+              "gib_per_s": 17.31424,
               "success": true
             },
             "pinned": {
-              "avg_ms": 37.727249,
-              "gib_per_s": 53.012081,
+              "avg_ms": 37.576035,
+              "gib_per_s": 53.225414,
               "success": true
             },
-            "speedup": 3.673143
+            "speedup": 3.074083
           },
           "h2d": {
             "pageable": {
-              "avg_ms": 131.074097,
-              "gib_per_s": 15.258545,
+              "avg_ms": 106.670555,
+              "gib_per_s": 18.749317,
               "success": true
             },
             "pinned": {
-              "avg_ms": 37.523342,
-              "gib_per_s": 53.300156,
+              "avg_ms": 40.013969,
+              "gib_per_s": 49.982544,
               "success": true
             },
-            "speedup": 3.493135
+            "speedup": 2.665833
           },
           "iterations": 8,
           "size_mb": 2048,
@@ -213,29 +213,29 @@
         {
           "d2h": {
             "pageable": {
-              "avg_ms": 257.839172,
-              "gib_per_s": 15.513547,
+              "avg_ms": 234.02034,
+              "gib_per_s": 17.092531,
               "success": true
             },
             "pinned": {
-              "avg_ms": 87.096489,
-              "gib_per_s": 45.926076,
+              "avg_ms": 75.100296,
+              "gib_per_s": 53.262107,
               "success": true
             },
-            "speedup": 2.960385
+            "speedup": 3.116104
           },
           "h2d": {
             "pageable": {
-              "avg_ms": 260.775024,
-              "gib_per_s": 15.338892,
+              "avg_ms": 228.122162,
+              "gib_per_s": 17.534465,
               "success": true
             },
             "pinned": {
-              "avg_ms": 75.032593,
-              "gib_per_s": 53.310166,
+              "avg_ms": 85.802612,
+              "gib_per_s": 46.618627,
               "success": true
             },
-            "speedup": 3.47549
+            "speedup": 2.658686
           },
           "iterations": 4,
           "size_mb": 4096,
@@ -244,38 +244,38 @@
         {
           "d2h": {
             "pageable": {
-              "avg_ms": 535.706116,
-              "gib_per_s": 14.933561,
+              "avg_ms": 648.032837,
+              "gib_per_s": 12.345053,
               "success": true
             },
             "pinned": {
-              "avg_ms": 151.807755,
-              "gib_per_s": 52.69823,
+              "avg_ms": 150.325394,
+              "gib_per_s": 53.217888,
               "success": true
             },
-            "speedup": 3.528846
+            "speedup": 4.310867
           },
           "h2d": {
             "pageable": {
-              "avg_ms": 531.585022,
-              "gib_per_s": 15.049333,
+              "avg_ms": 461.699921,
+              "gib_per_s": 17.327272,
               "success": true
             },
             "pinned": {
-              "avg_ms": 156.024841,
-              "gib_per_s": 51.273886,
+              "avg_ms": 151.409973,
+              "gib_per_s": 52.836678,
               "success": true
             },
-            "speedup": 3.407054
+            "speedup": 3.049336
           },
           "iterations": 2,
           "size_mb": 8192,
           "warmup": 1
         }
       ],
-      "d2h_pinned_utilization_of_theoretical": 0.903297,
-      "h2d_pinned_utilization_of_theoretical": 0.908377,
-      "max_speedup": 3.673143,
+      "d2h_pinned_utilization_of_theoretical": 0.908326,
+      "h2d_pinned_utilization_of_theoretical": 0.914851,
+      "max_speedup": 4.310867,
       "theoretical_one_way_pcie_5_x16_gib_per_s": 58.687292,
       "timing_backend": "cuda_event"
     },
