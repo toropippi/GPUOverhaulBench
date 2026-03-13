@@ -1,0 +1,278 @@
+{
+  "bench_id": "pcie_pinned_vs_pageable_kernel_event_timeline",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "async_engine_count": 1,
+      "cases": [
+        {
+          "iterations": 5,
+          "pageable": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 68.326598,
+                "gib_per_s": 14.635589,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 68.380222,
+                "loop_count": 5226976,
+                "success": true
+              },
+              "overlap_timeline": {
+                "copy_elapsed_ms": 77.10201,
+                "copy_end_ms": 77.148744,
+                "copy_gib_per_s": 12.969831,
+                "copy_start_ms": 0.046733,
+                "kernel_elapsed_ms": 67.448698,
+                "kernel_end_ms": 144.67131,
+                "kernel_start_after_copy_start_ms": 77.175877,
+                "kernel_start_ms": 77.22261,
+                "overlap_active_ms": 0.0,
+                "span_ms": 144.624578,
+                "success": true
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 54.856672,
+                "gib_per_s": 18.229323,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 54.92464,
+                "loop_count": 4194304,
+                "success": true
+              },
+              "overlap_timeline": {
+                "copy_elapsed_ms": 57.606214,
+                "copy_end_ms": 57.649235,
+                "copy_gib_per_s": 17.359238,
+                "copy_start_ms": 0.043021,
+                "kernel_elapsed_ms": 54.640607,
+                "kernel_end_ms": 112.365215,
+                "kernel_start_after_copy_start_ms": 57.681587,
+                "kernel_start_ms": 57.724608,
+                "overlap_active_ms": 0.0,
+                "span_ms": 112.322194,
+                "success": true
+              }
+            }
+          },
+          "pinned": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 18.760825,
+                "gib_per_s": 53.302559,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 19.117177,
+                "loop_count": 1443081,
+                "success": true
+              },
+              "overlap_timeline": {
+                "copy_elapsed_ms": 18.837792,
+                "copy_end_ms": 18.884039,
+                "copy_gib_per_s": 53.084777,
+                "copy_start_ms": 0.046246,
+                "kernel_elapsed_ms": 19.322925,
+                "kernel_end_ms": 19.34665,
+                "kernel_start_after_copy_start_ms": -0.022522,
+                "kernel_start_ms": 0.023725,
+                "overlap_active_ms": 18.837792,
+                "span_ms": 19.322925,
+                "success": true
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 18.610829,
+                "gib_per_s": 53.732158,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 18.746989,
+                "loop_count": 1428790,
+                "success": true
+              },
+              "overlap_timeline": {
+                "copy_elapsed_ms": 18.651353,
+                "copy_end_ms": 18.713562,
+                "copy_gib_per_s": 53.615412,
+                "copy_start_ms": 0.062208,
+                "kernel_elapsed_ms": 19.160666,
+                "kernel_end_ms": 19.192218,
+                "kernel_start_after_copy_start_ms": -0.030656,
+                "kernel_start_ms": 0.031552,
+                "overlap_active_ms": 18.651354,
+                "span_ms": 19.160666,
+                "success": true
+              }
+            }
+          },
+          "size_mb": 1024,
+          "warmup": 2
+        },
+        {
+          "iterations": 3,
+          "pageable": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 121.020681,
+                "gib_per_s": 16.526101,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 120.965078,
+                "loop_count": 9239218,
+                "success": true
+              },
+              "overlap_timeline": {
+                "copy_elapsed_ms": 159.249598,
+                "copy_end_ms": 159.299805,
+                "copy_gib_per_s": 12.558901,
+                "copy_start_ms": 0.050208,
+                "kernel_elapsed_ms": 120.428599,
+                "kernel_end_ms": 279.804016,
+                "kernel_start_after_copy_start_ms": 159.325205,
+                "kernel_start_ms": 159.375412,
+                "overlap_active_ms": 0.0,
+                "span_ms": 279.753808,
+                "success": true
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 111.214144,
+                "gib_per_s": 17.983324,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 110.000651,
+                "loop_count": 8360549,
+                "success": true
+              },
+              "overlap_timeline": {
+                "copy_elapsed_ms": 126.811297,
+                "copy_end_ms": 126.85203,
+                "copy_gib_per_s": 15.771466,
+                "copy_start_ms": 0.040736,
+                "kernel_elapsed_ms": 108.813321,
+                "kernel_end_ms": 235.73791,
+                "kernel_start_after_copy_start_ms": 126.883845,
+                "kernel_start_ms": 126.924583,
+                "overlap_active_ms": 0.0,
+                "span_ms": 235.697174,
+                "success": true
+              }
+            }
+          },
+          "pinned": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 37.533428,
+                "gib_per_s": 53.285833,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 37.722794,
+                "loop_count": 2884769,
+                "success": true
+              },
+              "overlap_timeline": {
+                "copy_elapsed_ms": 37.653814,
+                "copy_end_ms": 37.710613,
+                "copy_gib_per_s": 53.11547,
+                "copy_start_ms": 0.0568,
+                "kernel_elapsed_ms": 38.690102,
+                "kernel_end_ms": 38.803777,
+                "kernel_start_after_copy_start_ms": 0.056875,
+                "kernel_start_ms": 0.113675,
+                "overlap_active_ms": 37.574709,
+                "span_ms": 38.769206,
+                "success": true
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 37.203295,
+                "gib_per_s": 53.758679,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 37.259008,
+                "loop_count": 2855905,
+                "success": true
+              },
+              "overlap_timeline": {
+                "copy_elapsed_ms": 37.294134,
+                "copy_end_ms": 37.353748,
+                "copy_gib_per_s": 53.627737,
+                "copy_start_ms": 0.059616,
+                "kernel_elapsed_ms": 38.30255,
+                "kernel_end_ms": 38.336319,
+                "kernel_start_after_copy_start_ms": -0.025845,
+                "kernel_start_ms": 0.033771,
+                "overlap_active_ms": 37.294132,
+                "span_ms": 38.302548,
+                "success": true
+              }
+            }
+          },
+          "size_mb": 2048,
+          "warmup": 2
+        }
+      ],
+      "device_overlap": 1,
+      "pageable_h2d_2048mb_kernel_start_after_copy_start_ms": 126.883845,
+      "pageable_h2d_2048mb_overlap_active_ms": 0.0,
+      "pinned_h2d_2048mb_kernel_start_after_copy_start_ms": -0.025845,
+      "pinned_h2d_2048mb_overlap_active_ms": 37.294132,
+      "timing_backend": "cuda_event_elapsed_time"
+    },
+    "notes": [
+      "copy_start/copy_end/kernel_start/kernel_end are average offsets from a common anchor event.",
+      "Pinned overlap should show kernel_start close to copy_start and a large overlap_active_ms.",
+      "Pageable overlap may show kernel_start delayed because host-side enqueue is blocked by pageable cudaMemcpyAsync behavior."
+    ],
+    "parameters": {
+      "copy_directions": [
+        "H2D",
+        "D2H"
+      ],
+      "iterations": 50,
+      "memory_types": [
+        "pinned",
+        "pageable"
+      ],
+      "sizes_mb": [
+        1024,
+        2048
+      ],
+      "stream_count": 2,
+      "warmup": 5
+    },
+    "primary_metric": "pageable_h2d_2048mb_kernel_start_after_copy_start_ms",
+    "status": "ok",
+    "unit": "ms",
+    "validation": {
+      "passed": true
+    }
+  }
+}

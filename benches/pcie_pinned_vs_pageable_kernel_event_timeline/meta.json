@@ -1,0 +1,40 @@
+{
+  "id": "pcie_pinned_vs_pageable_kernel_event_timeline",
+  "title": "PCIe Pinned vs Pageable Copy and Kernel Event Timeline",
+  "question": {
+    "ja": "CUDA の pinned と pageable で copy と kernel を別 stream に投げたとき、cudaEventElapsedTime() で見た copy と kernel の開始・終了オフセットはどうなり、実際にオーバーラップしていることを時刻から確認できるか。",
+    "en": "When copy and kernel are issued to separate CUDA streams using pinned or pageable host memory, what do the cudaEventElapsedTime() start/end offsets show, and can overlap be confirmed directly from the event timeline?"
+  },
+  "tags": [
+    "cuda",
+    "pcie",
+    "pinned",
+    "pageable",
+    "kernel",
+    "overlap",
+    "timeline",
+    "event"
+  ],
+  "focus": [
+    "Pinned vs pageable timeline difference",
+    "cudaEventElapsedTime()-based start/end offsets for copy and kernel",
+    "1024 MiB and 2048 MiB H2D/D2H overlap confirmation"
+  ],
+  "primary_metrics": [
+    "pageable_h2d_2048mb_kernel_start_after_copy_start_ms",
+    "pinned_h2d_2048mb_overlap_active_ms"
+  ],
+  "considerations": [
+    {
+      "ja": "この bench は wall-clock bench ではなく、cudaEventElapsedTime() による GPU event timeline を見るための補助 bench である。",
+      "en": "This is not a wall-clock benchmark. It is a support benchmark for inspecting the GPU event timeline via cudaEventElapsedTime()."
+    },
+    {
+      "ja": "anchor event を共通基準にし、copy_start/copy_end/kernel_start/kernel_end のオフセットを比較する。",
+      "en": "A common anchor event is used as the time origin, and offsets to copy_start/copy_end/kernel_start/kernel_end are compared."
+    }
+  ],
+  "build": {
+    "toolchain": "nvcc"
+  }
+}
