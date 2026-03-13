@@ -1,0 +1,48 @@
+{
+  "bench_id": "opencl_irregular_access_bw",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "timing_backend": "opencl_event_profiling"
+    },
+    "notes": [
+      "No matching OpenCL device found for device_type=cpu, platform_substr=AMD, device_substr=AMD"
+    ],
+    "parameters": {
+      "api": "opencl",
+      "device_substr": "AMD",
+      "device_type": "cpu",
+      "iterations": 50,
+      "platform_substr": "AMD",
+      "sizes_mb": [
+        8,
+        32,
+        128,
+        512,
+        1024
+      ],
+      "warmup": 1
+    },
+    "primary_metric": "random_both_1024mb_gib_per_s",
+    "status": "failed",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": false
+    }
+  }
+}

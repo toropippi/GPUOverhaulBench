@@ -1,0 +1,46 @@
+{
+  "id": "opencl_irregular_access_bw",
+  "title": "OpenCL Irregular Access Bandwidth",
+  "question": "How do gather, scatter, and random_both irregular access patterns compare across NVIDIA GPU, AMD GPU, and AMD CPU OpenCL devices when they share the same explicit permutation?",
+  "tags": [
+    "opencl",
+    "memory",
+    "global",
+    "irregular",
+    "gather",
+    "scatter",
+    "random"
+  ],
+  "focus": [
+    "Compare gather, scatter, and random_both on three OpenCL device classes",
+    "Use one explicit permutation per size and reuse it inside the timing interval",
+    "Keep permutation upload and validation outside the timed kernel interval",
+    "Observe whether random write remains more expensive than random read across vendors"
+  ],
+  "primary_metrics": [
+    "random_both_1024mb_gib_per_s",
+    "best_gather_gib_per_s",
+    "best_scatter_gib_per_s",
+    "best_random_both_gib_per_s"
+  ],
+  "considerations": [
+    {
+      "en": "gather, scatter, and random_both use explicit host-generated permutation indices over 4-byte elements. The permutation is generated once per size and copied once to the selected OpenCL device outside the timed kernel interval."
+    },
+    {
+      "en": "The same permutation is shared by gather and scatter so random-read and random-write penalties can be compared fairly. random_both uses the same permutation with a one-element rotation on the destination side."
+    },
+    {
+      "en": "The default size sweep is capped at 1 GiB because explicit permutation buffers are also 1 GiB at that size."
+    }
+  ],
+  "observed_results": {
+    "source": "results/latest.json",
+    "summary": {
+      "en": "Use compare.json to review the three-device comparison. The main watchpoint is whether random write patterns remain much slower than random read patterns across NVIDIA GPU, AMD GPU, and AMD CPU OpenCL implementations."
+    }
+  },
+  "build": {
+    "toolchain": "msvc_opencl"
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "bench_id": "opencl_irregular_access_bw",
+  "by_size": {
+    "1024": {
+      "gather": {
+        "nvidia_gpu": {
+          "avg_ms": 17.876211,
+          "gib_per_s": 111.880534,
+          "iterations": 12,
+          "success": true
+        }
+      },
+      "random_both": {
+        "nvidia_gpu": {
+          "avg_ms": 79.800008,
+          "gib_per_s": 25.062654,
+          "iterations": 12,
+          "success": true
+        }
+      },
+      "scatter": {
+        "nvidia_gpu": {
+          "avg_ms": 62.802965,
+          "gib_per_s": 31.84563,
+          "iterations": 12,
+          "success": true
+        }
+      }
+    },
+    "128": {
+      "gather": {
+        "nvidia_gpu": {
+          "avg_ms": 1.467403,
+          "gib_per_s": 170.369026,
+          "iterations": 50,
+          "success": true
+        }
+      },
+      "random_both": {
+        "nvidia_gpu": {
+          "avg_ms": 8.187172,
+          "gib_per_s": 30.535575,
+          "iterations": 50,
+          "success": true
+        }
+      },
+      "scatter": {
+        "nvidia_gpu": {
+          "avg_ms": 4.924786,
+          "gib_per_s": 50.763628,
+          "iterations": 50,
+          "success": true
+        }
+      }
+    },
+    "32": {
+      "gather": {
+        "nvidia_gpu": {
+          "avg_ms": 0.083322,
+          "gib_per_s": 750.105615,
+          "iterations": 50,
+          "success": true
+        }
+      },
+      "random_both": {
+        "nvidia_gpu": {
+          "avg_ms": 0.157686,
+          "gib_per_s": 396.356312,
+          "iterations": 50,
+          "success": true
+        }
+      },
+      "scatter": {
+        "nvidia_gpu": {
+          "avg_ms": 0.088785,
+          "gib_per_s": 703.950593,
+          "iterations": 50,
+          "success": true
+        }
+      }
+    },
+    "512": {
+      "gather": {
+        "nvidia_gpu": {
+          "avg_ms": 8.784279,
+          "gib_per_s": 113.839735,
+          "iterations": 25,
+          "success": true
+        }
+      },
+      "random_both": {
+        "nvidia_gpu": {
+          "avg_ms": 38.843401,
+          "gib_per_s": 25.744399,
+          "iterations": 25,
+          "success": true
+        }
+      },
+      "scatter": {
+        "nvidia_gpu": {
+          "avg_ms": 30.821859,
+          "gib_per_s": 32.444507,
+          "iterations": 25,
+          "success": true
+        }
+      }
+    },
+    "8": {
+      "gather": {
+        "nvidia_gpu": {
+          "avg_ms": 0.027464,
+          "gib_per_s": 568.933224,
+          "iterations": 50,
+          "success": true
+        }
+      },
+      "random_both": {
+        "nvidia_gpu": {
+          "avg_ms": 0.045662,
+          "gib_per_s": 342.187653,
+          "iterations": 50,
+          "success": true
+        }
+      },
+      "scatter": {
+        "nvidia_gpu": {
+          "avg_ms": 0.040612,
+          "gib_per_s": 384.733954,
+          "iterations": 50,
+          "success": true
+        }
+      }
+    }
+  },
+  "profiles": {
+    "amd_cpu": {
+      "best_gather_gib_per_s": null,
+      "best_random_both_gib_per_s": null,
+      "best_scatter_gib_per_s": null,
+      "device": {},
+      "notes": [
+        "No matching OpenCL device found for device_type=cpu, platform_substr=AMD, device_substr=AMD"
+      ],
+      "random_both_1024mb_gib_per_s": null,
+      "status": "failed",
+      "validation_passed": false
+    },
+    "amd_gpu": {
+      "best_gather_gib_per_s": null,
+      "best_random_both_gib_per_s": null,
+      "best_scatter_gib_per_s": null,
+      "device": {},
+      "notes": [
+        "No matching OpenCL device found for device_type=gpu, platform_substr=AMD, device_substr=AMD"
+      ],
+      "random_both_1024mb_gib_per_s": null,
+      "status": "failed",
+      "validation_passed": false
+    },
+    "nvidia_gpu": {
+      "best_gather_gib_per_s": 750.105615,
+      "best_random_both_gib_per_s": 396.356312,
+      "best_scatter_gib_per_s": 703.950593,
+      "device": {
+        "device_name": "NVIDIA GeForce RTX 5090",
+        "device_vendor": "NVIDIA Corporation",
+        "device_version": "OpenCL 3.0 CUDA",
+        "platform_name": "NVIDIA CUDA"
+      },
+      "notes": [
+        "Permutation generation and upload happen outside the timed kernel interval.",
+        "gather, scatter, and random_both share the same explicit permutation for each size."
+      ],
+      "random_both_1024mb_gib_per_s": 25.062654,
+      "status": "ok",
+      "validation_passed": true
+    }
+  },
+  "summary": {
+    "amd_cpu": null,
+    "amd_gpu": null,
+    "nvidia_gpu": 25.062654
+  }
+}

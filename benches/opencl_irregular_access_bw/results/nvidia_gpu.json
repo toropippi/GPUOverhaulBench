@@ -1,0 +1,216 @@
+{
+  "bench_id": "opencl_irregular_access_bw",
+  "context": {
+    "build": {
+      "cuda_runtime_version": "12.9"
+    },
+    "gpu": {
+      "driver_version": "576.88",
+      "memory_total_mb": "32607",
+      "name": "NVIDIA GeForce RTX 5090"
+    },
+    "host": {
+      "machine": "AMD64",
+      "os": "Windows-11-10.0.26200-SP0",
+      "release": "11",
+      "system": "Windows"
+    }
+  },
+  "result": {
+    "measurement": {
+      "best_gather_gib_per_s": 750.105615,
+      "best_random_both_gib_per_s": 396.356312,
+      "best_scatter_gib_per_s": 703.950593,
+      "cases": [
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 0.027464,
+          "gib_per_s": 568.933224,
+          "iterations": 50,
+          "pattern": "gather",
+          "size_mb": 8,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 0.040612,
+          "gib_per_s": 384.733954,
+          "iterations": 50,
+          "pattern": "scatter",
+          "size_mb": 8,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 0.045662,
+          "gib_per_s": 342.187653,
+          "iterations": 50,
+          "pattern": "random_both",
+          "size_mb": 8,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 0.083322,
+          "gib_per_s": 750.105615,
+          "iterations": 50,
+          "pattern": "gather",
+          "size_mb": 32,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 0.088785,
+          "gib_per_s": 703.950593,
+          "iterations": 50,
+          "pattern": "scatter",
+          "size_mb": 32,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 0.157686,
+          "gib_per_s": 396.356312,
+          "iterations": 50,
+          "pattern": "random_both",
+          "size_mb": 32,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 1.467403,
+          "gib_per_s": 170.369026,
+          "iterations": 50,
+          "pattern": "gather",
+          "size_mb": 128,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 4.924786,
+          "gib_per_s": 50.763628,
+          "iterations": 50,
+          "pattern": "scatter",
+          "size_mb": 128,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 8.187172,
+          "gib_per_s": 30.535575,
+          "iterations": 50,
+          "pattern": "random_both",
+          "size_mb": 128,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 8.784279,
+          "gib_per_s": 113.839735,
+          "iterations": 25,
+          "pattern": "gather",
+          "size_mb": 512,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 30.821859,
+          "gib_per_s": 32.444507,
+          "iterations": 25,
+          "pattern": "scatter",
+          "size_mb": 512,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 38.843401,
+          "gib_per_s": 25.744399,
+          "iterations": 25,
+          "pattern": "random_both",
+          "size_mb": 512,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 17.876211,
+          "gib_per_s": 111.880534,
+          "iterations": 12,
+          "pattern": "gather",
+          "size_mb": 1024,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 62.802965,
+          "gib_per_s": 31.84563,
+          "iterations": 12,
+          "pattern": "scatter",
+          "size_mb": 1024,
+          "success": true,
+          "warmup": 1
+        },
+        {
+          "access_unit_bytes": 4,
+          "avg_ms": 79.800008,
+          "gib_per_s": 25.062654,
+          "iterations": 12,
+          "pattern": "random_both",
+          "size_mb": 1024,
+          "success": true,
+          "warmup": 1
+        }
+      ],
+      "device": {
+        "device_name": "NVIDIA GeForce RTX 5090",
+        "device_vendor": "NVIDIA Corporation",
+        "device_version": "OpenCL 3.0 CUDA",
+        "platform_name": "NVIDIA CUDA"
+      },
+      "patterns": [
+        "gather",
+        "scatter",
+        "random_both"
+      ],
+      "random_both_1024mb_gib_per_s": 25.062654,
+      "timing_backend": "opencl_event_profiling"
+    },
+    "notes": [
+      "Permutation generation and upload happen outside the timed kernel interval.",
+      "gather, scatter, and random_both share the same explicit permutation for each size."
+    ],
+    "parameters": {
+      "api": "opencl",
+      "device_substr": "NVIDIA",
+      "device_type": "gpu",
+      "iterations": 50,
+      "platform_substr": "NVIDIA",
+      "sizes_mb": [
+        8,
+        32,
+        128,
+        512,
+        1024
+      ],
+      "warmup": 1
+    },
+    "primary_metric": "random_both_1024mb_gib_per_s",
+    "status": "ok",
+    "unit": "GiB/s",
+    "validation": {
+      "passed": true
+    }
+  }
+}

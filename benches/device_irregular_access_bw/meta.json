@@ -35,11 +35,11 @@
     },
     {
       "ja": "gather、scatter、random_both は 4-byte 要素単位で、順列になる affine permutation を使って実装する。同じアドレスへの重複アクセスは作らない。",
-      "en": "gather, scatter, and random_both are implemented on 4-byte elements using invertible mixed-bit permutations that form a true permutation. No repeated-address accesses are introduced."
+      "en": "gather, scatter, and random_both are implemented on 4-byte elements using explicit host-generated permutation indices that form a true permutation. No repeated-address accesses are introduced."
     },
     {
       "ja": "8 GiB まで通すため、random 系は explicit index array を持たず、式ベースの permutation で source/destination index を決める。",
-      "en": "To support up to 8 GiB, the random-family patterns do not store explicit index arrays. Source and destination indices are generated from formula-based invertible permutations."
+      "en": "The random-family patterns use explicit permutation index arrays generated once on the host and copied once to the GPU outside the timing path. The default size sweep is capped at 1 GiB to keep this practical."
     }
   ],
   "observed_results": {

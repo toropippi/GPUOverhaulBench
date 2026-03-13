@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
+#include <numeric>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -34,14 +35,8 @@ constexpr unsigned char kStrideWriteXor = 0x5A;
 constexpr unsigned char kStrideReadWriteXor = 0xA7;
 constexpr uint64_t kBytesPerGiB = 1024ull * 1024ull * 1024ull;
 constexpr size_t kValidationChunkBytes = 16ull * 1024ull * 1024ull;
-constexpr uint64_t kGatherMulA = 0x9E3779B185EBCA87ull;
-constexpr uint64_t kGatherMulB = 0xC2B2AE3D27D4EB4Full;
-constexpr uint64_t kGatherAdd = 0x165667B19E3779F9ull;
-constexpr uint64_t kScatterMulA = 0xD6E8FEB86659FD93ull;
-constexpr uint64_t kScatterMulB = 0xA24BAED4963EE407ull;
-constexpr uint64_t kScatterAdd = 0x94D049BB133111EBull;
 constexpr size_t kDefaultSizesMb[] = {8, 32, 128, 512, 1024};
-constexpr size_t kExtendedSizesMb[] = {8, 32, 128, 512, 1024, 2048, 4096, 8192};
+constexpr size_t kExtendedSizesMb[] = {8, 32, 128, 512, 1024};
 
 uint64_t gcd_u64(uint64_t a, uint64_t b) {
     while (b != 0) {
@@ -107,76 +102,31 @@ const char* pattern_name(PatternKind pattern) {
     return "unknown";
 }
 
-uint64_t odd_mod_inverse_pow2(uint64_t value) {
-    uint64_t inverse = value;
-    for (int i = 0; i < 6; ++i) {
-        inverse *= (2 - value * inverse);
+uint64_t splitmix64_next(uint64_t& state) {
+    state += 0x9E3779B97F4A7C15ull;
+    uint64_t z = state;
+    z = (z ^ (z >> 30u)) * 0xBF58476D1CE4E5B9ull;
+    z = (z ^ (z >> 27u)) * 0x94D049BB133111EBull;
+    return z ^ (z >> 31u);
+}
+
+std::vector<uint32_t> build_random_permutation(size_t element_count) {
+    std::vector<uint32_t> permutation(element_count);
+    std::iota(permutation.begin(), permutation.end(), 0u);
+    uint64_t rng_state = 0xA5A5A5A55A5A5A5Aull ^ static_cast<uint64_t>(element_count);
+    for (size_t i = element_count - 1; i > 0; --i) {
+        const size_t j = static_cast<size_t>(splitmix64_next(rng_state) % static_cast<uint64_t>(i + 1));
+        std::swap(permutation[i], permutation[j]);
+    }
+    return permutation;
+}
+
+std::vector<uint32_t> build_inverse_permutation(const std::vector<uint32_t>& permutation) {
+    std::vector<uint32_t> inverse(permutation.size());
+    for (size_t i = 0; i < permutation.size(); ++i) {
+        inverse[permutation[i]] = static_cast<uint32_t>(i);
     }
     return inverse;
-}
-
-__host__ __device__ uint64_t reverse_bits_64(uint64_t value) {
-    value = ((value & 0x5555555555555555ull) << 1u) | ((value >> 1u) & 0x5555555555555555ull);
-    value = ((value & 0x3333333333333333ull) << 2u) | ((value >> 2u) & 0x3333333333333333ull);
-    value = ((value & 0x0F0F0F0F0F0F0F0Full) << 4u) | ((value >> 4u) & 0x0F0F0F0F0F0F0F0Full);
-    value = ((value & 0x00FF00FF00FF00FFull) << 8u) | ((value >> 8u) & 0x00FF00FF00FF00FFull);
-    value = ((value & 0x0000FFFF0000FFFFull) << 16u) | ((value >> 16u) & 0x0000FFFF0000FFFFull);
-    return (value << 32u) | (value >> 32u);
-}
-
-__host__ __device__ uint64_t reverse_low_bits(uint64_t value, uint32_t bit_count) {
-    return reverse_bits_64(value) >> (64u - bit_count);
-}
-
-uint32_t log2_pow2_u64(uint64_t value) {
-    uint32_t bits = 0;
-    while (value > 1) {
-        value >>= 1u;
-        ++bits;
-    }
-    return bits;
-}
-
-__host__ __device__ uint64_t invert_right_xor(uint64_t value, uint32_t shift, uint32_t bit_count) {
-    uint64_t result = value;
-    for (uint32_t step = shift; step < bit_count; step <<= 1u) {
-        result ^= result >> step;
-    }
-    if (bit_count < 64u) {
-        const uint64_t mask = (1ull << bit_count) - 1ull;
-        result &= mask;
-    }
-    return result;
-}
-
-__host__ __device__ uint64_t apply_permutation(
-    uint64_t index,
-    uint64_t mul_a,
-    uint64_t mul_b,
-    uint64_t add,
-    uint64_t mask,
-    uint32_t bit_count) {
-    uint64_t value = reverse_low_bits(index, bit_count);
-    value = (value * mul_a + add) & mask;
-    value ^= value >> 13u;
-    value &= mask;
-    value = (value * mul_b) & mask;
-    value ^= value >> 7u;
-    return value & mask;
-}
-
-uint64_t invert_permutation(
-    uint64_t index,
-    uint64_t mul_a_inverse,
-    uint64_t mul_b_inverse,
-    uint64_t add,
-    uint64_t mask,
-    uint32_t bit_count) {
-    uint64_t value = invert_right_xor(index, 7u, bit_count) & mask;
-    value = (value * mul_b_inverse) & mask;
-    value = invert_right_xor(value, 13u, bit_count) & mask;
-    value = (mul_a_inverse * ((value - add) & mask)) & mask;
-    return reverse_low_bits(value, bit_count);
 }
 
 unsigned char source_byte_value(uint64_t offset) {
@@ -310,46 +260,38 @@ __global__ void stride_read_write_kernel(
 __global__ void gather_kernel(
     const uint32_t* src,
     uint32_t* dst,
-    size_t element_count,
-    uint64_t mask,
-    uint32_t bit_count) {
+    const uint32_t* permutation,
+    size_t element_count) {
     const size_t global_tid = static_cast<size_t>(blockIdx.x) * blockDim.x + threadIdx.x;
     const size_t total_threads = static_cast<size_t>(gridDim.x) * blockDim.x;
     for (size_t i = global_tid; i < element_count; i += total_threads) {
-        const uint64_t src_index =
-            apply_permutation(i, kGatherMulA, kGatherMulB, kGatherAdd, mask, bit_count);
-        dst[i] = src[src_index];
+        dst[i] = src[permutation[i]];
     }
 }
 
 __global__ void scatter_kernel(
     const uint32_t* src,
     uint32_t* dst,
-    size_t element_count,
-    uint64_t mask,
-    uint32_t bit_count) {
+    const uint32_t* permutation,
+    size_t element_count) {
     const size_t global_tid = static_cast<size_t>(blockIdx.x) * blockDim.x + threadIdx.x;
     const size_t total_threads = static_cast<size_t>(gridDim.x) * blockDim.x;
     for (size_t i = global_tid; i < element_count; i += total_threads) {
-        const uint64_t dst_index =
-            apply_permutation(i, kScatterMulA, kScatterMulB, kScatterAdd, mask, bit_count);
-        dst[dst_index] = src[i];
+        dst[permutation[i]] = src[i];
     }
 }
 
 __global__ void random_both_kernel(
     const uint32_t* src,
     uint32_t* dst,
+    const uint32_t* permutation,
     size_t element_count,
-    uint64_t mask,
-    uint32_t bit_count) {
+    uint64_t mask) {
     const size_t global_tid = static_cast<size_t>(blockIdx.x) * blockDim.x + threadIdx.x;
     const size_t total_threads = static_cast<size_t>(gridDim.x) * blockDim.x;
     for (size_t i = global_tid; i < element_count; i += total_threads) {
-        const uint64_t src_index =
-            apply_permutation(i, kGatherMulA, kGatherMulB, kGatherAdd, mask, bit_count);
-        const uint64_t dst_index =
-            apply_permutation(i, kScatterMulA, kScatterMulB, kScatterAdd, mask, bit_count);
+        const uint64_t src_index = permutation[i];
+        const uint64_t dst_index = permutation[(i + 1) & mask];
         dst[dst_index] = src[src_index];
     }
 }
@@ -400,26 +342,19 @@ bool validate_stride_written_bytes(
 uint32_t expected_random_word(
     PatternKind pattern,
     uint64_t dst_index,
-    uint64_t mask,
-    uint64_t scatter_mul_a_inverse,
-    uint64_t scatter_mul_b_inverse,
-    uint32_t bit_count) {
+    const std::vector<uint32_t>& permutation,
+    const std::vector<uint32_t>& inverse_permutation,
+    uint64_t mask) {
     switch (pattern) {
         case PatternKind::Gather: {
-            const uint64_t src_index =
-                apply_permutation(dst_index, kGatherMulA, kGatherMulB, kGatherAdd, mask, bit_count);
-            return source_word_value(src_index);
+            return source_word_value(permutation[dst_index]);
         }
         case PatternKind::Scatter: {
-            const uint64_t src_index =
-                invert_permutation(dst_index, scatter_mul_a_inverse, scatter_mul_b_inverse, kScatterAdd, mask, bit_count);
-            return source_word_value(src_index);
+            return source_word_value(inverse_permutation[dst_index]);
         }
         case PatternKind::RandomBoth: {
-            const uint64_t logical_index =
-                invert_permutation(dst_index, scatter_mul_a_inverse, scatter_mul_b_inverse, kScatterAdd, mask, bit_count);
-            const uint64_t src_index =
-                apply_permutation(logical_index, kGatherMulA, kGatherMulB, kGatherAdd, mask, bit_count);
+            const uint64_t logical_index = inverse_permutation[dst_index];
+            const uint64_t src_index = permutation[(logical_index - 1ull) & mask];
             return source_word_value(src_index);
         }
         default:
@@ -431,9 +366,8 @@ bool validate_random_pattern(
     const uint32_t* dst_device,
     size_t element_count,
     PatternKind pattern,
-    uint64_t scatter_mul_a_inverse,
-    uint64_t scatter_mul_b_inverse,
-    uint32_t bit_count) {
+    const std::vector<uint32_t>& permutation,
+    const std::vector<uint32_t>& inverse_permutation) {
     const size_t chunk_words = std::max<size_t>(1, kValidationChunkBytes / sizeof(uint32_t));
     std::vector<uint32_t> chunk(chunk_words);
     const uint64_t mask = static_cast<uint64_t>(element_count - 1);
@@ -447,7 +381,7 @@ bool validate_random_pattern(
         for (size_t i = 0; i < words_this_chunk; ++i) {
             const uint64_t dst_index = static_cast<uint64_t>(offset + i);
             const uint32_t expected =
-                expected_random_word(pattern, dst_index, mask, scatter_mul_a_inverse, scatter_mul_b_inverse, bit_count);
+                expected_random_word(pattern, dst_index, permutation, inverse_permutation, mask);
             if (chunk[i] != expected) {
                 return false;
             }
@@ -555,7 +489,7 @@ std::string render_json(const bench::Options& options, const std::vector<CaseRow
         << "},"
         << "\"notes\":["
         << bench::quote("stride uses byte-addressed accesses from 1 B to 1024 B.") << ","
-        << bench::quote("gather, scatter, and random_both use invertible mixed-bit permutations over 4-byte elements with no repeated addresses.") << ","
+        << bench::quote("gather, scatter, and random_both use explicit host-generated permutation indices over 4-byte elements with no repeated addresses.") << ","
         << bench::quote("results should be compared against device_global_memory_bw for the sequential baseline.")
         << "]"
         << "}";
@@ -603,8 +537,6 @@ int main(int argc, char** argv) {
         uint64_t* partial_device = nullptr;
         bench::check_cuda(cudaMalloc(&partial_device, partial_count * sizeof(uint64_t)), "cudaMalloc(partial_device)");
 
-        const uint64_t scatter_mul_a_inverse = odd_mod_inverse_pow2(kScatterMulA);
-        const uint64_t scatter_mul_b_inverse = odd_mod_inverse_pow2(kScatterMulB);
         const auto strides = default_strides_bytes();
 
         std::vector<CaseRow> rows;
@@ -689,10 +621,16 @@ int main(int argc, char** argv) {
 
             const size_t element_count = size_bytes / sizeof(uint32_t);
             const uint64_t mask = static_cast<uint64_t>(element_count - 1);
-            const uint32_t bit_count = log2_pow2_u64(static_cast<uint64_t>(element_count));
             const int block_count = choose_block_count(prop.multiProcessorCount, element_count);
             auto* src_words = reinterpret_cast<uint32_t*>(src_device);
             auto* dst_words = reinterpret_cast<uint32_t*>(dst_device);
+            auto permutation = build_random_permutation(element_count);
+            auto inverse_permutation = build_inverse_permutation(permutation);
+            uint32_t* permutation_device = nullptr;
+            bench::check_cuda(cudaMalloc(&permutation_device, size_bytes), "cudaMalloc(permutation_device)");
+            bench::check_cuda(
+                cudaMemcpy(permutation_device, permutation.data(), size_bytes, cudaMemcpyHostToDevice),
+                "cudaMemcpy(permutation_device)");
 
             for (PatternKind pattern : {PatternKind::Gather, PatternKind::Scatter, PatternKind::RandomBoth}) {
                 CaseRow row;
@@ -709,21 +647,21 @@ int main(int argc, char** argv) {
                         case PatternKind::Gather:
                             row.stats = measure_timed_operation(size_bytes * 2ull, row.warmup, row.iterations, [&]() {
                                 gather_kernel<<<block_count, kThreadsPerBlock>>>(
-                                    src_words, dst_words, element_count, mask, bit_count);
+                                    src_words, dst_words, permutation_device, element_count);
                                 bench::check_cuda(cudaGetLastError(), "gather_kernel launch");
                             });
                             break;
                         case PatternKind::Scatter:
                             row.stats = measure_timed_operation(size_bytes * 2ull, row.warmup, row.iterations, [&]() {
                                 scatter_kernel<<<block_count, kThreadsPerBlock>>>(
-                                    src_words, dst_words, element_count, mask, bit_count);
+                                    src_words, dst_words, permutation_device, element_count);
                                 bench::check_cuda(cudaGetLastError(), "scatter_kernel launch");
                             });
                             break;
                         case PatternKind::RandomBoth:
                             row.stats = measure_timed_operation(size_bytes * 2ull, row.warmup, row.iterations, [&]() {
                                 random_both_kernel<<<block_count, kThreadsPerBlock>>>(
-                                    src_words, dst_words, element_count, mask, bit_count);
+                                    src_words, dst_words, permutation_device, element_count, mask);
                                 bench::check_cuda(cudaGetLastError(), "random_both_kernel launch");
                             });
                             break;
@@ -733,7 +671,7 @@ int main(int argc, char** argv) {
 
                     if (row.stats.success &&
                         !validate_random_pattern(
-                            dst_words, element_count, pattern, scatter_mul_a_inverse, scatter_mul_b_inverse, bit_count)) {
+                            dst_words, element_count, pattern, permutation, inverse_permutation)) {
                         row.stats.success = false;
                         row.stats.error = std::string(pattern_name(pattern)) + " validation failed";
                         validation_passed = false;
@@ -748,6 +686,8 @@ int main(int argc, char** argv) {
                 }
                 rows.push_back(row);
             }
+
+            cudaFree(permutation_device);
         }
 
         cudaFree(partial_device);
