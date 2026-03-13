@@ -25,80 +25,80 @@
           "pageable": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 7.795275,
-                "gib_per_s": 16.035355,
+                "avg_ms": 7.05013,
+                "gib_per_s": 17.73017,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 7.93524,
-                "loop_count": 558319,
+                "avg_ms": 7.0676,
+                "loop_count": 537968,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 16.33064,
-                "copy_gib_per_s": 7.654323,
+                "avg_wall_ms": 14.286745,
+                "copy_gib_per_s": 8.749369,
                 "success": true,
-                "wall_vs_solo_max_ratio": 2.057989,
-                "wall_vs_solo_sum_ratio": 1.03815
+                "wall_vs_solo_max_ratio": 2.021442,
+                "wall_vs_solo_sum_ratio": 1.011972
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 7.539035,
-                "gib_per_s": 16.580371,
+                "avg_ms": 6.980985,
+                "gib_per_s": 17.905783,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 7.669135,
-                "loop_count": 541793,
+                "avg_ms": 6.997955,
+                "loop_count": 528906,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 15.140695,
-                "copy_gib_per_s": 8.255896,
+                "avg_wall_ms": 13.92452,
+                "copy_gib_per_s": 8.97697,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.974238,
-                "wall_vs_solo_sum_ratio": 0.995563
+                "wall_vs_solo_max_ratio": 1.989798,
+                "wall_vs_solo_sum_ratio": 0.996107
               }
             }
           },
           "pinned": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 2.38042,
-                "gib_per_s": 52.511742,
+                "avg_ms": 2.375675,
+                "gib_per_s": 52.616625,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 2.403845,
-                "loop_count": 171318,
+                "avg_ms": 2.368585,
+                "loop_count": 183733,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 2.586665,
-                "copy_gib_per_s": 48.324773,
+                "avg_wall_ms": 2.47967,
+                "copy_gib_per_s": 50.409934,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.076053,
-                "wall_vs_solo_sum_ratio": 0.540661
+                "wall_vs_solo_max_ratio": 1.043775,
+                "wall_vs_solo_sum_ratio": 0.522667
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 2.3836,
-                "gib_per_s": 52.441685,
+                "avg_ms": 2.35803,
+                "gib_per_s": 53.010352,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 2.446555,
-                "loop_count": 173937,
+                "avg_ms": 2.36468,
+                "loop_count": 175553,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 2.574425,
-                "copy_gib_per_s": 48.554532,
+                "avg_wall_ms": 2.49964,
+                "copy_gib_per_s": 50.007201,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.052265,
-                "wall_vs_solo_sum_ratio": 0.53299
+                "wall_vs_solo_max_ratio": 1.057073,
+                "wall_vs_solo_sum_ratio": 0.529281
               }
             }
           },
@@ -110,80 +110,80 @@
           "pageable": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 41.43736,
-                "gib_per_s": 12.066406,
+                "avg_ms": 35.28669,
+                "gib_per_s": 14.169649,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 42.68975,
-                "loop_count": 2922577,
+                "avg_ms": 34.84488,
+                "loop_count": 2671129,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 77.70551,
-                "copy_gib_per_s": 6.43455,
+                "avg_wall_ms": 68.17018,
+                "copy_gib_per_s": 7.334585,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.820238,
-                "wall_vs_solo_sum_ratio": 0.923668
+                "wall_vs_solo_max_ratio": 1.931895,
+                "wall_vs_solo_sum_ratio": 0.972033
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 29.1784,
-                "gib_per_s": 17.135964,
+                "avg_ms": 34.2732,
+                "gib_per_s": 14.588658,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 30.03247,
-                "loop_count": 2058329,
+                "avg_ms": 34.47728,
+                "loop_count": 2636513,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 62.11826,
-                "copy_gib_per_s": 8.049163,
+                "avg_wall_ms": 61.50803,
+                "copy_gib_per_s": 8.12902,
                 "success": true,
-                "wall_vs_solo_max_ratio": 2.06837,
-                "wall_vs_solo_sum_ratio": 1.049102
+                "wall_vs_solo_max_ratio": 1.784016,
+                "wall_vs_solo_sum_ratio": 0.894656
               }
             }
           },
           "pinned": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 9.57727,
-                "gib_per_s": 52.206944,
+                "avg_ms": 9.40693,
+                "gib_per_s": 53.152304,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 9.58972,
-                "loop_count": 670558,
+                "avg_ms": 9.4716,
+                "loop_count": 727652,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 9.98849,
-                "copy_gib_per_s": 50.057616,
+                "avg_wall_ms": 9.70297,
+                "copy_gib_per_s": 51.530614,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.041583,
-                "wall_vs_solo_sum_ratio": 0.52113
+                "wall_vs_solo_max_ratio": 1.024428,
+                "wall_vs_solo_sum_ratio": 0.513969
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 9.42667,
-                "gib_per_s": 53.041,
+                "avg_ms": 9.38516,
+                "gib_per_s": 53.275597,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 9.5573,
-                "loop_count": 670703,
+                "avg_ms": 9.32675,
+                "loop_count": 709387,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 10.1069,
-                "copy_gib_per_s": 49.471153,
+                "avg_wall_ms": 9.40999,
+                "copy_gib_per_s": 53.135019,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.057506,
-                "wall_vs_solo_sum_ratio": 0.532391
+                "wall_vs_solo_max_ratio": 1.002646,
+                "wall_vs_solo_sum_ratio": 0.502888
               }
             }
           },
@@ -195,95 +195,350 @@
           "pageable": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 78.72484,
-                "gib_per_s": 12.702471,
+                "avg_ms": 60.67082,
+                "gib_per_s": 16.482388,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 80.7186,
-                "loop_count": 5528058,
-                "success": true
-              },
-              "overlap": {
-                "avg_wall_ms": 145.69414,
-                "copy_gib_per_s": 6.863694,
-                "success": true,
-                "wall_vs_solo_max_ratio": 1.804964,
-                "wall_vs_solo_sum_ratio": 0.913767
-              }
-            },
-            "h2d": {
-              "copy_solo": {
-                "avg_ms": 63.15158,
-                "gib_per_s": 15.834917,
-                "success": true
-              },
-              "kernel_solo": {
-                "avg_ms": 60.51182,
+                "avg_ms": 54.73248,
                 "loop_count": 4194304,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 118.5913,
-                "copy_gib_per_s": 8.432322,
+                "avg_wall_ms": 130.71804,
+                "copy_gib_per_s": 7.650054,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.877883,
-                "wall_vs_solo_sum_ratio": 0.958985
+                "wall_vs_solo_max_ratio": 2.154545,
+                "wall_vs_solo_sum_ratio": 1.132706
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 54.61736,
+                "gib_per_s": 18.309197,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 54.32108,
+                "loop_count": 4147442,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 108.63416,
+                "copy_gib_per_s": 9.205208,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.989004,
+                "wall_vs_solo_sum_ratio": 0.997207
               }
             }
           },
           "pinned": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 19.1734,
-                "gib_per_s": 52.155591,
+                "avg_ms": 18.79108,
+                "gib_per_s": 53.216739,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 19.56768,
-                "loop_count": 1387348,
+                "avg_ms": 18.78908,
+                "loop_count": 1437393,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 20.77968,
-                "copy_gib_per_s": 48.123936,
+                "avg_wall_ms": 19.20658,
+                "copy_gib_per_s": 52.06549,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.061939,
-                "wall_vs_solo_sum_ratio": 0.536373
+                "wall_vs_solo_max_ratio": 1.022112,
+                "wall_vs_solo_sum_ratio": 0.511083
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 19.56834,
-                "gib_per_s": 51.102955,
+                "avg_ms": 18.6142,
+                "gib_per_s": 53.722427,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 19.19796,
-                "loop_count": 1369715,
+                "avg_ms": 18.90688,
+                "loop_count": 1430806,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 21.48106,
-                "copy_gib_per_s": 46.552638,
+                "avg_wall_ms": 18.91112,
+                "copy_gib_per_s": 52.878941,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.097746,
-                "wall_vs_solo_sum_ratio": 0.554117
+                "wall_vs_solo_max_ratio": 1.000224,
+                "wall_vs_solo_sum_ratio": 0.504013
               }
             }
           },
           "size_mb": 1024,
           "warmup": 2
+        },
+        {
+          "iterations": 5,
+          "pageable": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 135.35174,
+                "gib_per_s": 14.776315,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 135.07742,
+                "loop_count": 10249841,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 254.94276,
+                "copy_gib_per_s": 7.844898,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.883557,
+                "wall_vs_solo_sum_ratio": 0.942734
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 129.534,
+                "gib_per_s": 15.439962,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 130.50774,
+                "loop_count": 9736082,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 246.77898,
+                "copy_gib_per_s": 8.104418,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.890915,
+                "wall_vs_solo_sum_ratio": 0.948998
+              }
+            }
+          },
+          "pinned": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 37.62222,
+                "gib_per_s": 53.160074,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 37.73126,
+                "loop_count": 2840568,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 39.38396,
+                "copy_gib_per_s": 50.782095,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.043802,
+                "wall_vs_solo_sum_ratio": 0.522656
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 37.2373,
+                "gib_per_s": 53.709587,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 37.488,
+                "loop_count": 2837181,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 38.33632,
+                "copy_gib_per_s": 52.169848,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.022629,
+                "wall_vs_solo_sum_ratio": 0.51303
+              }
+            }
+          },
+          "size_mb": 2048,
+          "warmup": 2
+        },
+        {
+          "iterations": 5,
+          "pageable": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 239.12526,
+                "gib_per_s": 16.727635,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 221.17404,
+                "loop_count": 16777216,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 455.8202,
+                "copy_gib_per_s": 8.77539,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.906198,
+                "wall_vs_solo_sum_ratio": 0.990269
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 223.5427,
+                "gib_per_s": 17.893673,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 220.8324,
+                "loop_count": 16777216,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 459.43046,
+                "copy_gib_per_s": 8.706432,
+                "success": true,
+                "wall_vs_solo_max_ratio": 2.055225,
+                "wall_vs_solo_sum_ratio": 1.03388
+              }
+            }
+          },
+          "pinned": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 75.2493,
+                "gib_per_s": 53.156641,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 74.51618,
+                "loop_count": 5535176,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 75.34602,
+                "copy_gib_per_s": 53.088405,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.001285,
+                "wall_vs_solo_sum_ratio": 0.503093
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 74.5157,
+                "gib_per_s": 53.679963,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 75.33522,
+                "loop_count": 5542728,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 75.09834,
+                "copy_gib_per_s": 53.263494,
+                "success": true,
+                "wall_vs_solo_max_ratio": 0.996856,
+                "wall_vs_solo_sum_ratio": 0.501154
+              }
+            }
+          },
+          "size_mb": 4096,
+          "warmup": 2
+        },
+        {
+          "iterations": 5,
+          "pageable": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 522.36288,
+                "gib_per_s": 15.315024,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 534.0117,
+                "loop_count": 39736321,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 977.9183,
+                "copy_gib_per_s": 8.180642,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.831268,
+                "wall_vs_solo_sum_ratio": 0.925731
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 540.33552,
+                "gib_per_s": 14.805616,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 540.76602,
+                "loop_count": 40642732,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 1020.29304,
+                "copy_gib_per_s": 7.840885,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.886755,
+                "wall_vs_solo_sum_ratio": 0.943753
+              }
+            }
+          },
+          "pinned": {
+            "d2h": {
+              "copy_solo": {
+                "avg_ms": 150.47404,
+                "gib_per_s": 53.165317,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 147.42044,
+                "loop_count": 11108585,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 151.28326,
+                "copy_gib_per_s": 52.880933,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.005378,
+                "wall_vs_solo_sum_ratio": 0.507842
+              }
+            },
+            "h2d": {
+              "copy_solo": {
+                "avg_ms": 155.27924,
+                "gib_per_s": 51.520087,
+                "success": true
+              },
+              "kernel_solo": {
+                "avg_ms": 156.08202,
+                "loop_count": 11793373,
+                "success": true
+              },
+              "overlap": {
+                "avg_wall_ms": 164.18758,
+                "copy_gib_per_s": 48.724757,
+                "success": true,
+                "wall_vs_solo_max_ratio": 1.051931,
+                "wall_vs_solo_sum_ratio": 0.527322
+              }
+            }
+          },
+          "size_mb": 8192,
+          "warmup": 2
         }
       ],
       "device_overlap": 1,
-      "min_pageable_d2h_wall_vs_solo_sum_ratio": 0.913767,
-      "min_pageable_h2d_wall_vs_solo_sum_ratio": 0.958985,
-      "min_pageable_wall_vs_solo_sum_ratio": 0.913767,
-      "min_pinned_d2h_wall_vs_solo_sum_ratio": 0.52113,
-      "min_pinned_h2d_wall_vs_solo_sum_ratio": 0.532391,
-      "min_pinned_wall_vs_solo_sum_ratio": 0.52113,
-      "pageable_to_pinned_overlap_penalty": 1.753434,
+      "min_pageable_d2h_wall_vs_solo_sum_ratio": 0.925731,
+      "min_pageable_h2d_wall_vs_solo_sum_ratio": 0.894656,
+      "min_pageable_wall_vs_solo_sum_ratio": 0.894656,
+      "min_pinned_d2h_wall_vs_solo_sum_ratio": 0.503093,
+      "min_pinned_h2d_wall_vs_solo_sum_ratio": 0.501154,
+      "min_pinned_wall_vs_solo_sum_ratio": 0.501154,
+      "pageable_to_pinned_overlap_penalty": 1.785193,
       "timing_backend": "wall_clock"
     },
     "parameters": {
@@ -299,7 +554,10 @@
       "sizes_mb": [
         128,
         512,
-        1024
+        1024,
+        2048,
+        4096,
+        8192
       ],
       "stream_count": 2,
       "warmup": 5
