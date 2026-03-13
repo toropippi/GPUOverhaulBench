@@ -23,40 +23,40 @@
           "alloc_host_ptr": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 2.394825,
-                "gib_per_s": 52.195881,
+                "avg_ms": 2.37312,
+                "gib_per_s": 52.673274,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 2.36773,
-                "loop_count": 166290,
+                "avg_ms": 2.36872,
+                "loop_count": 184313,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 2.498255,
-                "copy_gib_per_s": 50.034924,
+                "avg_wall_ms": 2.477555,
+                "copy_gib_per_s": 50.452967,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.043189,
-                "wall_vs_solo_sum_ratio": 0.524562
+                "wall_vs_solo_max_ratio": 1.044007,
+                "wall_vs_solo_sum_ratio": 0.522488
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 2.376575,
-                "gib_per_s": 52.596699,
+                "avg_ms": 2.34961,
+                "gib_per_s": 53.200318,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 2.241445,
-                "loop_count": 162591,
+                "avg_ms": 2.316605,
+                "loop_count": 180379,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 2.48234,
-                "copy_gib_per_s": 50.355713,
+                "avg_wall_ms": 2.46269,
+                "copy_gib_per_s": 50.757505,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.044503,
-                "wall_vs_solo_sum_ratio": 0.537533
+                "wall_vs_solo_max_ratio": 1.048127,
+                "wall_vs_solo_sum_ratio": 0.52777
               }
             }
           },
@@ -64,40 +64,40 @@
           "pageable": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 7.7546,
-                "gib_per_s": 16.119465,
+                "avg_ms": 6.840365,
+                "gib_per_s": 18.273879,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 7.850135,
-                "loop_count": 551919,
+                "avg_ms": 6.99292,
+                "loop_count": 536829,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 15.544615,
-                "copy_gib_per_s": 8.04137,
+                "avg_wall_ms": 13.886515,
+                "copy_gib_per_s": 9.001539,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.980172,
-                "wall_vs_solo_sum_ratio": 0.996147
+                "wall_vs_solo_max_ratio": 1.985796,
+                "wall_vs_solo_sum_ratio": 1.003848
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 7.6826,
-                "gib_per_s": 16.270533,
+                "avg_ms": 6.575385,
+                "gib_per_s": 19.010294,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 7.84631,
-                "loop_count": 551260,
+                "avg_ms": 6.643085,
+                "loop_count": 517091,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 15.616855,
-                "copy_gib_per_s": 8.004172,
+                "avg_wall_ms": 13.24837,
+                "copy_gib_per_s": 9.435123,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.990344,
-                "wall_vs_solo_sum_ratio": 1.005663
+                "wall_vs_solo_max_ratio": 1.99431,
+                "wall_vs_solo_sum_ratio": 1.002262
               }
             }
           },
@@ -108,40 +108,40 @@
           "alloc_host_ptr": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 9.51098,
-                "gib_per_s": 52.570818,
+                "avg_ms": 9.41807,
+                "gib_per_s": 53.089433,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 9.36848,
-                "loop_count": 658244,
+                "avg_ms": 9.57118,
+                "loop_count": 738761,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 9.80046,
-                "copy_gib_per_s": 51.018013,
+                "avg_wall_ms": 9.78572,
+                "copy_gib_per_s": 51.094861,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.030436,
-                "wall_vs_solo_sum_ratio": 0.519107
+                "wall_vs_solo_max_ratio": 1.022415,
+                "wall_vs_solo_sum_ratio": 0.515329
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 9.4349,
-                "gib_per_s": 52.994732,
+                "avg_ms": 9.32946,
+                "gib_per_s": 53.59367,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 9.2816,
-                "loop_count": 651956,
+                "avg_ms": 9.41269,
+                "loop_count": 735884,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 9.88322,
-                "copy_gib_per_s": 50.590799,
+                "avg_wall_ms": 9.68411,
+                "copy_gib_per_s": 51.630971,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.047517,
-                "wall_vs_solo_sum_ratio": 0.528049
+                "wall_vs_solo_max_ratio": 1.028836,
+                "wall_vs_solo_sum_ratio": 0.516702
               }
             }
           },
@@ -149,40 +149,40 @@
           "pageable": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 30.84332,
-                "gib_per_s": 16.210966,
+                "avg_ms": 38.41282,
+                "gib_per_s": 13.016488,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 31.26425,
-                "loop_count": 2167373,
+                "avg_ms": 38.85483,
+                "loop_count": 2197268,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 69.46621,
-                "copy_gib_per_s": 7.197744,
+                "avg_wall_ms": 56.78598,
+                "copy_gib_per_s": 8.80499,
                 "success": true,
-                "wall_vs_solo_max_ratio": 2.221906,
-                "wall_vs_solo_sum_ratio": 1.118482
+                "wall_vs_solo_max_ratio": 1.461491,
+                "wall_vs_solo_sum_ratio": 0.734926
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 31.15788,
-                "gib_per_s": 16.047305,
+                "avg_ms": 27.3753,
+                "gib_per_s": 18.26464,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 31.88661,
-                "loop_count": 2178479,
+                "avg_ms": 27.49434,
+                "loop_count": 2112570,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 65.67344,
-                "copy_gib_per_s": 7.613428,
+                "avg_wall_ms": 55.08076,
+                "copy_gib_per_s": 9.07758,
                 "success": true,
-                "wall_vs_solo_max_ratio": 2.059593,
-                "wall_vs_solo_sum_ratio": 1.0417
+                "wall_vs_solo_max_ratio": 2.003349,
+                "wall_vs_solo_sum_ratio": 1.003848
               }
             }
           },
@@ -193,40 +193,40 @@
           "alloc_host_ptr": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 19.49084,
-                "gib_per_s": 51.306152,
+                "avg_ms": 18.76926,
+                "gib_per_s": 53.278606,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 19.56392,
-                "loop_count": 1375004,
+                "avg_ms": 18.99086,
+                "loop_count": 1457927,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 19.85104,
-                "copy_gib_per_s": 50.375194,
+                "avg_wall_ms": 19.23424,
+                "copy_gib_per_s": 51.990617,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.014676,
-                "wall_vs_solo_sum_ratio": 0.508287
+                "wall_vs_solo_max_ratio": 1.012816,
+                "wall_vs_solo_sum_ratio": 0.50938
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 22.06886,
-                "gib_per_s": 45.312717,
+                "avg_ms": 18.63286,
+                "gib_per_s": 53.668626,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 22.02838,
-                "loop_count": 1544953,
+                "avg_ms": 18.8053,
+                "loop_count": 1449483,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 23.32108,
-                "copy_gib_per_s": 42.879661,
+                "avg_wall_ms": 19.06906,
+                "copy_gib_per_s": 52.44097,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.056741,
-                "wall_vs_solo_sum_ratio": 0.528856
+                "wall_vs_solo_max_ratio": 1.014026,
+                "wall_vs_solo_sum_ratio": 0.509348
               }
             }
           },
@@ -234,40 +234,40 @@
           "pageable": {
             "d2h": {
               "copy_solo": {
-                "avg_ms": 68.96768,
-                "gib_per_s": 14.499545,
+                "avg_ms": 57.00604,
+                "gib_per_s": 17.542001,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 61.05088,
+                "avg_ms": 54.6084,
                 "loop_count": 4194304,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 135.70102,
-                "copy_gib_per_s": 7.369141,
+                "avg_wall_ms": 117.59422,
+                "copy_gib_per_s": 8.503819,
                 "success": true,
-                "wall_vs_solo_max_ratio": 1.967603,
-                "wall_vs_solo_sum_ratio": 1.043705
+                "wall_vs_solo_max_ratio": 2.062838,
+                "wall_vs_solo_sum_ratio": 1.053575
               }
             },
             "h2d": {
               "copy_solo": {
-                "avg_ms": 62.74094,
-                "gib_per_s": 15.938556,
+                "avg_ms": 54.53266,
+                "gib_per_s": 18.337635,
                 "success": true
               },
               "kernel_solo": {
-                "avg_ms": 61.18628,
+                "avg_ms": 54.37668,
                 "loop_count": 4194304,
                 "success": true
               },
               "overlap": {
-                "avg_wall_ms": 130.64214,
-                "copy_gib_per_s": 7.654498,
+                "avg_wall_ms": 120.74518,
+                "copy_gib_per_s": 8.281904,
                 "success": true,
-                "wall_vs_solo_max_ratio": 2.082247,
-                "wall_vs_solo_sum_ratio": 1.054184
+                "wall_vs_solo_max_ratio": 2.214181,
+                "wall_vs_solo_sum_ratio": 1.108676
               }
             }
           },
@@ -277,13 +277,13 @@
       ],
       "device_name": "NVIDIA GeForce RTX 5090",
       "device_version": "OpenCL 3.0 CUDA",
-      "min_alloc_host_ptr_d2h_wall_vs_solo_sum_ratio": 0.508287,
-      "min_alloc_host_ptr_h2d_wall_vs_solo_sum_ratio": 0.528049,
-      "min_alloc_host_ptr_wall_vs_solo_sum_ratio": 0.508287,
-      "min_pageable_d2h_wall_vs_solo_sum_ratio": 0.996147,
-      "min_pageable_h2d_wall_vs_solo_sum_ratio": 1.005663,
-      "min_pageable_wall_vs_solo_sum_ratio": 0.996147,
-      "pageable_to_alloc_host_ptr_overlap_penalty": 1.959811,
+      "min_alloc_host_ptr_d2h_wall_vs_solo_sum_ratio": 0.50938,
+      "min_alloc_host_ptr_h2d_wall_vs_solo_sum_ratio": 0.509348,
+      "min_alloc_host_ptr_wall_vs_solo_sum_ratio": 0.509348,
+      "min_pageable_d2h_wall_vs_solo_sum_ratio": 0.734926,
+      "min_pageable_h2d_wall_vs_solo_sum_ratio": 1.002262,
+      "min_pageable_wall_vs_solo_sum_ratio": 0.734926,
+      "pageable_to_alloc_host_ptr_overlap_penalty": 1.442875,
       "platform_name": "NVIDIA CUDA",
       "timing_backend": "wall_clock"
     },
