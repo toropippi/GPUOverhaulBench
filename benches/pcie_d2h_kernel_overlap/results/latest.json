@@ -19,50 +19,50 @@
   "result": {
     "measurement": {
       "async_engine_count": 1,
-      "best_d2h_overlap_copy_gib_per_s": 50.444364,
-      "best_h2d_overlap_copy_gib_per_s": 50.726351,
+      "best_d2h_overlap_copy_gib_per_s": 52.534308,
+      "best_h2d_overlap_copy_gib_per_s": 51.367295,
       "cases": [
         {
           "d2h": {
             "copy_solo": {
-              "avg_ms": 2.353731,
-              "gib_per_s": 53.107165,
+              "avg_ms": 2.34232,
+              "gib_per_s": 53.365892,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 2.362115,
-              "loop_count": 168482,
+              "avg_ms": 2.352048,
+              "loop_count": 181575,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 2.570035,
-              "copy_gib_per_s": 48.63747,
-              "copy_stream_avg_ms": 2.374096,
-              "kernel_stream_avg_ms": 2.46888,
+              "avg_wall_ms": 2.456635,
+              "copy_gib_per_s": 50.88261,
+              "copy_stream_avg_ms": 2.345181,
+              "kernel_stream_avg_ms": 2.398571,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.088023,
-              "wall_vs_solo_sum_ratio": 0.544979
+              "wall_vs_solo_max_ratio": 1.044466,
+              "wall_vs_solo_sum_ratio": 0.523315
             }
           },
           "h2d": {
             "copy_solo": {
-              "avg_ms": 2.357918,
-              "gib_per_s": 53.012862,
+              "avg_ms": 2.326789,
+              "gib_per_s": 53.72211,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 2.418434,
-              "loop_count": 173397,
+              "avg_ms": 2.29859,
+              "loop_count": 178169,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 2.66951,
-              "copy_gib_per_s": 46.825073,
-              "copy_stream_avg_ms": 2.383727,
-              "kernel_stream_avg_ms": 2.572045,
+              "avg_wall_ms": 2.433455,
+              "copy_gib_per_s": 51.367295,
+              "copy_stream_avg_ms": 2.326186,
+              "kernel_stream_avg_ms": 2.355107,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.103818,
-              "wall_vs_solo_sum_ratio": 0.558901
+              "wall_vs_solo_max_ratio": 1.045843,
+              "wall_vs_solo_sum_ratio": 0.526109
             }
           },
           "iterations": 20,
@@ -72,44 +72,44 @@
         {
           "d2h": {
             "copy_solo": {
-              "avg_ms": 9.427593,
-              "gib_per_s": 53.035805,
+              "avg_ms": 9.356052,
+              "gib_per_s": 53.441347,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 9.508202,
-              "loop_count": 668744,
+              "avg_ms": 9.395248,
+              "loop_count": 726902,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 9.91191,
-              "copy_gib_per_s": 50.444364,
-              "copy_stream_avg_ms": 9.493245,
-              "kernel_stream_avg_ms": 9.730758,
+              "avg_wall_ms": 9.60165,
+              "copy_gib_per_s": 52.074383,
+              "copy_stream_avg_ms": 9.382372,
+              "kernel_stream_avg_ms": 9.52382,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.042459,
-              "wall_vs_solo_sum_ratio": 0.523448
+              "wall_vs_solo_max_ratio": 1.021969,
+              "wall_vs_solo_sum_ratio": 0.512052
             }
           },
           "h2d": {
             "copy_solo": {
-              "avg_ms": 9.375646,
-              "gib_per_s": 53.329657,
+              "avg_ms": 9.750365,
+              "gib_per_s": 51.280133,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 9.598346,
-              "loop_count": 675176,
+              "avg_ms": 9.800467,
+              "loop_count": 754445,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 10.1016,
-              "copy_gib_per_s": 49.497109,
-              "copy_stream_avg_ms": 9.406906,
-              "kernel_stream_avg_ms": 9.861417,
+              "avg_wall_ms": 9.86993,
+              "copy_gib_per_s": 50.658921,
+              "copy_stream_avg_ms": 9.323665,
+              "kernel_stream_avg_ms": 9.851395,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.052431,
-              "wall_vs_solo_sum_ratio": 0.532392
+              "wall_vs_solo_max_ratio": 1.007088,
+              "wall_vs_solo_sum_ratio": 0.504834
             }
           },
           "iterations": 10,
@@ -119,44 +119,44 @@
         {
           "d2h": {
             "copy_solo": {
-              "avg_ms": 19.147789,
-              "gib_per_s": 52.225351,
+              "avg_ms": 18.71694,
+              "gib_per_s": 53.427536,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 19.297914,
-              "loop_count": 1366211,
+              "avg_ms": 18.809549,
+              "loop_count": 1447895,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 20.15184,
-              "copy_gib_per_s": 49.62326,
-              "copy_stream_avg_ms": 19.17856,
-              "kernel_stream_avg_ms": 20.016409,
+              "avg_wall_ms": 19.03518,
+              "copy_gib_per_s": 52.534308,
+              "copy_stream_avg_ms": 18.790361,
+              "kernel_stream_avg_ms": 18.996922,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.04425,
-              "wall_vs_solo_sum_ratio": 0.524164
+              "wall_vs_solo_max_ratio": 1.011996,
+              "wall_vs_solo_sum_ratio": 0.507246
             }
           },
           "h2d": {
             "copy_solo": {
-              "avg_ms": 18.715288,
-              "gib_per_s": 53.432253,
+              "avg_ms": 18.583577,
+              "gib_per_s": 53.810954,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 18.241537,
-              "loop_count": 1329936,
+              "avg_ms": 19.129619,
+              "loop_count": 1471369,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 19.71362,
-              "copy_gib_per_s": 50.726351,
-              "copy_stream_avg_ms": 18.948615,
-              "kernel_stream_avg_ms": 19.460204,
+              "avg_wall_ms": 22.44984,
+              "copy_gib_per_s": 44.543747,
+              "copy_stream_avg_ms": 21.977049,
+              "kernel_stream_avg_ms": 19.435091,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.053343,
-              "wall_vs_solo_sum_ratio": 0.533423
+              "wall_vs_solo_max_ratio": 1.173564,
+              "wall_vs_solo_sum_ratio": 0.595278
             }
           },
           "iterations": 5,
@@ -165,10 +165,10 @@
         }
       ],
       "device_overlap": 1,
-      "min_d2h_wall_vs_solo_max_ratio": 1.042459,
-      "min_d2h_wall_vs_solo_sum_ratio": 0.523448,
-      "min_h2d_wall_vs_solo_max_ratio": 1.052431,
-      "min_h2d_wall_vs_solo_sum_ratio": 0.532392,
+      "min_d2h_wall_vs_solo_max_ratio": 1.011996,
+      "min_d2h_wall_vs_solo_sum_ratio": 0.507246,
+      "min_h2d_wall_vs_solo_max_ratio": 1.007088,
+      "min_h2d_wall_vs_solo_sum_ratio": 0.504834,
       "timing_backend": "cuda_event_and_wall_clock"
     },
     "parameters": {
