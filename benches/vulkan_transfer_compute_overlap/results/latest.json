@@ -23,40 +23,40 @@
         {
           "d2h_like": {
             "copy_solo": {
-              "avg_ms": 2.457572,
-              "gib_per_s": 50.86321,
+              "avg_ms": 2.462288,
+              "gib_per_s": 50.765792,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 2.4016,
-              "loop_count": 26779,
+              "avg_ms": 2.4748,
+              "loop_count": 25931,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 2.533376,
-              "copy_gib_per_s": 49.341274,
+              "avg_wall_ms": 2.59964,
+              "copy_gib_per_s": 48.083581,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.030845,
-              "wall_vs_solo_sum_ratio": 0.52136
+              "wall_vs_solo_max_ratio": 1.050444,
+              "wall_vs_solo_sum_ratio": 0.526553
             }
           },
           "h2d_like": {
             "copy_solo": {
-              "avg_ms": 2.797992,
-              "gib_per_s": 44.674895,
+              "avg_ms": 2.482616,
+              "gib_per_s": 50.350115,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 2.73896,
-              "loop_count": 30607,
+              "avg_ms": 2.462424,
+              "loop_count": 25615,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 2.793828,
-              "copy_gib_per_s": 44.74148,
+              "avg_wall_ms": 2.615724,
+              "copy_gib_per_s": 47.787916,
               "success": true,
-              "wall_vs_solo_max_ratio": 0.998512,
-              "wall_vs_solo_sum_ratio": 0.504579
+              "wall_vs_solo_max_ratio": 1.053616,
+              "wall_vs_solo_sum_ratio": 0.528959
             }
           },
           "iterations": 25,
@@ -66,40 +66,40 @@
         {
           "d2h_like": {
             "copy_solo": {
-              "avg_ms": 9.60281,
-              "gib_per_s": 52.068093,
+              "avg_ms": 9.68924,
+              "gib_per_s": 51.603635,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 9.0334,
-              "loop_count": 103851,
+              "avg_ms": 8.64138,
+              "loop_count": 95029,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 9.64714,
-              "copy_gib_per_s": 51.828832,
+              "avg_wall_ms": 9.66814,
+              "copy_gib_per_s": 51.716256,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.004616,
-              "wall_vs_solo_sum_ratio": 0.517656
+              "wall_vs_solo_max_ratio": 0.997822,
+              "wall_vs_solo_sum_ratio": 0.527431
             }
           },
           "h2d_like": {
             "copy_solo": {
-              "avg_ms": 9.72132,
-              "gib_per_s": 51.433344,
+              "avg_ms": 9.74312,
+              "gib_per_s": 51.318264,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 9.12018,
-              "loop_count": 105018,
+              "avg_ms": 9.03688,
+              "loop_count": 99691,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 9.70669,
-              "copy_gib_per_s": 51.510865,
+              "avg_wall_ms": 9.78776,
+              "copy_gib_per_s": 51.084211,
               "success": true,
-              "wall_vs_solo_max_ratio": 0.998495,
-              "wall_vs_solo_sum_ratio": 0.515176
+              "wall_vs_solo_max_ratio": 1.004582,
+              "wall_vs_solo_sum_ratio": 0.52118
             }
           },
           "iterations": 10,
@@ -109,40 +109,40 @@
         {
           "d2h_like": {
             "copy_solo": {
-              "avg_ms": 19.0637,
-              "gib_per_s": 52.455714,
+              "avg_ms": 19.17978,
+              "gib_per_s": 52.138241,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 17.43378,
-              "loop_count": 204066,
+              "avg_ms": 17.5561,
+              "loop_count": 191875,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 19.072,
-              "copy_gib_per_s": 52.432886,
+              "avg_wall_ms": 19.15966,
+              "copy_gib_per_s": 52.192993,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.000435,
-              "wall_vs_solo_sum_ratio": 0.522557
+              "wall_vs_solo_max_ratio": 0.998951,
+              "wall_vs_solo_sum_ratio": 0.521552
             }
           },
           "h2d_like": {
             "copy_solo": {
-              "avg_ms": 19.24986,
-              "gib_per_s": 51.94843,
+              "avg_ms": 19.49078,
+              "gib_per_s": 51.30631,
               "success": true
             },
             "kernel_solo": {
-              "avg_ms": 17.54972,
-              "loop_count": 202822,
+              "avg_ms": 17.87466,
+              "loop_count": 194537,
               "success": true
             },
             "overlap": {
-              "avg_wall_ms": 19.3852,
-              "copy_gib_per_s": 51.585746,
+              "avg_wall_ms": 19.44094,
+              "copy_gib_per_s": 51.437842,
               "success": true,
-              "wall_vs_solo_max_ratio": 1.007031,
-              "wall_vs_solo_sum_ratio": 0.526778
+              "wall_vs_solo_max_ratio": 0.997443,
+              "wall_vs_solo_sum_ratio": 0.520292
             }
           },
           "iterations": 5,
@@ -150,9 +150,10 @@
           "warmup": 2
         }
       ],
-      "min_d2h_wall_vs_solo_sum_ratio": 0.517656,
-      "min_h2d_wall_vs_solo_sum_ratio": 0.504579,
-      "min_wall_vs_solo_sum_ratio": 0.504579,
+      "min_d2h_wall_vs_solo_sum_ratio": 0.521552,
+      "min_h2d_wall_vs_solo_sum_ratio": 0.520292,
+      "min_wall_vs_solo_sum_ratio": 0.520292,
+      "overlap_mode": "async_separate",
       "timing_backend": "wall_clock"
     },
     "parameters": {
@@ -162,6 +163,7 @@
         "D2H-like"
       ],
       "iterations": 50,
+      "overlap_mode": "async_separate",
       "queue_count": 2,
       "sizes_mb": [
         128,

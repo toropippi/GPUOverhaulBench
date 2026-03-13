@@ -30,6 +30,14 @@ struct Options {
     int iterations = 50;
     int warmup = 5;
     std::vector<size_t> sizes_mb = {128, 512, 1024};
+    std::string overlap_mode = "async_separate";
+};
+
+enum class OverlapMode {
+    AsyncSeparate,
+    SameQueueSerial,
+    HostWaitSerial,
+    SemaphoreDependency,
 };
 
 struct WallStats {
@@ -150,6 +158,36 @@ bool starts_with(const std::string& value, const std::string& prefix) {
     return value.rfind(prefix, 0) == 0;
 }
 
+OverlapMode parse_overlap_mode(const std::string& text) {
+    if (text == "async_separate") {
+        return OverlapMode::AsyncSeparate;
+    }
+    if (text == "same_queue_serial") {
+        return OverlapMode::SameQueueSerial;
+    }
+    if (text == "host_wait_serial") {
+        return OverlapMode::HostWaitSerial;
+    }
+    if (text == "semaphore_dependency") {
+        return OverlapMode::SemaphoreDependency;
+    }
+    throw std::runtime_error("Unknown overlap_mode: " + text);
+}
+
+const char* overlap_mode_name(OverlapMode mode) {
+    switch (mode) {
+        case OverlapMode::AsyncSeparate:
+            return "async_separate";
+        case OverlapMode::SameQueueSerial:
+            return "same_queue_serial";
+        case OverlapMode::HostWaitSerial:
+            return "host_wait_serial";
+        case OverlapMode::SemaphoreDependency:
+            return "semaphore_dependency";
+    }
+    return "unknown";
+}
+
 std::vector<size_t> parse_sizes_mb(const std::string& text) {
     std::vector<size_t> sizes;
     std::stringstream ss(text);
@@ -199,8 +237,13 @@ Options parse_common_args(int argc, char** argv) {
             options.sizes_mb = parse_sizes_mb(value);
             continue;
         }
+        if (auto value = get_value("--overlap_mode"); !value.empty()) {
+            options.overlap_mode = value;
+            continue;
+        }
         if (arg == "--help" || arg == "-h") {
-            std::cout << "Usage: bench.exe [--iterations N] [--warmup N] [--sizes_mb a,b,c]\n";
+            std::cout << "Usage: bench.exe [--iterations N] [--warmup N] [--sizes_mb a,b,c] "
+                         "[--overlap_mode async_separate|same_queue_serial|host_wait_serial|semaphore_dependency]\n";
             std::exit(0);
         }
         throw std::runtime_error("Unknown argument: " + arg);
@@ -240,7 +283,8 @@ std::string make_error_json(const std::string& status, const std::string& messag
         if (i > 0) oss << ",";
         oss << options.sizes_mb[i];
     }
-    oss << "],\"iterations\":" << options.iterations << ",\"warmup\":" << options.warmup << "},";
+    oss << "],\"iterations\":" << options.iterations << ",\"warmup\":" << options.warmup
+        << ",\"overlap_mode\":" << quote(options.overlap_mode) << "},";
     oss << "\"measurement\":{\"timing_backend\":\"wall_clock\",\"error\":" << quote(message) << "},";
     oss << "\"validation\":{\"passed\":false},";
     oss << "\"notes\":[" << quote(message) << "]}";
@@ -590,6 +634,14 @@ VkFence create_fence(Runtime& runtime) {
     return fence;
 }
 
+VkSemaphore create_semaphore(Runtime& runtime) {
+    VkSemaphoreCreateInfo info = {};
+    info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    VkSemaphore semaphore = VK_NULL_HANDLE;
+    check_vk(vkCreateSemaphore(runtime.device, &info, nullptr, &semaphore), "vkCreateSemaphore");
+    return semaphore;
+}
+
 void begin_command_buffer(VkCommandBuffer cmd) {
     check_vk(vkResetCommandBuffer(cmd, 0), "vkResetCommandBuffer");
     VkCommandBufferBeginInfo info = {};
@@ -725,39 +777,113 @@ KernelStats calibrate_kernel_to_target(Runtime& runtime, Resources& resources, d
     return stats;
 }
 
-OverlapStats measure_overlap_wall(Runtime& runtime, Resources& resources, size_t bytes, bool is_h2d_like, uint32_t loops, int warmup, int iterations, const WallStats& copy_solo, const KernelStats& kernel_solo, VkCommandBuffer transfer_cmd, VkFence transfer_fence, VkCommandBuffer compute_cmd, VkFence compute_fence) {
+OverlapStats measure_overlap_wall(
+    Runtime& runtime,
+    Resources& resources,
+    size_t bytes,
+    bool is_h2d_like,
+    uint32_t loops,
+    int warmup,
+    int iterations,
+    const WallStats& copy_solo,
+    const KernelStats& kernel_solo,
+    OverlapMode overlap_mode,
+    VkCommandBuffer transfer_cmd,
+    VkCommandBuffer same_queue_copy_cmd,
+    VkFence transfer_fence,
+    VkCommandBuffer compute_cmd,
+    VkFence compute_fence,
+    VkFence same_queue_fence,
+    VkSemaphore dependency_semaphore) {
     OverlapStats stats;
     try {
         update_uniform(resources, loops);
         auto submit_pair = [&](bool timed, double* total_ms) {
-            begin_command_buffer(transfer_cmd);
+            VkCommandBuffer copy_cmd = overlap_mode == OverlapMode::SameQueueSerial ? same_queue_copy_cmd : transfer_cmd;
+            begin_command_buffer(copy_cmd);
             VkBuffer src = is_h2d_like ? resources.staging_upload.buffer : resources.device_buffer.buffer;
             VkBuffer dst = is_h2d_like ? resources.device_buffer.buffer : resources.readback_buffer.buffer;
             VkBufferCopy region = {};
             region.size = static_cast<VkDeviceSize>(bytes);
-            vkCmdCopyBuffer(transfer_cmd, src, dst, 1, &region);
-            end_command_buffer(transfer_cmd);
+            vkCmdCopyBuffer(copy_cmd, src, dst, 1, &region);
+            end_command_buffer(copy_cmd);
 
             begin_command_buffer(compute_cmd);
             record_kernel_dispatch(runtime, resources, compute_cmd);
             end_command_buffer(compute_cmd);
 
-            check_vk(vkResetFences(runtime.device, 1, &transfer_fence), "vkResetFences transfer");
-            check_vk(vkResetFences(runtime.device, 1, &compute_fence), "vkResetFences compute");
-            VkSubmitInfo transfer_submit = {};
-            transfer_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-            transfer_submit.commandBufferCount = 1;
-            transfer_submit.pCommandBuffers = &transfer_cmd;
-            VkSubmitInfo compute_submit = {};
-            compute_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-            compute_submit.commandBufferCount = 1;
-            compute_submit.pCommandBuffers = &compute_cmd;
-
             const auto start = std::chrono::steady_clock::now();
-            check_vk(vkQueueSubmit(runtime.transfer_queue, 1, &transfer_submit, transfer_fence), "vkQueueSubmit transfer");
-            check_vk(vkQueueSubmit(runtime.compute_queue, 1, &compute_submit, compute_fence), "vkQueueSubmit compute");
-            check_vk(vkWaitForFences(runtime.device, 1, &transfer_fence, VK_TRUE, UINT64_MAX), "vkWaitForFences transfer");
-            check_vk(vkWaitForFences(runtime.device, 1, &compute_fence, VK_TRUE, UINT64_MAX), "vkWaitForFences compute");
+
+            if (overlap_mode == OverlapMode::AsyncSeparate) {
+                check_vk(vkResetFences(runtime.device, 1, &transfer_fence), "vkResetFences transfer");
+                check_vk(vkResetFences(runtime.device, 1, &compute_fence), "vkResetFences compute");
+                VkSubmitInfo transfer_submit = {};
+                transfer_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                transfer_submit.commandBufferCount = 1;
+                transfer_submit.pCommandBuffers = &copy_cmd;
+                VkSubmitInfo compute_submit = {};
+                compute_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                compute_submit.commandBufferCount = 1;
+                compute_submit.pCommandBuffers = &compute_cmd;
+
+                check_vk(vkQueueSubmit(runtime.transfer_queue, 1, &transfer_submit, transfer_fence), "vkQueueSubmit transfer");
+                check_vk(vkQueueSubmit(runtime.compute_queue, 1, &compute_submit, compute_fence), "vkQueueSubmit compute");
+                check_vk(vkWaitForFences(runtime.device, 1, &transfer_fence, VK_TRUE, UINT64_MAX), "vkWaitForFences transfer");
+                check_vk(vkWaitForFences(runtime.device, 1, &compute_fence, VK_TRUE, UINT64_MAX), "vkWaitForFences compute");
+            } else if (overlap_mode == OverlapMode::SameQueueSerial) {
+                check_vk(vkResetFences(runtime.device, 1, &same_queue_fence), "vkResetFences same_queue");
+                VkSubmitInfo copy_submit = {};
+                copy_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                copy_submit.commandBufferCount = 1;
+                copy_submit.pCommandBuffers = &copy_cmd;
+                VkSubmitInfo compute_submit = {};
+                compute_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                compute_submit.commandBufferCount = 1;
+                compute_submit.pCommandBuffers = &compute_cmd;
+
+                check_vk(vkQueueSubmit(runtime.compute_queue, 1, &copy_submit, VK_NULL_HANDLE), "vkQueueSubmit same_queue copy");
+                check_vk(vkQueueSubmit(runtime.compute_queue, 1, &compute_submit, same_queue_fence), "vkQueueSubmit same_queue compute");
+                check_vk(vkWaitForFences(runtime.device, 1, &same_queue_fence, VK_TRUE, UINT64_MAX), "vkWaitForFences same_queue");
+            } else if (overlap_mode == OverlapMode::HostWaitSerial) {
+                check_vk(vkResetFences(runtime.device, 1, &transfer_fence), "vkResetFences transfer");
+                check_vk(vkResetFences(runtime.device, 1, &compute_fence), "vkResetFences compute");
+                VkSubmitInfo transfer_submit = {};
+                transfer_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                transfer_submit.commandBufferCount = 1;
+                transfer_submit.pCommandBuffers = &copy_cmd;
+                VkSubmitInfo compute_submit = {};
+                compute_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                compute_submit.commandBufferCount = 1;
+                compute_submit.pCommandBuffers = &compute_cmd;
+
+                check_vk(vkQueueSubmit(runtime.transfer_queue, 1, &transfer_submit, transfer_fence), "vkQueueSubmit transfer");
+                check_vk(vkWaitForFences(runtime.device, 1, &transfer_fence, VK_TRUE, UINT64_MAX), "vkWaitForFences transfer");
+                check_vk(vkQueueSubmit(runtime.compute_queue, 1, &compute_submit, compute_fence), "vkQueueSubmit compute");
+                check_vk(vkWaitForFences(runtime.device, 1, &compute_fence, VK_TRUE, UINT64_MAX), "vkWaitForFences compute");
+            } else {
+                check_vk(vkResetFences(runtime.device, 1, &transfer_fence), "vkResetFences transfer");
+                check_vk(vkResetFences(runtime.device, 1, &compute_fence), "vkResetFences compute");
+                VkPipelineStageFlags wait_stage = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+                VkSubmitInfo transfer_submit = {};
+                transfer_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                transfer_submit.commandBufferCount = 1;
+                transfer_submit.pCommandBuffers = &copy_cmd;
+                transfer_submit.signalSemaphoreCount = 1;
+                transfer_submit.pSignalSemaphores = &dependency_semaphore;
+                VkSubmitInfo compute_submit = {};
+                compute_submit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                compute_submit.commandBufferCount = 1;
+                compute_submit.pCommandBuffers = &compute_cmd;
+                compute_submit.waitSemaphoreCount = 1;
+                compute_submit.pWaitSemaphores = &dependency_semaphore;
+                compute_submit.pWaitDstStageMask = &wait_stage;
+
+                check_vk(vkQueueSubmit(runtime.transfer_queue, 1, &transfer_submit, transfer_fence), "vkQueueSubmit transfer");
+                check_vk(vkQueueSubmit(runtime.compute_queue, 1, &compute_submit, compute_fence), "vkQueueSubmit compute");
+                check_vk(vkWaitForFences(runtime.device, 1, &transfer_fence, VK_TRUE, UINT64_MAX), "vkWaitForFences transfer");
+                check_vk(vkWaitForFences(runtime.device, 1, &compute_fence, VK_TRUE, UINT64_MAX), "vkWaitForFences compute");
+            }
+
             if (timed) {
                 const auto end = std::chrono::steady_clock::now();
                 *total_ms += std::chrono::duration<double, std::milli>(end - start).count();
@@ -855,7 +981,21 @@ bool validate_kernel_output(Runtime& runtime, Resources& resources, uint32_t loo
     return true;
 }
 
-DirectionRow run_direction_case(Runtime& runtime, Resources& resources, size_t bytes, bool is_h2d_like, int warmup, int iterations, VkCommandBuffer transfer_cmd, VkFence transfer_fence, VkCommandBuffer compute_cmd, VkFence compute_fence) {
+DirectionRow run_direction_case(
+    Runtime& runtime,
+    Resources& resources,
+    size_t bytes,
+    bool is_h2d_like,
+    int warmup,
+    int iterations,
+    OverlapMode overlap_mode,
+    VkCommandBuffer transfer_cmd,
+    VkCommandBuffer same_queue_copy_cmd,
+    VkFence transfer_fence,
+    VkCommandBuffer compute_cmd,
+    VkFence compute_fence,
+    VkFence same_queue_fence,
+    VkSemaphore dependency_semaphore) {
     DirectionRow row;
     if (is_h2d_like) {
         fill_pattern(static_cast<uint8_t*>(resources.staging_upload.mapped), bytes, 0x13);
@@ -870,7 +1010,24 @@ DirectionRow run_direction_case(Runtime& runtime, Resources& resources, size_t b
     if (!row.kernel_solo.success) {
         return row;
     }
-    row.overlap = measure_overlap_wall(runtime, resources, bytes, is_h2d_like, row.kernel_solo.loop_count, warmup, iterations, row.copy_solo, row.kernel_solo, transfer_cmd, transfer_fence, compute_cmd, compute_fence);
+    row.overlap = measure_overlap_wall(
+        runtime,
+        resources,
+        bytes,
+        is_h2d_like,
+        row.kernel_solo.loop_count,
+        warmup,
+        iterations,
+        row.copy_solo,
+        row.kernel_solo,
+        overlap_mode,
+        transfer_cmd,
+        same_queue_copy_cmd,
+        transfer_fence,
+        compute_cmd,
+        compute_fence,
+        same_queue_fence,
+        dependency_semaphore);
     return row;
 }
 std::string render_wall_stats_json(const WallStats& stats) {
@@ -969,6 +1126,7 @@ std::string render_json(const Options& options, const Runtime& runtime, const st
     oss << "\"unit\":\"ratio\",";
     oss << "\"parameters\":{";
     oss << "\"api\":\"vulkan\",";
+    oss << "\"overlap_mode\":" << quote(options.overlap_mode) << ",";
     oss << "\"copy_directions\":[\"H2D-like\",\"D2H-like\"],";
     oss << "\"iterations\":" << options.iterations << ",";
     oss << "\"warmup\":" << options.warmup << ",";
@@ -982,6 +1140,7 @@ std::string render_json(const Options& options, const Runtime& runtime, const st
     oss << "\"measurement\":{";
     oss << "\"timing_backend\":\"wall_clock\",";
     oss << "\"adapter_name\":" << quote(runtime.adapter_name) << ",";
+    oss << "\"overlap_mode\":" << quote(options.overlap_mode) << ",";
     oss << "\"cases\":" << cases.str() << ",";
     oss << "\"min_h2d_wall_vs_solo_sum_ratio\":" << format_double(have_h2d ? min_h2d : 0.0) << ",";
     oss << "\"min_d2h_wall_vs_solo_sum_ratio\":" << format_double(have_d2h ? min_d2h : 0.0) << ",";
@@ -999,12 +1158,16 @@ int main(int argc, char** argv) {
     Runtime runtime;
     try {
         options = parse_common_args(argc, argv);
+        const OverlapMode overlap_mode = parse_overlap_mode(options.overlap_mode);
         runtime = create_runtime();
 
         VkCommandBuffer transfer_cmd = allocate_command_buffer(runtime, runtime.transfer_pool);
         VkCommandBuffer compute_cmd = allocate_command_buffer(runtime, runtime.compute_pool);
+        VkCommandBuffer same_queue_copy_cmd = allocate_command_buffer(runtime, runtime.compute_pool);
         VkFence transfer_fence = create_fence(runtime);
         VkFence compute_fence = create_fence(runtime);
+        VkFence same_queue_fence = create_fence(runtime);
+        VkSemaphore dependency_semaphore = create_semaphore(runtime);
 
         std::vector<CaseRow> rows;
         bool validation_passed = true;
@@ -1026,8 +1189,36 @@ int main(int argc, char** argv) {
                 validation_passed = false;
             }
 
-            row.h2d_like = run_direction_case(runtime, resources, bytes, true, warmup, iterations, transfer_cmd, transfer_fence, compute_cmd, compute_fence);
-            row.d2h_like = run_direction_case(runtime, resources, bytes, false, warmup, iterations, transfer_cmd, transfer_fence, compute_cmd, compute_fence);
+            row.h2d_like = run_direction_case(
+                runtime,
+                resources,
+                bytes,
+                true,
+                warmup,
+                iterations,
+                overlap_mode,
+                transfer_cmd,
+                same_queue_copy_cmd,
+                transfer_fence,
+                compute_cmd,
+                compute_fence,
+                same_queue_fence,
+                dependency_semaphore);
+            row.d2h_like = run_direction_case(
+                runtime,
+                resources,
+                bytes,
+                false,
+                warmup,
+                iterations,
+                overlap_mode,
+                transfer_cmd,
+                same_queue_copy_cmd,
+                transfer_fence,
+                compute_cmd,
+                compute_fence,
+                same_queue_fence,
+                dependency_semaphore);
 
             const uint32_t validation_loops = std::max(row.h2d_like.kernel_solo.loop_count, row.d2h_like.kernel_solo.loop_count);
             if (validation_loops == 0 || !validate_kernel_output(runtime, resources, validation_loops, compute_cmd, compute_fence)) {
@@ -1040,6 +1231,8 @@ int main(int argc, char** argv) {
 
         vkDestroyFence(runtime.device, transfer_fence, nullptr);
         vkDestroyFence(runtime.device, compute_fence, nullptr);
+        vkDestroyFence(runtime.device, same_queue_fence, nullptr);
+        vkDestroySemaphore(runtime.device, dependency_semaphore, nullptr);
         emit_json(render_json(options, runtime, rows, validation_passed));
         destroy_runtime(runtime);
         return 0;

@@ -1,0 +1,163 @@
+{
+  "status": "ok",
+  "primary_metric": "min_wall_vs_solo_sum_ratio",
+  "unit": "ratio",
+  "parameters": {
+    "api": "vulkan",
+    "overlap_mode": "same_queue_serial",
+    "copy_directions": [
+      "H2D-like",
+      "D2H-like"
+    ],
+    "iterations": 50,
+    "warmup": 5,
+    "sizes_mb": [
+      128,
+      512,
+      1024
+    ],
+    "queue_count": 2
+  },
+  "measurement": {
+    "timing_backend": "wall_clock",
+    "adapter_name": "NVIDIA GeForce RTX 5090",
+    "overlap_mode": "same_queue_serial",
+    "cases": [
+      {
+        "size_mb": 128,
+        "iterations": 25,
+        "warmup": 3,
+        "h2d_like": {
+          "copy_solo": {
+            "success": true,
+            "avg_ms": 2.517436,
+            "gib_per_s": 49.653695
+          },
+          "kernel_solo": {
+            "success": true,
+            "avg_ms": 2.492376,
+            "loop_count": 25482
+          },
+          "overlap": {
+            "success": true,
+            "avg_wall_ms": 5.48596,
+            "copy_gib_per_s": 22.785438,
+            "wall_vs_solo_sum_ratio": 1.095043,
+            "wall_vs_solo_max_ratio": 2.179185
+          }
+        },
+        "d2h_like": {
+          "copy_solo": {
+            "success": true,
+            "avg_ms": 2.477324,
+            "gib_per_s": 50.457671
+          },
+          "kernel_solo": {
+            "success": true,
+            "avg_ms": 2.441416,
+            "loop_count": 25746
+          },
+          "overlap": {
+            "success": true,
+            "avg_wall_ms": 5.595208,
+            "copy_gib_per_s": 22.340546,
+            "wall_vs_solo_sum_ratio": 1.137529,
+            "wall_vs_solo_max_ratio": 2.258569
+          }
+        }
+      },
+      {
+        "size_mb": 512,
+        "iterations": 10,
+        "warmup": 3,
+        "h2d_like": {
+          "copy_solo": {
+            "success": true,
+            "avg_ms": 9.88005,
+            "gib_per_s": 50.607031
+          },
+          "kernel_solo": {
+            "success": true,
+            "avg_ms": 9.39486,
+            "loop_count": 104045
+          },
+          "overlap": {
+            "success": true,
+            "avg_wall_ms": 21.43043,
+            "copy_gib_per_s": 23.33131,
+            "wall_vs_solo_sum_ratio": 1.11183,
+            "wall_vs_solo_max_ratio": 2.169061
+          }
+        },
+        "d2h_like": {
+          "copy_solo": {
+            "success": true,
+            "avg_ms": 9.67986,
+            "gib_per_s": 51.65364
+          },
+          "kernel_solo": {
+            "success": true,
+            "avg_ms": 8.82926,
+            "loop_count": 97948
+          },
+          "overlap": {
+            "success": true,
+            "avg_wall_ms": 20.97282,
+            "copy_gib_per_s": 23.84038,
+            "wall_vs_solo_sum_ratio": 1.133107,
+            "wall_vs_solo_max_ratio": 2.166645
+          }
+        }
+      },
+      {
+        "size_mb": 1024,
+        "iterations": 5,
+        "warmup": 2,
+        "h2d_like": {
+          "copy_solo": {
+            "success": true,
+            "avg_ms": 19.47362,
+            "gib_per_s": 51.351521
+          },
+          "kernel_solo": {
+            "success": true,
+            "avg_ms": 19.25252,
+            "loop_count": 209035
+          },
+          "overlap": {
+            "success": true,
+            "avg_wall_ms": 43.3271,
+            "copy_gib_per_s": 23.080243,
+            "wall_vs_solo_sum_ratio": 1.118808,
+            "wall_vs_solo_max_ratio": 2.224912
+          }
+        },
+        "d2h_like": {
+          "copy_solo": {
+            "success": true,
+            "avg_ms": 19.24802,
+            "gib_per_s": 51.953396
+          },
+          "kernel_solo": {
+            "success": true,
+            "avg_ms": 17.332,
+            "loop_count": 189348
+          },
+          "overlap": {
+            "success": true,
+            "avg_wall_ms": 41.27264,
+            "copy_gib_per_s": 24.229126,
+            "wall_vs_solo_sum_ratio": 1.128284,
+            "wall_vs_solo_max_ratio": 2.144254
+          }
+        }
+      }
+    ],
+    "min_h2d_wall_vs_solo_sum_ratio": 1.095043,
+    "min_d2h_wall_vs_solo_sum_ratio": 1.128284,
+    "min_wall_vs_solo_sum_ratio": 1.095043
+  },
+  "validation": {
+    "passed": true
+  }
+}

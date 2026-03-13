@@ -1,0 +1,49 @@
+{
+  "status": "ok",
+  "question": "Which Vulkan submission/wait patterns preserve transfer+compute overlap and which ones serialize it?",
+  "notes": [
+    "async_separate is the intended good path: transfer and compute are submitted independently to separate queues.",
+    "same_queue_serial shows what happens if copy and compute are forced through one queue.",
+    "host_wait_serial shows what happens if the host waits for copy completion before launching compute.",
+    "semaphore_dependency shows what happens if compute is made to wait explicitly on the copy even though separate queues exist."
+  ],
+  "modes": {
+    "async_separate": {
+      "status": "ok",
+      "min_h2d_wall_vs_solo_sum_ratio": 0.514517,
+      "min_d2h_wall_vs_solo_sum_ratio": 0.521073,
+      "min_wall_vs_solo_sum_ratio": 0.514517,
+      "adapter_name": "NVIDIA GeForce RTX 5090"
+    },
+    "same_queue_serial": {
+      "status": "ok",
+      "min_h2d_wall_vs_solo_sum_ratio": 1.095043,
+      "min_d2h_wall_vs_solo_sum_ratio": 1.128284,
+      "min_wall_vs_solo_sum_ratio": 1.095043,
+      "adapter_name": "NVIDIA GeForce RTX 5090"
+    },
+    "host_wait_serial": {
+      "status": "ok",
+      "min_h2d_wall_vs_solo_sum_ratio": 0.996297,
+      "min_d2h_wall_vs_solo_sum_ratio": 1.011153,
+      "min_wall_vs_solo_sum_ratio": 0.996297,
+      "adapter_name": "NVIDIA GeForce RTX 5090"
+    },
+    "semaphore_dependency": {
+      "status": "ok",
+      "min_h2d_wall_vs_solo_sum_ratio": 0.989009,
+      "min_d2h_wall_vs_solo_sum_ratio": 0.993418,
+      "min_wall_vs_solo_sum_ratio": 0.989009,
+      "adapter_name": "NVIDIA GeForce RTX 5090"
+    }
+  },
+  "takeaway": {
+    "best_overlap_mode": "async_separate",
+    "best_min_wall_vs_solo_sum_ratio": 0.514517,
+    "human_mistakes_to_avoid": [
+      "Do not submit both copy and compute to the same queue if you want queue-level overlap.",
+      "Do not wait on the host for copy completion before enqueueing compute.",
+      "Do not add an unnecessary semaphore dependency from copy to compute when the workloads are otherwise independent."
+    ]
+  }
+}

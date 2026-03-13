@@ -1,24 +1,21 @@
 {
   "id": "vulkan_transfer_compute_overlap",
-  "title": "Vulkan Transfer Queue and Compute Queue Overlap",
+  "title": "Vulkan Transfer and Compute Overlap Modes",
   "question": {
-    "ja": "Vulkan で transfer queue と compute queue を分けたとき、staging buffer を使う H2D-like/D2H-like copy と low-memory compute は x+y ではなく max(x, y) に近い wall time で重なるか。",
-    "en": "When transfer and compute queues are separated in Vulkan, do staging-buffer-based H2D-like and D2H-like copies overlap with low-memory compute such that wall time stays closer to max(x, y) than x+y?"
+    "ja": "Vulkan で transfer queue と compute queue を使うとき、どのような submit と wait のやり方なら H2D-like/D2H-like copy と compute が重なり、どのようなやり方だと人間側の実装都合で overlap が潰れるのか。",
+    "en": "When using transfer and compute queues in Vulkan, which submission and wait patterns preserve overlap between staged H2D-like/D2H-like copies and compute, and which patterns serialize it due to host-side or queue-side usage?"
   },
   "tags": [
     "vulkan",
     "transfer",
     "compute",
     "overlap",
-    "staging",
-    "h2d",
-    "d2h"
+    "staging"
   ],
   "focus": [
-    "Technical transfer+compute overlap in Vulkan",
-    "Staged H2D-like and D2H-like copy wall time",
-    "Wall time vs x+y and vs max(x, y)",
-    "Cross-API comparison point against CUDA, OpenCL, and D3D12"
+    "Async overlap with separate transfer and compute queues",
+    "How same-queue submit, host-side waits, or explicit dependencies destroy overlap",
+    "Wall time vs copy solo + compute solo"
   ],
   "primary_metrics": [
     "min_h2d_wall_vs_solo_sum_ratio",
@@ -27,26 +24,30 @@
   ],
   "comparisons": [
     {
-      "ja": "H2D-like copy + compute と D2H-like copy + compute の比較",
-      "en": "Difference between H2D-like copy + compute and D2H-like copy + compute"
+      "ja": "async_separate と same_queue_serial の比較",
+      "en": "Compare async_separate against same_queue_serial"
     },
     {
-      "ja": "同時 wall time が x+y に近いか max(x, y) に近いか",
-      "en": "Whether simultaneous wall time stays closer to x+y or to max(x, y)"
+      "ja": "async_separate と host_wait_serial の比較",
+      "en": "Compare async_separate against host_wait_serial"
+    },
+    {
+      "ja": "async_separate と semaphore_dependency の比較",
+      "en": "Compare async_separate against semaphore_dependency"
     }
   ],
   "considerations": [
     {
-      "ja": "この bench はまず Vulkan で transfer+compute overlap が技術的に成立するかを見る。raw PCIe 帯域 bench ではない。",
-      "en": "This benchmark is primarily about whether Vulkan can technically overlap transfer and compute. It is not a raw PCIe bandwidth benchmark."
+      "ja": "この bench は Vulkan staged copy と compute の overlap を観察するものであり、raw PCIe 帯域 bench ではない。",
+      "en": "This benchmark observes overlap between Vulkan staged copies and compute. It is not a raw PCIe bandwidth benchmark."
     },
     {
-      "ja": "H2D-like は HOST_VISIBLE staging buffer から DEVICE_LOCAL buffer への copy、D2H-like は DEVICE_LOCAL buffer から HOST_VISIBLE readback buffer への copy として扱う。",
-      "en": "H2D-like is defined as a copy from a HOST_VISIBLE staging buffer to a DEVICE_LOCAL buffer, and D2H-like is defined as a copy from a DEVICE_LOCAL buffer to a HOST_VISIBLE readback buffer."
+      "ja": "H2D-like は HOST_VISIBLE staging buffer から DEVICE_LOCAL buffer への copy、D2H-like は DEVICE_LOCAL buffer から HOST_VISIBLE readback buffer への copy として定義する。",
+      "en": "H2D-like is defined as a copy from a HOST_VISIBLE staging buffer to a DEVICE_LOCAL buffer, and D2H-like as a copy from a DEVICE_LOCAL buffer to a HOST_VISIBLE readback buffer."
     },
     {
-      "ja": "主指標は CPU wall time の overlap ratio であり、copy throughput は補助指標として扱う。",
-      "en": "The primary judgment uses CPU wall-clock overlap ratios, while copy throughput is only a supporting metric."
+      "ja": "overlap_mode は、queue の分け方や host wait の置き方で overlap がどれだけ崩れるかを見るための診断軸である。",
+      "en": "The overlap_mode axis is diagnostic: it shows how queue usage and host waits preserve or destroy overlap."
     }
   ],
   "build": {
